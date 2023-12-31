@@ -1,9 +1,11 @@
 import { Event } from "@/types/event";
 import Link from "next/link";
+import Image from "next/image";
 
 const eventData: Event[] = [
   {
     name: "Healing",
+    imageUrl:"https://scontent-cgk1-2.cdninstagram.com/v/t51.2885-15/413893817_1104389514062218_8435652700476609878_n.webp?stp=dst-jpg_e35&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xMDgweDEwODAuc2RyIn0&_nc_ht=scontent-cgk1-2.cdninstagram.com&_nc_cat=110&_nc_ohc=QIG6esl36tQAX--Nvd8&edm=ACWDqb8BAAAA&ccb=7-5&ig_cache_key=MzI2NjgxODcyNDA1MDkwNTAwMg%3D%3D.2-ccb7-5&oh=00_AfADSEC7LdC2fraWsBUQz26zmY7eoLhOGZlhM7RE1eJobA&oe=659398C3&_nc_sid=ee9879",
     divisi: "Kajian Pekanan",
     participant: 100,
     regional: "Solo",
@@ -12,6 +14,7 @@ const eventData: Event[] = [
   },
   {
     name: "Futsal MainYuk",
+    imageUrl:"https://scontent-cgk1-2.cdninstagram.com/v/t51.2885-15/413893817_1104389514062218_8435652700476609878_n.webp?stp=dst-jpg_e35&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xMDgweDEwODAuc2RyIn0&_nc_ht=scontent-cgk1-2.cdninstagram.com&_nc_cat=110&_nc_ohc=QIG6esl36tQAX--Nvd8&edm=ACWDqb8BAAAA&ccb=7-5&ig_cache_key=MzI2NjgxODcyNDA1MDkwNTAwMg%3D%3D.2-ccb7-5&oh=00_AfADSEC7LdC2fraWsBUQz26zmY7eoLhOGZlhM7RE1eJobA&oe=659398C3&_nc_sid=ee9879",
     participant: 20,
     divisi: "Sport",
     regional: "Solo",
@@ -20,6 +23,7 @@ const eventData: Event[] = [
   },
   {
     name: "Bisnis",
+    imageUrl: "https://scontent-cgk1-2.cdninstagram.com/v/t51.2885-15/413893817_1104389514062218_8435652700476609878_n.webp?stp=dst-jpg_e35&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xMDgweDEwODAuc2RyIn0&_nc_ht=scontent-cgk1-2.cdninstagram.com&_nc_cat=110&_nc_ohc=QIG6esl36tQAX--Nvd8&edm=ACWDqb8BAAAA&ccb=7-5&ig_cache_key=MzI2NjgxODcyNDA1MDkwNTAwMg%3D%3D.2-ccb7-5&oh=00_AfADSEC7LdC2fraWsBUQz26zmY7eoLhOGZlhM7RE1eJobA&oe=659398C3&_nc_sid=ee9879",
     divisi: "Kajian Pekanan",
     participant: 90,
     regional: "Solo",
@@ -43,6 +47,9 @@ const TableThree = () => {
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
+            <th className="min-w-[100px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                Poster
+              </th>
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                 Nama Event
               </th>
@@ -63,6 +70,9 @@ const TableThree = () => {
           <tbody>
             {eventData.map((data, key) => (
               <tr key={key}>
+                <td className="flex justify-center border-b border-[#eee] py-2 dark:border-strokedark ">
+                 <Image className="px-auto" width={100} height={100} src={data.imageUrl!} alt="poster event"></Image>
+                </td>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
                     {data.name}
@@ -103,7 +113,7 @@ const TableThree = () => {
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    <Link href={`/events/${data.name}`}>
+                    <Link href={`/dashboard/events/${data.name}`}>
                       <button className="hover:text-primary">
                         <svg
                           className="fill-current"

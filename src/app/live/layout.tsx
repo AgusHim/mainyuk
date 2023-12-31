@@ -1,7 +1,5 @@
 "use client";
-import "./globals.css";
-import "./data-tables-css.css";
-import "./satoshi.css";
+import "../globals.css";
 import { useState, useEffect } from "react";
 import Loader from "@/components/common/Loader";
 
@@ -29,7 +27,6 @@ export default function RootLayout({
           ) : (
             <div className="flex h-screen overflow-hidden">
               <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-              <Header></Header>
               <main>
                 <div className="mx-auto max-w-screen-2xl">{children}</div>
               </main>

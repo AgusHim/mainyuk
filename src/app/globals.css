@@ -174,3 +174,7 @@ span.flatpickr-weekday,
 .map-btn .jvectormap-container .jvectormap-zoomin {
   right: 45px;
 }
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}

@@ -1,7 +1,8 @@
 export type Event = {
     id?:string;
     name?: string;
-    performer?:string;
+    imageUrl?: string;
+    speaker?:string;
     participant?:number;
     divisi?:string;
     regional?:string;
