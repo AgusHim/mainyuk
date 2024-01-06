@@ -4,8 +4,8 @@ import TableUser from "@/components/Tables/TableUser";
 
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Teman Hijrah | MainYuk Solo",
-  description: "Halaman daftar teman hijrah MainYuk",
+  title: "Teman Hijrah | YukNgaji Solo",
+  description: "Halaman daftar teman hijrah YukNgaji",
   // other metadata
 };
 

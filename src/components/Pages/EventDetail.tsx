@@ -3,34 +3,69 @@ import { format } from "date-fns";
 import Image from "next/image";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import QnaList from "../QnaList";
+import { useRouter } from "next/navigation";
+import Loader from "../common/Loader";
+import { postPrecence } from "@/redux/slices/eventRegisterSlice";
+import { CreatePresence } from "@/types/presence";
+import { getSessionUser } from "@/redux/slices/authSlice";
 
 export default function EventDetailPage({
   params,
 }: {
   params: { slug: string };
 }) {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const event = useAppSelector((state) => state.event.event);
+  const user = useAppSelector((state) => state.auth.user);
+  const presence = useAppSelector((state) => state.eventRegister);
+
   const isLoading = useAppSelector((state) => state.event.loading);
   const error = useAppSelector((state) => state.event.error);
 
+  const [isInit, setIsInit] = useState(true);
+
+  const getEvent = useCallback(() => {
+    dispatch(getEventDetail(params.slug));
+  }, [isInit]);
+
+  const getSession = useCallback(() => {
+    dispatch(getSessionUser())
+      .unwrap()
+      .then((user) => {
+        if (user == null) {
+          router.replace(`/events/${params.slug}/register`);
+        }
+        if (user != null && presence.event_id != params.slug) {
+          const presence: CreatePresence = {
+            event_id: params.slug,
+            user_id: user.id,
+          };
+          dispatch(postPrecence(presence));
+        }
+      });
+  }, [isInit]);
+
   useEffect(() => {
-    if (!isLoading) {
-      dispatch(getEventDetail(params.slug));
+    if(isInit){
+      getEvent();
+      getSession();
+      setIsInit(false);
     }
-    
-  }, []);
+  }, [isInit, dispatch]);
+
+
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loader></Loader>;
   }
   if (error != null) {
     return <h1>{error}</h1>;
   }
-  if (event == null) {
+  if (event == null || user == null) {
     return <div></div>;
   }
   return (
@@ -42,7 +77,7 @@ export default function EventDetailPage({
             width={400}
             height={400}
             alt={`Image ${event.title}`}
-            src={event.image_url??''}
+            src={event.image_url ?? ""}
           />
           <h1 className="flex w-full justify-center text-lg md:text-xl lg:text-2xl font-bold text-black dark:text-white text-center">
             {event.title}

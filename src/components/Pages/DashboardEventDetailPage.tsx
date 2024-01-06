@@ -1,21 +1,21 @@
 "use client";
 import { format } from "date-fns";
 import BreadcrumbEvent from "@/components/Breadcrumbs/BreadcrumbEvent";
-import TableUser from "@/components/Tables/TableUser";
 import Image from "next/image";
 
-import { Metadata } from "next";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect } from "react";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import TablePresence from "@/components/Tables/TablePresence";
 import CardDataStats from "../CardDataStats";
+import { useRouter } from "next/navigation";
 
 export default function DashboardEventDetailPage({
   params,
 }: {
   params: { slug: string };
 }) {
+  
   const dispatch = useAppDispatch();
   const event = useAppSelector((state) => state.event.event);
   const isLoading = useAppSelector((state) => state.event.loading);
@@ -32,6 +32,7 @@ export default function DashboardEventDetailPage({
     if (!isLoading) {
       dispatch(getEventDetail(params.slug));
     }
+    
   }, []);
 
   if (isLoading) {

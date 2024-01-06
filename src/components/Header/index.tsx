@@ -2,8 +2,20 @@ import Link from "next/link";
 import DarkModeSwitcher from "./DarkModeSwitcher";
 import DropdownUser from "./DropdownUser";
 import Image from "next/image";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { getSessionUser } from "@/redux/slices/authSlice";
 
 const Header = () => {
+  const dispatch = useAppDispatch();
+  const auth = useAppSelector((state) => state.auth);
+  
+  useEffect(()=>{
+    if (!auth.loading && auth.user == null) {
+      dispatch(getSessionUser());
+    }
+  })
+
   return (
     <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
       <div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">

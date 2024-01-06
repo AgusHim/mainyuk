@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Live Event",
-  description: "Live event MainYuk regional Solo",
+  description: "Live event YukNgaji regional Solo",
   // other metadata
 };
 

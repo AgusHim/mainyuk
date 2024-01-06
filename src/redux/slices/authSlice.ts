@@ -1,6 +1,7 @@
 import { User } from "@/types/user";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../api";
+import { encryptData } from "@/utils/crypto";
 
 interface AuthState {
   user: User | null;
@@ -26,7 +27,7 @@ export const getSessionUser = createAsyncThunk(
   "auth.getSessionUser",
   async () => {
     const str = localStorage.getItem("user");
-    console.log(`Get Session user ${str}`)
+    
     if (str != null) {
       const user = JSON.parse(str) as User;
       return user;
@@ -35,15 +36,15 @@ export const getSessionUser = createAsyncThunk(
   }
 );
 
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    getSessionAdmin: (state, _) => {
-      const user = localStorage.getItem("admin");
-      if (user != null) {
-        state.user = JSON.parse(user);
-      }
+    setAuthUser: (state, action) => {
+      const user = action.payload as User;
+      localStorage.setItem("user",JSON.stringify(user));
+      state.user = user;
     },
     logOutUser: (state, _) => {
       localStorage.removeItem("user");
@@ -72,5 +73,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { getSessionAdmin, logOutUser } = authSlice.actions;
+export const { logOutUser,setAuthUser } = authSlice.actions;
 export default authSlice.reducer;

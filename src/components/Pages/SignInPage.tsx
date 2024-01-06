@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 const SignInPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.auth.user);
+  const loading = useAppSelector((state) => state.auth.loading);
 
   const [formData, setFormData] = useState({
     email: "admin@mainyuk.com",
@@ -141,11 +141,10 @@ const SignInPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-
                 <div className="mb-5">
                   <input
                     type="submit"
-                    value="Sign In"
+                    value={loading?'Loading' :'Masuk Akun'}
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                   />
                 </div>

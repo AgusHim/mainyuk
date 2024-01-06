@@ -1,4 +1,4 @@
-import DashboardEventDetailPage from "@/components/Page/DashboardEventDetailPage";
+import DashboardEventDetailPage from "@/components/Pages/DashboardEventDetailPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import EventDetailPage from "@/components/Page/EventDetail";
+import EventDetailPage from "@/components/Pages/EventDetail";
 
 export const metadata: Metadata = {
-  title: "Event - MainYuk Solo",
-  description: "Detail event MainYuk Solo",
+  title: "Event - YukNgaji Solo",
+  description: "Detail event YukNgaji Solo",
   // other metadata
 };
 

@@ -11,9 +11,9 @@ const DropdownUser = () => {
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
-
+ 
   // close on click outside
-  useEffect(() => {
+  useEffect(() => {    
     const clickHandler = ({ target }: MouseEvent) => {
       if (!dropdown.current) return;
       if (

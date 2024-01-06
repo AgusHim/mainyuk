@@ -6,3 +6,9 @@ export type Presence ={
     event:Event,
     create_at:string,
 }
+
+export type CreatePresence ={
+    event_id: string,
+    user_id?:string|null,
+    user?:User|null,
+}

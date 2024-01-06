@@ -2,6 +2,8 @@ import { User } from "@/types/user";
 
 const eventData: User[] = [
   {
+    id:"asdada",
+    username:"sadada",
     name: "Wahab",
     address: "Solo",
     phone:"0823123131",
@@ -13,6 +15,8 @@ const eventData: User[] = [
     }
   },
   {
+    id:"asdada",
+    username:"sadada",
     name: "Fulan",
     address: "Sukoharjo",
     phone:"0823123131",

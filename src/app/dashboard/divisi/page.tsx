@@ -3,8 +3,8 @@ import TableDivisi from "@/components/Tables/TableDivisi";
 
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Event | MainYuk Solo",
-  description: "Halaman event MainYuk Solo",
+  title: "Event | YukNgaji Solo",
+  description: "Halaman event YukNgaji Solo",
   // other metadata
 };
 
