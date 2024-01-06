@@ -1,31 +1,29 @@
-import { User } from "@/types/user";
+"use client";
 
-const eventData: User[] = [
-  {
-    name: "Wahab",
-    address: "Solo",
-    phone:"0823123131",
-    age: 23,
-    gender: "Ikhwan",
-    createdAt: "10/01/2021",
-    event:{
-      title: "Kajian Pekanan"
-    }
-  },
-  {
-    name: "Fulan",
-    address: "Sukoharjo",
-    phone:"0823123131",
-    age: 20,
-    gender: "Akhwat",
-    createdAt: "10/01/2021",
-    event:{
-      title: "Fun Futsal"
-    }
-  },
-];
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { getPresence } from "@/redux/slices/presenceSlice";
+import { useEffect } from "react";
 
-const TableUser = () => {
+const TablePresence = () => {
+  const dispatch = useAppDispatch();
+  const event = useAppSelector((state) => state.event.event);
+  const presenceData = useAppSelector((state) => state.presence.data);
+  const isLoading = useAppSelector((state) => state.presence.loading);
+  const error = useAppSelector((state) => state.presence.error);
+
+  useEffect(() => {
+    if (presenceData == null && event != null && !isLoading) {
+        console.log("RUN GET PRESENCE")
+      dispatch(getPresence(event!.id!));
+    }
+  }, []);
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+  if (error != null) {
+    return <h1>{error}</h1>;
+  }
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -53,39 +51,40 @@ const TableUser = () => {
             </tr>
           </thead>
           <tbody>
-            {eventData.map((data, key) => (
+            {presenceData?.map((data, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {data.name}
+                    {data.user.name}
                   </h5>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex justify-center items-center">
                     <p className="text-black dark:text-white">
-                      {data.gender}
+                      {data.user.gender == 'male'?'Ikhwan':'Akhwat'}
                     </p>
-                    
                   </div>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{data.phone}</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {data.address}
+                    {data.user.phone}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {data.age} th
+                    {data.user.address}
+                  </p>
+                </td>
+                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                  <p className="text-black dark:text-white">
+                    {data.user.age} th
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
                     {data.event.title}
                   </p>
-                  <p className="text-sm">{data.createdAt}</p>
+                  <p className="text-sm">{data.create_at}</p>
                 </td>
               </tr>
             ))}
@@ -96,4 +95,4 @@ const TableUser = () => {
   );
 };
 
-export default TableUser;
+export default TablePresence;

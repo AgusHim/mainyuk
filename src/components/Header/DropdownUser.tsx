@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { logOutUser } from "@/redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 
 const DropdownUser = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
@@ -33,6 +37,16 @@ const DropdownUser = () => {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
+  const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch(logOutUser(null))
+    router.replace('/'); 
+  };
+
+  if(user == null){
+    return <div></div>
+  }
 
   return (
     <div className="relative">
@@ -42,21 +56,9 @@ const DropdownUser = () => {
         className="flex items-center gap-4"
         href="#"
       >
-        <span className="hidden text-right lg:block">
-          <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
-          </span>
-          <span className="block text-xs">UX Designer</span>
-        </span>
-
-        <span className="h-12 w-12 rounded-full">
-          <Image
-            width={112}
-            height={112}
-            src={"/images/user/user-01.png"}
-            alt="User"
-          />
-        </span>
+        <div className="flex items-center text-center justify-center w-12 h-12 md:h-14 md:w-14 rounded-full bg-primary">
+          <h1 className="text-white text-lg md:text-xl">{user?.name.substring(0,2)}</h1>
+        </div>
 
         <svg
           className="hidden fill-current sm:block"
@@ -84,7 +86,12 @@ const DropdownUser = () => {
           dropdownOpen === true ? "block" : "hidden"
         }`}
       >
-        <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
+        <span className="tex-left lg:block p-4">
+          <span className="block text-sm font-medium text-black dark:text-white">
+            {user?.name}
+          </span>
+        </span>
+        {/* <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
           <li>
             <Link
               href="/profile"
@@ -156,8 +163,11 @@ const DropdownUser = () => {
               Account Settings
             </Link>
           </li>
-        </ul>
-        <button className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+        </ul> */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+        >
           <svg
             className="fill-current"
             width="22"

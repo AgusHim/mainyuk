@@ -1,24 +1,27 @@
-import { Divisi } from "@/types/divisi";
+"use client";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { getDivisi } from "@/redux/slices/divisiSlice";
+import { useEffect } from "react";
 
-const divisiData: Divisi[] = [
-  {
-    id: "01",
-    name: "Sport",
-    regional: "Solo",
-  },
-  {
-    id: "02",
-    name: "Kajian Pekanan",
-    regional: "Solo",
-  },
-  {
-    id: "03",
-    name: "KEY",
-    regional: "Solo",
-  },
-];
+const TableDivisi = () => {
+  const dispatch = useAppDispatch();
+  const divisiData = useAppSelector((state) => state.divisi.data);
+  const isLoading = useAppSelector((state) => state.divisi.loading);
+  const error = useAppSelector((state) => state.divisi.error);
 
-const TableThree = () => {
+  useEffect(() => {
+    if(divisiData == null && !isLoading){
+      dispatch(getDivisi());
+    }
+  }, []);
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+  if (error != null) {
+    return <h1>{error}</h1>;
+  }
+
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -37,7 +40,7 @@ const TableThree = () => {
             </tr>
           </thead>
           <tbody>
-            {divisiData.map((data, key) => (
+            {divisiData?.map((data, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
@@ -125,4 +128,4 @@ const TableThree = () => {
   );
 };
 
-export default TableThree;
+export default TableDivisi;

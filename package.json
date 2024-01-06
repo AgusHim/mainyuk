@@ -11,14 +11,20 @@
   "dependencies": {
     "@react-jvectormap/core": "^1.0.4",
     "@react-jvectormap/unitedstates": "^1.0.1",
-    "apexcharts": "^3.41.1",
+    "@reduxjs/toolkit": "^2.0.1",
+    "@types/crypto-js": "^4.2.1",
+    "@types/react-redux": "^7.1.33",
+    "apexcharts": "^3.45.1",
+    "axios": "^1.6.3",
+    "date-fns": "^3.0.6",
     "jsvectormap": "^1.5.3",
     "next": "14.0.4",
     "qrcode.react": "^3.1.0",
     "react": "^18",
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18",
-    "react-jvectormap": "^0.0.16"
+    "react-jvectormap": "^0.0.16",
+    "react-redux": "^9.0.4"
   },
   "devDependencies": {
     "@types/node": "^20",

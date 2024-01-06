@@ -1,12 +1,16 @@
+import { Divisi } from "./divisi";
+
 export type Event = {
     id?:string;
-    name?: string;
-    imageUrl?: string;
+    slug?:string;
+    code?:string;
+    title?: string;
+    desc?: string;
+    image_url?: string;
     speaker?:string;
     participant?:number;
-    divisi?:string;
-    regional?:string;
-    startAt?:string;
-    endAt?:string;
+    divisi?:Divisi;
+    start_at?:string;
+    end_at?:string;
   };
   

@@ -1,5 +1,6 @@
 import Admin from "@/components/Dashboard/Admin";
 import { Metadata } from "next";
+import MyCounter from "@/components/MyCounter";
 
 export const metadata: Metadata = {
   title: "MainYuk | Solo",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
+    <MyCounter></MyCounter>
     <div className="flex flex-col items-center justify-center">
       <h1 className="mt-30 mb-10 text-7xl text-primary font-bold">MainYuk</h1>
       <form className="my-5">

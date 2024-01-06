@@ -12,7 +12,7 @@ const DropdownFilter = () => {
         <button
           onClick={handleClick}
           type="button"
-          className="inline-flex justify-center items-center px-4 py-2 border rounded-md text-sm font-medium text-black dark:text-white"
+          className="inline-flex justify-center items-center px-4 py-2 border rounded-md text-sm font-medium text-white dark:text-white"
         >
           Popular
           <svg
@@ -23,9 +23,9 @@ const DropdownFilter = () => {
             aria-hidden="true"
           >
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M10 3a1 1 0 01.707.293l6 6a1 1 0 01-1.414 1.414L10 5.414 4.707 10.707a1 1 0 01-1.414-1.414l6-6A1 1 0 0110 3z"
-              clip-rule="evenodd"
+              clipRule="evenodd"
             />
           </svg>
         </button>

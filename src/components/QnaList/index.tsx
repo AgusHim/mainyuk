@@ -107,7 +107,7 @@ const QnaList = () => {
         {chatData.map((chat, key) => (
           <Link
             href="#"
-            className="flex items-center gap-5 py-3 px-3 md:py-3 md:px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4 border mb-2 rounded-md"
+            className="flex items-center gap-5 py-3 px-3 md:py-3 md:px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4  border-[1.5px] border-stroke mb-2 rounded-md"
             key={key}
           >
             <div className="flex items-center text-center justify-center w-7 h-7 md:h-14 md:w-14 rounded-full bg-primary">

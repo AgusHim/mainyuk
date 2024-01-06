@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return (
-    <>
-      <Admin />
-    </>
-  );
+    return (
+      <>
+        <Admin />
+      </>
+    );
 }

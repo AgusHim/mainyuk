@@ -1,46 +1,30 @@
-import { Event } from "@/types/event";
+"use client";
+import { format } from 'date-fns';
 import Link from "next/link";
 import Image from "next/image";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { useEffect } from "react";
+import { getEvents } from "@/redux/slices/eventSlice";
 
-const eventData: Event[] = [
-  {
-    name: "Healing",
-    imageUrl:"https://scontent-cgk1-2.cdninstagram.com/v/t51.2885-15/413893817_1104389514062218_8435652700476609878_n.webp?stp=dst-jpg_e35&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xMDgweDEwODAuc2RyIn0&_nc_ht=scontent-cgk1-2.cdninstagram.com&_nc_cat=110&_nc_ohc=QIG6esl36tQAX--Nvd8&edm=ACWDqb8BAAAA&ccb=7-5&ig_cache_key=MzI2NjgxODcyNDA1MDkwNTAwMg%3D%3D.2-ccb7-5&oh=00_AfADSEC7LdC2fraWsBUQz26zmY7eoLhOGZlhM7RE1eJobA&oe=659398C3&_nc_sid=ee9879",
-    divisi: "Kajian Pekanan",
-    participant: 100,
-    regional: "Solo",
-    startAt: "13 Jan 2023",
-    endAt: "13 Jan 2023",
-  },
-  {
-    name: "Futsal MainYuk",
-    imageUrl:"https://scontent-cgk1-2.cdninstagram.com/v/t51.2885-15/413893817_1104389514062218_8435652700476609878_n.webp?stp=dst-jpg_e35&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xMDgweDEwODAuc2RyIn0&_nc_ht=scontent-cgk1-2.cdninstagram.com&_nc_cat=110&_nc_ohc=QIG6esl36tQAX--Nvd8&edm=ACWDqb8BAAAA&ccb=7-5&ig_cache_key=MzI2NjgxODcyNDA1MDkwNTAwMg%3D%3D.2-ccb7-5&oh=00_AfADSEC7LdC2fraWsBUQz26zmY7eoLhOGZlhM7RE1eJobA&oe=659398C3&_nc_sid=ee9879",
-    participant: 20,
-    divisi: "Sport",
-    regional: "Solo",
-    startAt: "14 Jan 2023",
-    endAt: "14 Jan 2023",
-  },
-  {
-    name: "Bisnis",
-    imageUrl: "https://scontent-cgk1-2.cdninstagram.com/v/t51.2885-15/413893817_1104389514062218_8435652700476609878_n.webp?stp=dst-jpg_e35&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xMDgweDEwODAuc2RyIn0&_nc_ht=scontent-cgk1-2.cdninstagram.com&_nc_cat=110&_nc_ohc=QIG6esl36tQAX--Nvd8&edm=ACWDqb8BAAAA&ccb=7-5&ig_cache_key=MzI2NjgxODcyNDA1MDkwNTAwMg%3D%3D.2-ccb7-5&oh=00_AfADSEC7LdC2fraWsBUQz26zmY7eoLhOGZlhM7RE1eJobA&oe=659398C3&_nc_sid=ee9879",
-    divisi: "Kajian Pekanan",
-    participant: 90,
-    regional: "Solo",
-    startAt: "23 Jan 2023",
-    endAt: "23 Jan 2023",
-  },
-  {
-    name: "KEY - Sesi Hijrah",
-    participant: 120,
-    divisi: "KEY",
-    regional: "Solo",
-    startAt: "14 Jan 2023",
-    endAt: "14 Jan 2023",
-  },
-];
 
 const TableThree = () => {
+  const dispatch = useAppDispatch();
+  const eventData = useAppSelector((state) => state.event.data);
+  const isLoading = useAppSelector((state) => state.event.loading);
+  const error = useAppSelector((state) => state.event.error);
+  
+  useEffect(() => {
+    if(eventData == null && !isLoading){
+      dispatch(getEvents());
+    }
+  }, []);
+  
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+  if (error != null) {
+    return <h1>{error}</h1>;
+  }
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -68,16 +52,16 @@ const TableThree = () => {
             </tr>
           </thead>
           <tbody>
-            {eventData.map((data, key) => (
+            {eventData?.map((data, key) => (
               <tr key={key}>
                 <td className="flex justify-center border-b border-[#eee] py-2 dark:border-strokedark ">
-                 <Image className="px-auto" width={100} height={100} src={data.imageUrl!} alt="poster event"></Image>
+                 <Image className="px-auto" width={100} height={100} src={data.image_url??''} alt="poster event"></Image>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {data.name}
+                    {data.title}
                   </h5>
-                  <p className="text-sm">{data.divisi}</p>
+                  <p className="text-sm">{data.divisi?.name}</p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex justify-center items-center">
@@ -104,16 +88,16 @@ const TableThree = () => {
                   </div>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{data.regional}</p>
+                  <p className="text-black dark:text-white">{data.divisi?.regional}</p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {data.startAt} - {data.endAt}
+                    {format(Date.parse(data.start_at!),"dd MMM yyyy")} - {format(Date.parse(data.end_at!),"dd MMM yyyy")}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    <Link href={`/dashboard/events/${data.name}`}>
+                    <Link href={`/dashboard/events/${data.slug!}`}>
                       <button className="hover:text-primary">
                         <svg
                           className="fill-current"

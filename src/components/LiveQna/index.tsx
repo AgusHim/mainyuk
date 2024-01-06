@@ -124,13 +124,13 @@ const LiveQna = () => {
                     {chat.name.charAt(0)}
                   </h1>
                 </div>
-                <h5 className="mx-3 font-bold text-black dark:text-white text-sm md:text-lg">
+                <h5 className="mx-3 font-bold text-white dark:text-white text-sm md:text-lg">
                   {chat.name}
                 </h5>
               </div>
               <p className="my-3">
                 <span
-                  className={`text-black dark:text-white text-xl font-normal`}
+                  className={`text-white dark:text-white text-xl font-normal`}
                 >
                   {chat.text}
                 </span>

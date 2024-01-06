@@ -1,19 +1,19 @@
 "use client";
+import { Provider } from "react-redux";
+import { makeStore } from "../redux/store";
 import "./globals.css";
 import "./data-tables-css.css";
 import "./satoshi.css";
 import { useState, useEffect } from "react";
 import Loader from "@/components/common/Loader";
 
-import Header from "@/components/Header";
+import { useAppSelector } from "@/hooks/hooks";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -21,23 +21,14 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en">
-      <body suppressHydrationWarning={true}>
-        <div className="dark:bg-boxdark-2 dark:text-bodydark">
-          {loading ? (
-            <Loader />
-          ) : (
-            <div className="flex h-screen overflow-hidden">
-              <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-              <Header></Header>
-              <main>
-                <div className="mx-auto max-w-screen-2xl">{children}</div>
-              </main>
-              </div>
+    <Provider store={makeStore()}>
+        <html lang="en">
+          <body suppressHydrationWarning={true}>
+            <div className="dark:bg-boxdark-2 dark:text-bodydark">
+              {loading ? <Loader /> : <main>{children}</main>}
             </div>
-          )}
-        </div>
-      </body>
-    </html>
+          </body>
+        </html>
+    </Provider>
   );
 }
