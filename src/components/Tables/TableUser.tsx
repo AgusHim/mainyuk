@@ -9,6 +9,7 @@ const eventData: User[] = [
     phone:"0823123131",
     age: 23,
     gender: "Ikhwan",
+    role:'jamaah',
     createdAt: "10/01/2021",
     event:{
       title: "Kajian Pekanan"
@@ -22,6 +23,7 @@ const eventData: User[] = [
     phone:"0823123131",
     age: 20,
     gender: "Akhwat",
+    role:'jamaah',
     createdAt: "10/01/2021",
     event:{
       title: "Fun Futsal"

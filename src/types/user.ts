@@ -8,6 +8,7 @@ export type User = {
   phone:string;
   age:number;
   address:string;
+  role:string;
   event:Event;
   createdAt:string;
 };

@@ -29,7 +29,9 @@ export default function EventDetailPage({
   const [isInit, setIsInit] = useState(true);
 
   const getEvent = useCallback(() => {
-    dispatch(getEventDetail(params.slug));
+    if (event == null || event?.slug != params.slug) {
+      dispatch(getEventDetail(params.slug));
+    }
   }, [isInit]);
 
   const getSession = useCallback(() => {
@@ -50,14 +52,12 @@ export default function EventDetailPage({
   }, [isInit]);
 
   useEffect(() => {
-    if(isInit){
+    if (isInit) {
       getEvent();
       getSession();
       setIsInit(false);
     }
   }, [isInit, dispatch]);
-
-
 
   if (isLoading) {
     return <Loader></Loader>;

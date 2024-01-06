@@ -1,7 +1,7 @@
 import { User } from "@/types/user";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../api";
-import { encryptData } from "@/utils/crypto";
+import { decryptData, encryptData } from "@/utils/crypto";
 
 interface AuthState {
   user: User | null;
@@ -18,8 +18,9 @@ export const loginUser = createAsyncThunk(
   "auth.login",
   async (userCredential: any) => {
     const response = await api.post("/login", userCredential);
-    localStorage.setItem("user", JSON.stringify(response.data));
-    return response.data;
+    var result = encryptData(response.data.user);
+    localStorage.setItem("user",result);
+    return response.data.user;
   }
 );
 
@@ -27,9 +28,9 @@ export const getSessionUser = createAsyncThunk(
   "auth.getSessionUser",
   async () => {
     const str = localStorage.getItem("user");
-    
-    if (str != null) {
-      const user = JSON.parse(str) as User;
+    if (str != null && str != "") {
+      var decrypt = decryptData(str);
+      const user = decrypt as User;
       return user;
     }
     return null;

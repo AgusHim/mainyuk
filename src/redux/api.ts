@@ -1,35 +1,51 @@
+import { decryptData, encryptData } from "@/utils/crypto";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const api = axios.create({
-    baseURL:`http://localhost:8000/api`, // Set your API base URL
-  });
-  
-  api.interceptors.request.use(
-    (config) => {
-        const sessionAuth = localStorage.getItem("auth");
-        console.log(`Interceptopr ${sessionAuth}`)
-      if (sessionAuth) {
-        const user = JSON.parse(sessionAuth);
-        config.headers.Authorization = `Bearer ${user.auth_token}`;
+  baseURL: `http://localhost:8000/api`, // Set your API base URL
+});
+
+api.interceptors.request.use(
+  (config) => {
+    let sessionAuth = localStorage.getItem("access_token");
+    if (sessionAuth != null) {
+      const token = decryptData(sessionAuth);
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => {
+    if(response.data.access_token != null){
+      var result = encryptData(response.data.access_token);
+      localStorage.setItem("access_token",result);
+    }
+    return response;
+  },
+  (error) => {
+    let message;
+
+    if (error.response) {
+      if (error.response.status === 500) message = "Internal server error";
+      
+      else message = error.response.data.error;
+
+      if (typeof message === "string") {
+        toast.error(message, {
+          className: "toast",
+        });
       }
-      console.log(`Config${config.baseURL}`)
-      return config;
-  
-    },
-    (error) => {
       return Promise.reject(error);
     }
-  );
-  
-  api.interceptors.response.use(
-    (response) => {
-      console.log(`[RES]${response.config.url}`)
-      return response;
-    },
-    (error) => {
-      // Handle error responses
-      return Promise.reject(error);
-    }
-  );
-  
-  export default api;
+
+    return Promise.reject(error);
+  }
+);
+
+export default api;

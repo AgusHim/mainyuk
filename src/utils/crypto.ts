@@ -1,20 +1,19 @@
-import Crypto from "crypto-js";
+import * as Crypto from 'crypto-js';
 
-export const encryptData = (data: any, secretKey: string) => {
+export const encryptData = (data: any) => {
   const encryptedData = Crypto.AES.encrypt(
     JSON.stringify(data),
-    secretKey
+    process.env.AUTH_SECRET ?? "secret"
   ).toString();
-  localStorage.setItem("encryptedData", encryptedData);
+  return encryptedData;
 };
 
 // Function to decrypt data
-export const decryptData = (secretKey: string) => {
-  const encryptedData = localStorage.getItem("encryptedData");
-  if (encryptedData) {
-    const bytes = Crypto.AES.decrypt(encryptedData, secretKey);
-    const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
-    return decryptedData;
-  }
-  return null;
+export const decryptData = (encrypted: string) => {
+  const bytes = Crypto.AES.decrypt(
+    encrypted,
+    process.env.AUTH_SECRET ?? "secret"
+  );
+  const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
+  return decryptedData;
 };

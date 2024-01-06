@@ -28,7 +28,7 @@ export default function DashboardLayout({
     dispatch(getSessionUser())
       .unwrap()
       .then((value) => {
-        if(value == null){
+        if(value == null || value.role != 'admin'){
           router.replace('/signin');
         }
       })

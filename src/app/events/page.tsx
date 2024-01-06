@@ -1,4 +1,3 @@
-import Admin from "@/components/Dashboard/Admin";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

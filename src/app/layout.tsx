@@ -4,8 +4,8 @@ import { makeStore } from "../redux/store";
 import "./globals.css";
 import "./data-tables-css.css";
 import "./satoshi.css";
-import { useState, useEffect } from "react";
-import Loader from "@/components/common/Loader";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
 
 
 export default function RootLayout({
@@ -18,6 +18,7 @@ export default function RootLayout({
         <html lang="en">
           <body suppressHydrationWarning={true}>
             <div className="dark:bg-boxdark-2 dark:text-bodydark">
+            <ToastContainer position="top-center" theme="colored" />
             <main>{children}</main>
             </div>
           </body>

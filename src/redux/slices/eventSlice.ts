@@ -20,10 +20,21 @@ export const getEvents = createAsyncThunk("events", async () => {
   return res.data;
 });
 
-export const getEventDetail = createAsyncThunk("eventDetail", async (slug:string,thunk) => {
-  const res = await axiosInstance.get(`/events/${slug}`);
-  return res.data;
-});
+export const getEventDetail = createAsyncThunk(
+  "eventDetail",
+  async (slug: string, thunk) => {
+    const res = await axiosInstance.get(`/events/${slug}`);
+    return res.data as Event;
+  }
+);
+
+export const getEventByCode = createAsyncThunk(
+  "event.byCode",
+  async (code: string, thunk) => {
+    const res = await axiosInstance.get(`/events/code/${code}`);
+    return res.data as Event;
+  }
+);
 
 export const eventSlice = createSlice({
   name: "event",
@@ -35,19 +46,27 @@ export const eventSlice = createSlice({
       state.data = action.payload as Event[];
       state.loading = false;
     });
-    builder.addCase(getEvents.pending || getEventDetail.pending, (state, _) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(getEvents.rejected || getEventDetail.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message || "Failed to fetch data";
-    });
-    builder.addCase(getEventDetail.fulfilled, (state, action) => {
-      state.event = action.payload as Event;
-      state.loading = false;
-    });
-    
+    builder.addCase(
+      getEvents.pending || getEventDetail.pending || getEventByCode.pending,
+      (state, _) => {
+        state.loading = true;
+        state.error = null;
+      }
+    );
+    builder.addCase(
+      getEvents.rejected || getEventDetail.rejected || getEventByCode.rejected,
+      (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch data";
+      }
+    );
+    builder.addCase(
+      getEventDetail.fulfilled || getEventByCode.fulfilled,
+      (state, action) => {
+        state.event = action.payload as Event;
+        state.loading = false;
+      }
+    );
   },
 });
 
