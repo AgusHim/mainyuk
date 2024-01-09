@@ -5,6 +5,8 @@ import eventSlice from './slices/eventSlice'
 import presenceSlice from './slices/presenceSlice'
 import authSlice from './slices/authSlice'
 import eventRegisterSlice from './slices/eventRegisterSlice'
+import qnaSlice from './slices/qnaSlice'
+import likeSlice from './slices/likeSlice'
 
 export const makeStore = () => {
   return configureStore({
@@ -14,7 +16,9 @@ export const makeStore = () => {
       counter:counterSlice,
       event:eventSlice,
       eventRegister:eventRegisterSlice,
-      presence:presenceSlice
+      presence:presenceSlice,
+      qna:qnaSlice,
+      like:likeSlice,
     },
   })
 }

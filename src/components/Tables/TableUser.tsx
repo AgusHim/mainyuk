@@ -89,7 +89,7 @@ const TableUser = () => {
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {data.event.title}
+                    {data.event!.title!}
                   </p>
                   <p className="text-sm">{data.createdAt}</p>
                 </td>

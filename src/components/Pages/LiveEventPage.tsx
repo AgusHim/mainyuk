@@ -23,7 +23,7 @@ export default function LiveEventPage({
   }, []);
 
   const hostUrl = window.location.origin;
-  const qrValue = `${hostUrl}/events/${params.slug}`
+  const qrValue = `${hostUrl}/events/${params.slug}`;
 
   if (isLoading) {
     return <h1>Loading...</h1>;
@@ -41,8 +41,9 @@ export default function LiveEventPage({
             size={250}
             className="p-5 bg-white rounded-xl mb-10"
           />
-          <h1 className="text-4xl text-white mx-5 text-center"> 
-            Gabung ke <span className="font-extrabold">{window.location.hostname}</span>
+          <h1 className="text-4xl text-white mx-5 text-center">
+            Gabung ke{" "}
+            <span className="font-extrabold">{window.location.hostname}</span>
           </h1>
           <p className="text-4xl text-white mx-5 text-center font-bold">
             {`#${event?.code}`}
@@ -53,8 +54,7 @@ export default function LiveEventPage({
             <DropdownFilter></DropdownFilter>
           </div>
           <div className="w-full min-h-150 max-h-150 h-auto overflow-auto">
-            <h1 className="text-4xl text-white text-center">Q&A coming soon</h1>
-            {/* <LiveQna /> */}
+            <LiveQna />
           </div>
         </div>
       </div>

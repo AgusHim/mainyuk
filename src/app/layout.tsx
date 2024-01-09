@@ -16,6 +16,7 @@ export default function RootLayout({
   return (
     <Provider store={makeStore()}>
         <html lang="en">
+        <link rel="icon" href="/images/favicon.ico" sizes="any" />
           <body suppressHydrationWarning={true}>
             <div className="dark:bg-boxdark-2 dark:text-bodydark">
             <ToastContainer position="top-center" theme="colored" />

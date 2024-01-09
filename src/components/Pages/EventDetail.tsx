@@ -11,6 +11,7 @@ import Loader from "../common/Loader";
 import { postPrecence } from "@/redux/slices/eventRegisterSlice";
 import { CreatePresence } from "@/types/presence";
 import { getSessionUser } from "@/redux/slices/authSlice";
+import CommentField from "../CommentField";
 
 export default function EventDetailPage({
   params,
@@ -94,20 +95,9 @@ export default function EventDetailPage({
           <h1 className="mb-5 text-2xl font-bold text-black dark:text-white">
             Tanya Ustadz
           </h1>
-          <div className="w-full flex justify-center">
-            <textarea
-              className="w-full max-h-14 focus:max-h-40 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary resize-none"
-              rows={4}
-              cols={50}
-              maxLength={300}
-              placeholder="Tulis Pertanyaan ..."
-            />
-            <button className="max-h-12 ml-4 w-20 btn bg-primary text-white p-2 rounded-md ">
-              Kirim
-            </button>
-          </div>
+          <CommentField />
           <div className="mt-5">
-            <QnaList></QnaList>
+            <QnaList />
           </div>
         </div>
       </div>

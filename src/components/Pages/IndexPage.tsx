@@ -11,7 +11,7 @@ export default function IndexPage() {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    code: "856154",
+    code: "20240102",
   });
 
   const handleChange = (event: any) => {

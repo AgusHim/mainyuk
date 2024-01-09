@@ -1,142 +1,80 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Chat } from "@/types/chat";
-import { useState } from "react";
-
-const chatData: Chat[] = [
-  {
-    avatar: "/images/user/user-01.png",
-    name: "Devid Heilo",
-    text: "Note: In order to render QR Codes in <canvas> on high density displays, we scale the canvas element to contain an appropriate number of pixels and then use inline styles to scale back down. We will merge any additional styles, with custom height and width overriding our own values. This allows scaling to percentages but if scaling beyond the size, you will encounter blurry images. I recommend detecting resizes with something like react-measure to detect and pass the appropriate size when rendering to <canvas>.",
-    time: 12,
-    textCount: 3,
-    dot: 3,
-  },
-  {
-    avatar: "/images/user/user-02.png",
-    name: "Henry Fisher",
-    text: "Waiting for you!",
-    time: 12,
-    textCount: 0,
-    dot: 1,
-  },
-  {
-    avatar: "/images/user/user-04.png",
-    name: "Jhon Doe",
-    text: "What's up?",
-    time: 32,
-    textCount: 0,
-    dot: 3,
-  },
-  {
-    avatar: "/images/user/user-05.png",
-    name: "Jane Doe",
-    text: "Great",
-    time: 32,
-    textCount: 2,
-    dot: 6,
-  },
-  {
-    avatar: "/images/user/user-01.png",
-    name: "Jhon Doe",
-    text: "How are you?",
-    time: 32,
-    textCount: 0,
-    dot: 3,
-  },
-  {
-    avatar: "/images/user/user-03.png",
-    name: "Jhon Doe",
-    text: "How are you?",
-    time: 32,
-    textCount: 3,
-    dot: 6,
-  },
-  {
-    avatar: "/images/user/user-01.png",
-    name: "Devid Heilo",
-    text: "How are you?",
-    time: 12,
-    textCount: 3,
-    dot: 3,
-  },
-  {
-    avatar: "/images/user/user-02.png",
-    name: "Henry Fisher",
-    text: "Waiting for you!",
-    time: 12,
-    textCount: 0,
-    dot: 1,
-  },
-  {
-    avatar: "/images/user/user-04.png",
-    name: "Jhon Doe",
-    text: "What's up?",
-    time: 32,
-    textCount: 0,
-    dot: 3,
-  },
-  {
-    avatar: "/images/user/user-05.png",
-    name: "Jane Doe",
-    text: "Great",
-    time: 32,
-    textCount: 2,
-    dot: 6,
-  },
-  {
-    avatar: "/images/user/user-01.png",
-    name: "Jhon Doe",
-    text: "How are you?",
-    time: 32,
-    textCount: 0,
-    dot: 3,
-  },
-  {
-    avatar: "/images/user/user-03.png",
-    name: "Jhon Doe",
-    text: "How are you?",
-    time: 32,
-    textCount: 3,
-    dot: 6,
-  },
-];
+import { Comment } from "@/types/comment";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { getComments } from "@/redux/slices/qnaSlice";
+import { format } from "date-fns";
 
 const LiveQna = () => {
-  const [selected, setSelected] = useState<Chat>();
+  const dispatch = useAppDispatch();
+  const comments = useAppSelector((state) => state.qna.data);
+  const isLoading = useAppSelector((state) => state.qna.loading);
 
-  const handleClick = (value: Chat) => {
+  useEffect(() => {
+    if (comments == null && !isLoading) {
+      dispatch(getComments());
+    }
+  }, []);
+
+  const [selected, setSelected] = useState<Comment>();
+
+  const handleClick = (value: Comment) => {
     setSelected(value);
   };
+
+  if (isLoading) {
+    <div>Loading...</div>;
+  }
+  if (comments == null || comments?.length == 0) {
+    <h1 className="text-4xl text-white text-center">Tanya Ustadz</h1>;
+  }
+
   return (
     <div>
-      {chatData.map((chat, key) => (
+      {comments?.map((comment, key) => (
         <div
-          onClick={() => handleClick(chat)}
-          className={`flex items-center gap-5 py-3 px-3 md:py-3 md:px-7.5 border mb-2 rounded-md ${chat === selected?'border-primary border-4':''}`}
+          onClick={() => handleClick(comment)}
+          className={`flex items-center gap-5 py-3 px-3 md:py-3 md:px-7.5 border mb-2 rounded-md ${
+            comment === selected ? "border-primary border-4" : ""
+          }`}
           key={key}
         >
           <div className="flex flex-1 items-center justify-between">
             <div>
               <div className="flex flex-row items-center">
-                <div className="flex items-center text-center justify-center w-7 h-7 md:h-14 md:w-14 rounded-full bg-primary">
+                <div className="md:flex items-center text-center justify-center w-10 h-10 md:h-14 md:w-14 rounded-full bg-primary hidden">
                   <h1 className="text-white text-lg md:text-xl">
-                    {chat.name.charAt(0)}
+                    {comment.user.username?.substring(0, 2)}
                   </h1>
                 </div>
                 <h5 className="mx-3 font-bold text-white dark:text-white text-sm md:text-lg">
-                  {chat.name}
+                  {comment.user.username}
                 </h5>
               </div>
               <p className="my-3">
                 <span
                   className={`text-white dark:text-white text-xl font-normal`}
                 >
-                  {chat.text}
+                  {comment.comment}
                 </span>
-                <span className="text-md ml-5">{chat.time} min</span>
               </p>
+              <p className="text-md mt-2">{format(Date.parse(comment.created_at!), "dd-MM-yyyy hh:mm")}</p>
             </div>
+            <div className="flex flex-col items-center justify-center">
+            <svg
+              className="fill-current"
+              fill="none"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill=""
+                d="M20.808,11.079C19.829,16.132,12,20.5,12,20.5s-7.829-4.368-8.808-9.421C2.227,6.1,5.066,3.5,8,3.5a4.444,4.444,0,0,1,4,2,4.444,4.444,0,0,1,4-2C18.934,3.5,21.773,6.1,20.808,11.079Z"
+              />
+            </svg>
+            <span className="mt-1 text-md md:text-xl">{comment.like}</span>
+          </div>
           </div>
         </div>
       ))}

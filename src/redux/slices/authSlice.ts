@@ -44,7 +44,8 @@ export const authSlice = createSlice({
   reducers: {
     setAuthUser: (state, action) => {
       const user = action.payload as User;
-      localStorage.setItem("user",JSON.stringify(user));
+      var encrypted = encryptData(user);
+      localStorage.setItem("user",encrypted);
       state.user = user;
     },
     logOutUser: (state, _) => {
@@ -67,7 +68,6 @@ export const authSlice = createSlice({
       state.error = action.error.message || "Failed to fetch data";
     });
     builder.addCase(getSessionUser.fulfilled, (state, action) => {
-      console.log(`GetSession Payload ${action.payload}`)
       state.user = action.payload;
       state.loading = false;
     });
