@@ -57,7 +57,7 @@ const DropdownUser = () => {
         href="#"
       >
         <div className="flex items-center text-center justify-center w-12 h-12 md:h-14 md:w-14 rounded-full bg-primary">
-          <h1 className="text-white text-lg md:text-xl">{user?.name.substring(0,2)}</h1>
+          <h1 className="text-white text-lg md:text-xl">{user?.name?.substring(0,2)}</h1>
         </div>
 
         <svg
