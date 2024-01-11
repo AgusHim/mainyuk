@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    unoptimized: true,
     env: {
       BASE_URL: process.env.BASE_URL,
       BASE_API: process.env.BASE_API,
