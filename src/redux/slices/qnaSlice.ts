@@ -6,11 +6,13 @@ interface QnaState {
   data: Comment[] | null;
   loading: boolean;
   error: string | null;
+  sortBy:string;
 }
 const initialState: QnaState = {
   data: null,
   loading: false,
   error: null,
+  sortBy:'Terbaru',
 };
 
 export const getComments = createAsyncThunk("comments.index", async () => {
@@ -45,6 +47,25 @@ export const qnaSlice = createSlice({
         state.data![index].like = state.data![index].like - 1;
       }
     },
+    sortComment: (state, action) => {
+      state.sortBy = action.payload;
+      if(state.data!.length > 2){
+        const sortBy = state.sortBy;
+        
+        if(sortBy == "Terbaru"){
+          const sortedList = [...state.data!].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+          state.data = sortedList;
+        }
+        if(sortBy == "Pertama"){
+          const sortedList = [...state.data!].sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at));
+          state.data = sortedList;
+        }
+        if(sortBy == "Populer"){
+          const sortedList = [...state.data!].sort((a, b) => a.like - b.like);
+          state.data = sortedList;
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
@@ -70,5 +91,5 @@ export const qnaSlice = createSlice({
   },
 });
 
-export const { addComment, increaseLike, decreaseLike } = qnaSlice.actions;
+export const { addComment, increaseLike, decreaseLike, sortComment } = qnaSlice.actions;
 export default qnaSlice.reducer;

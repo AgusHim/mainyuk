@@ -11,11 +11,11 @@ const FormEvent = () => {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    title: "Fun Match Futsal",
-    desc: "Yuk sini futsal bareng kita kita, ikuti keseruannya dan jadilah kang gajul handal",
-    speaker: "@solofunsport",
+    title: "",
+    desc: "",
+    speaker: "",
     image_url:
-      "https://scontent-xsp2-1.cdninstagram.com/v/t51.2885-15/416434755_1546340782797611_8959410460795897837_n.jpg?stp=dst-jpg_e35&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xMDgweDEwODAuc2RyIn0&_nc_ht=scontent-xsp2-1.cdninstagram.com&_nc_cat=111&_nc_ohc=qktukPrn510AX8-1tc3&edm=ACWDqb8BAAAA&ccb=7-5&ig_cache_key=MzI3MzUzODY3NzQ0NTQ5NjMwOA%3D%3D.2-ccb7-5&oh=00_AfAahS8OlhvnMV_viwsrLzmwSgSBMHHfRKJ59aOXWcRDoA&oe=65A1ECEF&_nc_sid=ee9879",
+      "",
     divisi_id: "1",
     start_at: "",
     end_at: "",
@@ -117,6 +117,7 @@ const FormEvent = () => {
                     value={formData["divisi_id"]}
                     onChange={handleChange}
                     name="divisi_id"
+                    required
                     className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   >
                     <option value="">Pilih divisi</option>

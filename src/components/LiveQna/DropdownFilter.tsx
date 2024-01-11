@@ -1,11 +1,23 @@
+"use client"
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { sortComment } from "@/redux/slices/qnaSlice";
 import { useState } from "react";
 
 const DropdownFilter = () => {
+  const dispatch = useAppDispatch();
+  const sortBy = useAppSelector((state)=> state.qna.sortBy);
+
   const [open, setOpen] = useState<boolean>(false);
 
   const handleClick = () => {
     setOpen(!open);
   };
+
+  const handleSelected = (sortBy:string)=>{
+    setOpen(!open);
+    dispatch(sortComment(sortBy));
+  };
+
   return (
     <>
       <div className="relative inline-block text-left">
@@ -14,7 +26,7 @@ const DropdownFilter = () => {
           type="button"
           className="inline-flex justify-center items-center px-4 py-2 border rounded-md text-sm font-medium text-white dark:text-white"
         >
-          Popular
+          {sortBy}
           <svg
             className="-mr-1 ml-2 h-5 w-5"
             xmlns="http://www.w3.org/2000/svg"
@@ -42,13 +54,15 @@ const DropdownFilter = () => {
             aria-labelledby="options-menu"
           >
             <a
+             onClick={()=>handleSelected("Pupuler")}
               href="#"
               className="block px-4 py-2 text-sm text-black hover:text-primary hover:font-bold"
               role="menuitem"
             >
-              Popular
+              Populer
             </a>
             <a
+            onClick={()=>handleSelected("Terbaru")}
               href="#"
               className="block px-4 py-2 text-sm text-black hover:text-primary hover:font-bold"
               role="menuitem"
@@ -56,6 +70,7 @@ const DropdownFilter = () => {
               Terbaru
             </a>
             <a
+            onClick={()=>handleSelected("Pertama")}
               href="#"
               className="block px-4 py-2 text-sm text-black hover:text-primary hover:font-bold"
               role="menuitem"

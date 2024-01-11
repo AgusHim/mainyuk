@@ -17,7 +17,7 @@ const EventWebsocket = () => {
   useEffect(() => {
     // Create a new WebSocket instance
     const socket = new WebSocket(
-      `ws://localhost:8000/ws/events/${event?.id}?user_id=${user?.id}&username=${user?.username}`
+      `ws://${process.env.WEBSOCKET_HOST}/ws/events/${event?.id}?user_id=${user?.id}&username=${user?.username}`
     );
 
     // WebSocket event listeners

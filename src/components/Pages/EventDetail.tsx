@@ -12,6 +12,7 @@ import { postPrecence } from "@/redux/slices/eventRegisterSlice";
 import { CreatePresence } from "@/types/presence";
 import { getSessionUser } from "@/redux/slices/authSlice";
 import CommentField from "../CommentField";
+import DropdownFilter from "../LiveQna/DropdownFilter";
 
 export default function EventDetailPage({
   params,
@@ -97,6 +98,8 @@ export default function EventDetailPage({
           </h1>
           <CommentField />
           <div className="mt-5">
+            <div className="mb-3"><DropdownFilter /></div>
+            
             <QnaList />
           </div>
         </div>

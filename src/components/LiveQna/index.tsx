@@ -24,13 +24,13 @@ const LiveQna = () => {
   if (isLoading) {
     <div>Loading...</div>;
   }
-  if (comments == null || comments?.length == 0) {
+  if (comments == null) {
     <h1 className="text-4xl text-white text-center">Tanya Ustadz</h1>;
   }
 
   return (
     <div>
-      {comments?.map((comment, key) => (
+      {comments?.length == 0?<div className="h-full flex text-4xl items-center justify-center py-40 text-white text-center">Emang boleh? ga ada yang tanya?</div> :  comments?.map((comment, key) => (
         <div
           onClick={() => handleClick(comment)}
           className={`flex items-center gap-5 py-3 px-3 md:py-3 md:px-7.5 border mb-2 rounded-md ${
@@ -61,7 +61,7 @@ const LiveQna = () => {
             </div>
             <div className="flex flex-col items-center justify-center">
             <svg
-              className="fill-current"
+              className="fill-danger"
               fill="none"
               width="30"
               height="30"
