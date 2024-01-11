@@ -6,19 +6,26 @@ interface QnaState {
   data: Comment[] | null;
   loading: boolean;
   error: string | null;
-  sortBy:string;
+  sortBy: string;
 }
 const initialState: QnaState = {
   data: null,
   loading: false,
   error: null,
-  sortBy:'Terbaru',
+  sortBy: "Terbaru",
 };
 
-export const getComments = createAsyncThunk("comments.index", async () => {
-  const res = await axiosInstance.get("/comments");
-  return res.data;
-});
+export const getComments = createAsyncThunk(
+  "comments.index",
+  async (event_id: string) => {
+    const res = await axiosInstance.get("/comments", {
+      params: {
+        event_id: event_id,
+      },
+    });
+    return res.data;
+  }
+);
 
 export const postComment = createAsyncThunk(
   "comments.post",
@@ -49,18 +56,22 @@ export const qnaSlice = createSlice({
     },
     sortComment: (state, action) => {
       state.sortBy = action.payload;
-      if(state.data!.length > 2){
+      if (state.data!.length > 2) {
         const sortBy = state.sortBy;
-        
-        if(sortBy == "Terbaru"){
-          const sortedList = [...state.data!].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+
+        if (sortBy == "Terbaru") {
+          const sortedList = [...state.data!].sort(
+            (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
+          );
           state.data = sortedList;
         }
-        if(sortBy == "Pertama"){
-          const sortedList = [...state.data!].sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at));
+        if (sortBy == "Pertama") {
+          const sortedList = [...state.data!].sort(
+            (a, b) => Date.parse(a.created_at) - Date.parse(b.created_at)
+          );
           state.data = sortedList;
         }
-        if(sortBy == "Populer"){
+        if (sortBy == "Populer") {
           const sortedList = [...state.data!].sort((a, b) => a.like - b.like);
           state.data = sortedList;
         }
@@ -91,5 +102,6 @@ export const qnaSlice = createSlice({
   },
 });
 
-export const { addComment, increaseLike, decreaseLike, sortComment } = qnaSlice.actions;
+export const { addComment, increaseLike, decreaseLike, sortComment } =
+  qnaSlice.actions;
 export default qnaSlice.reducer;

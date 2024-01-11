@@ -28,7 +28,9 @@ const QnaList = () => {
 
   useEffect(() => {
     if (comments == null && !isLoading) {
-      dispatch(getComments());
+      dispatch(getComments(
+        event?.id??''
+      ));
       dispatch(
         getLikes({
           user_id: user?.id,
