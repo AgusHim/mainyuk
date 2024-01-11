@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { loginUser } from "@/redux/slices/authSlice";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const SignInPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -33,7 +34,9 @@ const SignInPage: React.FC = () => {
         }
       })
       .catch((error) => {
-        // Handle errors here if needed
+        toast.error("Gagal login", {
+          className: "toast",
+        });
         console.error('Error fetching data:', error);
       });
   };

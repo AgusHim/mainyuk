@@ -4,6 +4,7 @@ import { getEventByCode } from "@/redux/slices/eventSlice";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function IndexPage() {
   const dispatch = useAppDispatch();
@@ -21,7 +22,12 @@ export default function IndexPage() {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-
+    if(formData.code.length < 3){
+      toast.error("Kode tidak valid", {
+        className: "toast",
+      });
+      return;
+    }
     dispatch(getEventByCode(formData.code))
       .unwrap()
       .then((res) => {
@@ -31,6 +37,9 @@ export default function IndexPage() {
       })
       .catch((error) => {
         // Handle errors here if needed
+        toast.error("Maaf kode tidak aktif", {
+          className: "toast",
+        });
         console.error("Error fetching data:", error);
       });
   };
