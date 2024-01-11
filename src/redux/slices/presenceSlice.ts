@@ -14,10 +14,10 @@ const initialState: PresenceState= {
   error:null
 };
 
-export const getPresence = createAsyncThunk("Presence", async (event_slug:string, thunk) => {
+export const getPresence = createAsyncThunk("Presence", async (event_id:string, thunk) => {
   const res = await axiosInstance.get('/presence',{
     params:{
-        "event_slug":event_slug
+        "event_id":event_id
     }
   });
   return res.data;

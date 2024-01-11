@@ -80,6 +80,7 @@ export default function EventDetailPage({
             height={400}
             alt={`Image ${event.title}`}
             src={event.image_url ?? ""}
+            unoptimized={true}
           />
           <h1 className="flex w-full justify-center text-lg md:text-xl lg:text-2xl font-bold text-black dark:text-white text-center">
             {event.title}

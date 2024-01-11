@@ -87,6 +87,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                 height={300}
                 alt="Gambar event"
                 src={eventDetail?.image_url ?? ""}
+                unoptimized={true}
               ></Image>
               <h1 className="flex w-full justify-center text-2xl font-bold text-black dark:text-white">
                 {eventDetail?.title}

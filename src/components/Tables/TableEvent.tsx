@@ -55,7 +55,7 @@ const TableThree = () => {
             {eventData?.map((data, key) => (
               <tr key={key}>
                 <td className="flex justify-center border-b border-[#eee] py-2 dark:border-strokedark ">
-                 <Image className="px-auto" width={100} height={100} src={data.image_url??''} alt="poster event"></Image>
+                 <Image className="px-auto" width={100} height={100} src={data.image_url??''} alt="poster event" unoptimized={true}></Image>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">

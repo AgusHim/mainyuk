@@ -54,6 +54,7 @@ export default function DashboardEventDetailPage({
           height={150}
           alt={`Gambar event ${event?.title}`}
           src={event?.image_url!}
+          unoptimized={true}
         />
         <div className="flex flex-col items-center">
           <h1 className="truncate max-w-50 line-clamp-2 text-center text-xl font-extrabold text-primary dark:text-white">
