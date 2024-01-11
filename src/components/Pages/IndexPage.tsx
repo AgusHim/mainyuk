@@ -11,7 +11,7 @@ export default function IndexPage() {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    code: "20240102",
+    code: "",
   });
 
   const handleChange = (event: any) => {
@@ -51,6 +51,7 @@ export default function IndexPage() {
           <input
             onChange={handleChange}
             value={formData["code"]}
+            name="code"
             className="p-2 mr-3"
             type="text"
             placeholder="Masukan Kode"

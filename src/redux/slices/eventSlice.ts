@@ -36,6 +36,11 @@ export const getEventByCode = createAsyncThunk(
   }
 );
 
+export const postEvent = createAsyncThunk("event.post", async (data: Event) => {
+  const res = await axiosInstance.post(`/events`, data);
+  return res.data as Event;
+});
+
 export const eventSlice = createSlice({
   name: "event",
   initialState,
@@ -47,14 +52,14 @@ export const eventSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(
-      getEvents.pending || getEventDetail.pending || getEventByCode.pending,
+      getEvents.pending || getEventDetail.pending || getEventByCode.pending || postEvent.pending,
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
     builder.addCase(
-      getEvents.rejected || getEventDetail.rejected || getEventByCode.rejected,
+      getEvents.rejected || getEventDetail.rejected || getEventByCode.rejected || postEvent.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

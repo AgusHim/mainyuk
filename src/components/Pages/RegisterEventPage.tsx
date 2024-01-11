@@ -26,12 +26,12 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
   });
 
   const [formData, setFormData] = useState({
-    name: "Fulan",
-    username: "Fulan",
-    gender: "female",
-    age: 20,
-    address: "Solo Selatan",
-    phone: "0812321323",
+    name: "",
+    username: "",
+    gender: "Ikhwan",
+    age:0,
+    address: "",
+    phone: "",
   });
 
   const handleChange = (event: any) => {
@@ -101,7 +101,8 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                 <input
                   value={formData["name"]}
                   onChange={handleChange}
-                  type="name"
+                  name="name"
+                  type="text"
                   placeholder="Masukan nama kamu"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
@@ -113,7 +114,8 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                 <input
                   value={formData["username"]}
                   onChange={handleChange}
-                  type="username"
+                  name="username"
+                  type="text"
                   placeholder="Masukan nama untuk Q&A"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
@@ -129,6 +131,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                   <select
                     value={formData["gender"]}
                     onChange={handleChange}
+                    name="gender"
                     className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   >
                     <option value="male">Ikhwan</option>
@@ -162,6 +165,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                 <input
                   value={formData["age"]}
                   onChange={handleChange}
+                  name="age"
                   type="number"
                   placeholder="Masukan umur kamu"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -174,6 +178,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                 <input
                   value={formData["address"]}
                   onChange={handleChange}
+                  name="address"
                   type="text"
                   placeholder="Masukan alamat kamu"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -186,7 +191,8 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                 <input
                   value={formData["phone"]}
                   onChange={handleChange}
-                  type="number"
+                  name="phone"
+                  type="text"
                   placeholder="Masukan nomor Whatsapp kamu"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />

@@ -30,6 +30,9 @@ export const qnaSlice = createSlice({
   name: "qna",
   initialState,
   reducers: {
+    addComment: (state, action) => {
+      state.data?.push(action.payload as Comment);
+    },
     increaseLike: (state, action) => {
       const index = state.data?.findIndex((item) => item.id === action.payload);
       if (index !== undefined) {
@@ -67,5 +70,5 @@ export const qnaSlice = createSlice({
   },
 });
 
-export const { increaseLike, decreaseLike } = qnaSlice.actions;
+export const { addComment, increaseLike, decreaseLike } = qnaSlice.actions;
 export default qnaSlice.reducer;

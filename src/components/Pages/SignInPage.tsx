@@ -11,8 +11,8 @@ const SignInPage: React.FC = () => {
   const loading = useAppSelector((state) => state.auth.loading);
 
   const [formData, setFormData] = useState({
-    email: "admin@mainyuk.com",
-    password: "taatbahagia",
+    email: "",
+    password: "",
   });
 
   const handleChange = (event: any) => {
@@ -81,6 +81,7 @@ const SignInPage: React.FC = () => {
                     <input
                       value={formData["email"]}
                       onChange={handleChange}
+                      name="email"
                       type="email"
                       placeholder="Masukan email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -114,6 +115,7 @@ const SignInPage: React.FC = () => {
                     <input
                       value={formData["password"]}
                       onChange={handleChange}
+                      name="password"
                       type="password"
                       placeholder="Masukan password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
