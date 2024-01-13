@@ -47,7 +47,7 @@ const LiveQna = () => {
             <div className="flex flex-1 items-center justify-between">
               <div>
                 <div className="flex flex-row items-center">
-                  <div className="md:flex items-center text-center justify-center w-10 h-10 md:h-14 md:w-14 rounded-full bg-primary hidden">
+                  <div className={`sm:flex items-center text-center justify-center w-10 h-10 md:h-14 md:w-14 rounded-full hidden ${comment.user?.gender == "female"?"bg-meta-7":"bg-primary"}`}>
                     <h1 className="text-white text-lg md:text-xl">
                       {comment.user.username?.substring(0, 2)}
                     </h1>

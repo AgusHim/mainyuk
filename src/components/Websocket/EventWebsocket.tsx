@@ -9,6 +9,7 @@ import { Comment } from "@/types/comment";
 import { Like } from "@/types/like";
 import { WsMessage } from "@/types/wsMessage";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const EventWebsocket = () => {
   const dispatch = useAppDispatch();
@@ -34,6 +35,9 @@ const EventWebsocket = () => {
           const comment = res.message.data as Comment;
           if (comment.user.id != user?.id) {
             dispatch(addComment(comment));
+            if(comment.user != null){
+              toast.info(`${comment.user?.username} memposting pertanyaan`);
+            }
           }
         }
         if (res.message.type === "like.add") {

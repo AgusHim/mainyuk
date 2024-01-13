@@ -78,7 +78,7 @@ const QnaList = () => {
             className="flex items-center gap-5 py-3 px-3 md:py-3 md:px-7.5 dark:hover:bg-meta-4  border-[1.5px] border-stroke mb-2 rounded-md"
             key={key}
           >
-            <div className="md:flex items-center text-center justify-center w-10 h-10 md:h-14 md:w-14 rounded-full bg-primary hidden">
+            <div className={`sm:flex items-center text-center justify-center w-10 h-10 md:h-14 md:w-14 rounded-full hidden ${comment.user?.gender == "female"?"bg-meta-7":"bg-primary"}`}>
               <h1 className="text-white text-lg md:text-xl">
                 {comment.user.username?.substring(0, 2)}
               </h1>
