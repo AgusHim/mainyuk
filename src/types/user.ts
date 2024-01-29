@@ -6,7 +6,7 @@ export type User = {
   username?: string;
   gender?: string;
   phone?:string;
-  age?:number;
+  age?:number|string;
   address?:string;
   role?:string;
   event?:Event;

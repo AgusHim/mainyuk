@@ -2,20 +2,14 @@
 import "../globals.css";
 import "../data-tables-css.css";
 import "../satoshi.css";
-import { useState, useEffect } from "react";
-import Loader from "@/components/common/Loader";
 
 import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
-import HeaderDashboard from "@/components/Header/HeaderDashboard";
 
 export default function EventLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
- 
-
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       <div className="flex h-screen overflow-hidden">

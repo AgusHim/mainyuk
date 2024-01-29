@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import EventWebsocket from "../Websocket/EventWebsocket";
 import { getSessionUser } from "@/redux/slices/authSlice";
+import { useRouter } from "next/navigation";
 
 export default function LiveEventPage({
   params,
@@ -15,13 +16,25 @@ export default function LiveEventPage({
 }) {
   const dispatch = useAppDispatch();
   const event = useAppSelector((state) => state.event.event);
-  const isLoading = useAppSelector((state) => state.event.loading);
+  const isLoading = useAppSelector((state) => state.event.loading) || useAppSelector((state) => state.auth.loading);
   const error = useAppSelector((state) => state.event.error);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!isLoading) {
-      dispatch(getEventDetail(params.slug));
-      dispatch(getSessionUser());
+      dispatch(getSessionUser())
+      .unwrap()
+      .then((value) => {
+        if(value == null || value.role != 'admin'){
+          router.replace('/signin');
+        }
+        dispatch(getEventDetail(params.slug));
+      })
+      .catch((error) => {
+        // Handle errors here if needed
+        console.error('Error fetching data:', error);
+      });
     }
   }, []);
 

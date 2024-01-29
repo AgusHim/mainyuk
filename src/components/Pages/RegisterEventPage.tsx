@@ -19,29 +19,59 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
     (state) => state.eventRegister.loading
   );
 
-  useEffect(() => {
-    if (eventDetail == null && !isLoading) {
-      dispatch(getEventDetail(params.slug));
-    }
-  });
-
   const [formData, setFormData] = useState({
     name: "",
     username: "",
-    gender: "Ikhwan",
-    age:0,
+    gender: "male",
+    age: "0",
     address: "",
     phone: "",
   });
 
+  const [errorValidation, setErrorValidation] = useState({
+    name: "",
+    age: "",
+  });
+
+  useEffect(() => {
+    if (eventDetail == null && !isLoading) {
+      dispatch(getEventDetail(params.slug));
+    }
+  }, [formData, errorValidation]);
+
   const handleChange = (event: any) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+    setErrorValidation((prevErrors) => ({
+      ...prevErrors,
+      name: formData["name"] === "" ? "Mohon isi Nama anda" : "",
+      age: parseInt(formData["age"]) <= 0 ? "Mohon isi Umur anda" : "",
+    }));
   };
+
+  function validate(): boolean {
+    setErrorValidation((prevErrors) => ({
+      ...prevErrors,
+      name: formData["name"] === "" ? "Mohon isi Nama anda" : "",
+      age: parseInt(formData["age"]) <= 0 ? "Mohon isi Umur anda" : "",
+    }));
+    console.log("Errors = ",errorValidation);
+    if (errorValidation["name"] !== "" || errorValidation["age"] !== "") {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-
+    const isValid = validate();
+    if (!isValid) {
+      return;
+    }
+    if(formData.name == "" || formData.age =="0"){
+      return;
+    }
     let createPresence: CreatePresence;
     createPresence = {
       event_id: eventDetail?.slug ?? "",
@@ -107,6 +137,11 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                   placeholder="Masukan nama kamu"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
+                {errorValidation["name"] != "" ? (
+                  <p className="text-danger">{errorValidation["name"]}</p>
+                ) : (
+                  <div></div>
+                )}
               </div>
               <div className="mt-4 mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
@@ -171,6 +206,11 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                   placeholder="Masukan umur kamu"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
+                {errorValidation["age"] != "" ? (
+                  <p className="text-danger">{errorValidation["age"]}</p>
+                ) : (
+                  <div></div>
+                )}
               </div>
               <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
