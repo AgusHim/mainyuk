@@ -72,7 +72,7 @@ export const qnaSlice = createSlice({
           state.data = sortedList;
         }
         if (sortBy == "Populer") {
-          const sortedList = [...state.data!].sort((a, b) => a.like - b.like);
+          const sortedList = [...state.data!].sort((a, b) => b.like - a.like);
           state.data = sortedList;
         }
       }
