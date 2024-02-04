@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { postComment } from "@/redux/slices/qnaSlice";
 import { CreateComment } from "@/types/comment";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const CommentField = () => {
   const dispatch = useAppDispatch();
@@ -20,6 +21,10 @@ const CommentField = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    if (formData.comment.length == 0) {
+      toast.info("Masukan pertanyaan anda");
+      return;
+    }
     let comment: CreateComment;
     comment = {
       event_id: event?.slug ?? "",

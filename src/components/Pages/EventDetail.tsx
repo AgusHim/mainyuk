@@ -13,6 +13,7 @@ import { CreatePresence } from "@/types/presence";
 import { getSessionUser } from "@/redux/slices/authSlice";
 import CommentField from "../CommentField";
 import DropdownFilter from "../LiveQna/DropdownFilter";
+import ReadMoreParagraph from "../ReadMoreParagraph/ReadMoreParagraph";
 
 export default function EventDetailPage({
   params,
@@ -88,10 +89,11 @@ export default function EventDetailPage({
           <p className="my-2 flex w-full justify-center text-md md:text-lg font-light text-center text-black dark:text-white">
             {event.speaker}
           </p>
-          <h1 className="text-center text-sm md:text-md font-bold  text-black dark:text-white">
+          <h1 className="mb-3 text-center text-sm md:text-md font-bold  text-black dark:text-white">
             {format(Date.parse(event!.start_at!), "dd MMM yyyy")} -{" "}
             {format(Date.parse(event!.end_at!), "dd MMM yyyy")}
           </h1>
+          <ReadMoreParagraph text={event.desc??''} maxLength={200} />
         </div>
         <div className="w-auto md:w-2/4 md: mx-2 flex flex-col mb-5 md:my-5 md:mr-5 p-5 md:p-10 rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <h1 className="mb-5 text-2xl font-bold text-black dark:text-white">
@@ -99,8 +101,7 @@ export default function EventDetailPage({
           </h1>
           <CommentField />
           <div className="mt-5">
-            <div className="mb-3"><DropdownFilter /></div>
-            
+            <div className="mb-3"><DropdownFilter /></div>     
             <QnaList />
           </div>
         </div>

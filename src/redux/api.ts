@@ -32,10 +32,9 @@ api.interceptors.response.use(
     let message;
 
     if (error.response) {
-      if (error.response.status === 500) message = "Internal server error";
+      if (error.response.status === 500) message = "Terjadi kesalahan";
       
       else message = error.response.data.error;
-
       if (typeof message === "string") {
         toast.error(message, {
           className: "toast",

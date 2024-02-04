@@ -4,7 +4,7 @@ import { Event } from "./event"
 export type Presence ={
     user:User,
     event:Event,
-    create_at:string,
+    created_at:string,
 }
 
 export type CreatePresence ={

@@ -28,7 +28,6 @@ const EventWebsocket = () => {
       };
 
       socket.onmessage = (message) => {
-        console.log("Received message:", message.data);
         const res = JSON.parse(message.data) as WsMessage;
 
         if (res.message.type === "comment.add") {
