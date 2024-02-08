@@ -53,7 +53,7 @@ const CommentField = () => {
         <button
           onClick={handleSubmit}
           className="max-h-12 ml-4 w-40 btn bg-primary text-white p-2 rounded-md border-2 border-black"
-          style={{boxShadow: '0px 5px 0px 0px #000000'}}
+          style={{boxShadow: '5px 5px 0px 0px #000000'}}
         >
           Kirim
         </button>

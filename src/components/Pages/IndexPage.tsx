@@ -61,14 +61,16 @@ export default function IndexPage() {
             onChange={handleChange}
             value={formData["code"]}
             name="code"
-            className="p-2 mr-3"
+            className="p-2 mr-3 border-2 border-black rounded-md bg-transparent"
             type="text"
             placeholder="Masukan Kode"
           />
           {isLoading ? (
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>
           ) : (
-            <button className="btn bg-primary text-white p-2 rounded-md ">
+            <button className="btn w-30 bg-primary text-white p-2 rounded-md border-2 border-black"
+            style={{boxShadow: '3px 3px 0px 0px #000000'}}
+            >
               Masuk
             </button>
           )}

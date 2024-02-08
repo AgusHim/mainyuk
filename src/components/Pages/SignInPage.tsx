@@ -153,6 +153,7 @@ const SignInPage: React.FC = () => {
                     <input
                       type="submit"
                       value="Masuk Akun"
+                      style={{boxShadow: '5px 5px 0px 0px #000000'}}
                       className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                     />
                   )}

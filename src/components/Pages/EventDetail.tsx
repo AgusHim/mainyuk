@@ -78,6 +78,7 @@ export default function EventDetailPage({
         <div className="w-full md:w-1/4 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
           <Image
             className="w-full mb-5 rounded-xl shadow-bottom border-4 border-black"
+            style={{boxShadow: '10px 10px 0px 0px #000000'}}
             width={400}
             height={400}
             alt={`Image ${event.title}`}

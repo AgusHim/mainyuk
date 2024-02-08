@@ -115,14 +115,15 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
           <form onSubmit={handleSubmit}>
             <div className="p-6.5">
               <Image
-                className="mx-auto mb-5 rounded-xl shadow-bottom border-4 border-black"
+                className="mx-auto mb-5 rounded-xl border-4 border-black"
+                style={{boxShadow: '10px 10px 0px 0px #000000'}}
                 width={300}
                 height={300}
                 alt="Gambar event"
                 src={eventDetail?.image_url ?? ""}
                 unoptimized={true}
               ></Image>
-              <h1 className="flex w-full justify-center text-2xl font-bold text-black dark:text-white">
+              <h1 className="flex w-full mt-3 justify-center text-2xl font-bold text-black dark:text-white">
                 {eventDetail?.title}
               </h1>
               <p className="flex w-full justify-center text-lg font-light text-black dark:text-white">
@@ -253,7 +254,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                 <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
               ) : (
                 <button className="flex w-full justify-center rounded-3xl bg-primary p-3 mt-10 font-medium text-gray border-2 border-black"
-                style={{boxShadow: '0px 5px 0px 0px #000000'}}
+                style={{boxShadow: '5px 5px 0px 0px #000000'}}
                 >
                   Simpan
                 </button>
