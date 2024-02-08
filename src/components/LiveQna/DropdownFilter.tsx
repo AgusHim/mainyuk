@@ -3,7 +3,11 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { sortComment } from "@/redux/slices/qnaSlice";
 import { useState } from "react";
 
-const DropdownFilter = () => {
+const DropdownFilter = ({
+  isLivePage,
+}: {
+  isLivePage:boolean;
+}) => {
   const dispatch = useAppDispatch();
   const sortBy = useAppSelector((state)=> state.qna.sortBy);
 
@@ -24,7 +28,8 @@ const DropdownFilter = () => {
         <button
           onClick={handleClick}
           type="button"
-          className="inline-flex justify-center items-center px-4 py-2 border rounded-md text-sm font-medium text-white dark:text-white"
+          className={`inline-flex justify-center items-center px-4 py-2 border-2 border-black rounded-md text-sm font-medium ${isLivePage?'text-white':'text-black dark:text-white'}`}
+          style={{boxShadow: '0px 5px 0px 0px #000000'}}
         >
           {sortBy}
           <svg

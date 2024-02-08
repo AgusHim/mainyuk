@@ -54,12 +54,12 @@ export default function LiveEventPage({
   return (
     <>
     <EventWebsocket></EventWebsocket>
-      <div className="min-h-screen max-h-screen flex flex-col md:flex-row bg-black">
+      <div className="min-h-screen max-h-screen flex flex-col md:flex-row bg-boxdark">
         <div className="w-full md:w-2/4 flex flex-col items-center justify-center p-5">
           <QRCode
             value={qrValue}
-            size={250}
-            className="p-5 bg-white rounded-xl mb-10"
+            size={300}
+            className="p-5 bg-white rounded-xl mb-10 shadow-bottom border-6 border-black"
           />
           <h1 className="text-2xl md:text-4xl text-white mx-5 text-center">
             Gabung ke <span className="font-extrabold">{hostUrl}</span>
@@ -68,9 +68,9 @@ export default function LiveEventPage({
             {`#${event?.code}`}
           </p>
         </div>
-        <div className="w-full md:w-3/4 flex flex-col items-center justify-center p-5 bg-black">
+        <div className="w-full md:w-3/4 flex flex-col items-center justify-center p-5 bg-boxdark">
           <div className="ml-auto mr-5 mb-5">
-            <DropdownFilter></DropdownFilter>
+            <DropdownFilter isLivePage={true} />
           </div>
           <div className="w-full min-h-150 max-h-150 h-auto overflow-auto">
             <LiveQna />

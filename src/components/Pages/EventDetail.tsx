@@ -14,6 +14,7 @@ import { getSessionUser } from "@/redux/slices/authSlice";
 import CommentField from "../CommentField";
 import DropdownFilter from "../LiveQna/DropdownFilter";
 import ReadMoreParagraph from "../ReadMoreParagraph/ReadMoreParagraph";
+import FeedbackField from "../FeedbackField/FeedbackField";
 
 export default function EventDetailPage({
   params,
@@ -74,9 +75,9 @@ export default function EventDetailPage({
   return (
     <>
       <div className="min-w-screen min-h-screen flex flex-col md:flex-row items-center md:items-start">
-        <div className="w-auto md:w-1/4 h-1/2 m-2 mb-5 md:m-5 p-10 rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="w-full md:w-1/4 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
           <Image
-            className="w-full mb-5"
+            className="w-full mb-5 rounded-xl shadow-bottom border-4 border-black"
             width={400}
             height={400}
             alt={`Image ${event.title}`}
@@ -95,16 +96,17 @@ export default function EventDetailPage({
           </h1>
           <ReadMoreParagraph text={event.desc??''} maxLength={200} />
         </div>
-        <div className="w-auto md:w-2/4 md: mx-2 flex flex-col mb-5 md:my-5 md:mr-5 p-5 md:p-10 rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="w-auto md:w-2/4 md:mx-4 flex flex-col mb-5 p-5 md:p-10 rounded-xl border-2 bg-white shadow-bottom dark:bg-boxdark border-black dark:border-black">
           <h1 className="mb-5 text-2xl font-bold text-black dark:text-white">
             Tanya Ustadz
           </h1>
           <CommentField />
           <div className="mt-5">
-            <div className="mb-3"><DropdownFilter /></div>     
+            <div className="mb-5"><DropdownFilter isLivePage={false}/></div>     
             <QnaList />
           </div>
         </div>
+        <FeedbackField></FeedbackField>
       </div>
     </>
   );

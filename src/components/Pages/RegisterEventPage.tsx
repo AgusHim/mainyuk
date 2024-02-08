@@ -30,6 +30,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
 
   const [errorValidation, setErrorValidation] = useState({
     name: "",
+    phone:"",
     age: "",
   });
 
@@ -45,6 +46,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
     setErrorValidation((prevErrors) => ({
       ...prevErrors,
       name: formData["name"] === "" ? "Mohon isi Nama anda" : "",
+      phone: formData["phone"].length < 9 ? "Mohon isi Nomor Whatsapp anda" : "",
       age: parseInt(formData["age"]) <= 0 ? "Mohon isi Umur anda" : "",
     }));
   };
@@ -53,6 +55,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
     setErrorValidation((prevErrors) => ({
       ...prevErrors,
       name: formData["name"] === "" ? "Mohon isi Nama anda" : "",
+      phone: formData["phone"].length < 9 ? "Mohon isi Nomor Whatsapp anda" : "",
       age: parseInt(formData["age"]) <= 0 ? "Mohon isi Umur anda" : "",
     }));
     console.log("Errors = ",errorValidation);
@@ -102,9 +105,9 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
 
   return (
     <>
-      <div className="my-10 min-w-screen flex flex-col items-center justify-center">
-        <div className="sm:w-2/3 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
+      <div className="my-10 md:my-5 min-w-screen flex flex-col items-center justify-center">
+        <div className="sm:w-2/3 rounded-xl border-2 border-black bg-white shadow-default dark:bg-boxdark shadow-bottom">
+          <div className="border-b-2 border-black py-4 px-6.5">
             <h3 className="font-medium text-black dark:text-white">
               Form Daftar Hadir
             </h3>
@@ -112,7 +115,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
           <form onSubmit={handleSubmit}>
             <div className="p-6.5">
               <Image
-                className="mx-auto mb-5"
+                className="mx-auto mb-5 rounded-xl shadow-bottom border-4 border-black"
                 width={300}
                 height={300}
                 alt="Gambar event"
@@ -135,13 +138,34 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                   name="name"
                   type="text"
                   placeholder="Masukan nama kamu"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                 />
                 {errorValidation["name"] != "" ? (
                   <p className="text-danger">{errorValidation["name"]}</p>
                 ) : (
                   <div></div>
                 )}
+              </div>
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
+                  Nomor Whatsapp <span className="text-meta-1">*</span>
+                </label>
+                <input
+                  value={formData["phone"]}
+                  onChange={handleChange}
+                  name="phone"
+                  type="text"
+                  placeholder="Masukan nomor Whatsapp kamu"
+                  className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
+                />
+                {errorValidation["phone"] != "" ? (
+                  <p className="text-danger">{errorValidation["phone"]}</p>
+                ) : (
+                  <div></div>
+                )}
+                <p className="mt-1">
+                  Untuk memberikan update informasi event selanjutnya
+                </p>
               </div>
               <div className="mt-4 mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
@@ -153,7 +177,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                   name="username"
                   type="text"
                   placeholder="Masukan nama untuk Q&A"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                 />
                 <p className="mt-1">
                   Optional bila kosong akan muncul "Anonim"
@@ -163,12 +187,12 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                 <label className="mb-2.5 block text-black dark:text-white">
                   Gender <span className="text-meta-1">*</span>
                 </label>
-                <div className="relative z-20 bg-transparent dark:bg-form-input">
+                <div className="relative z-20 bg-transparent">
                   <select
                     value={formData["gender"]}
                     onChange={handleChange}
                     name="gender"
-                    className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    className="relative z-20 w-full appearance-none rounded border border-black bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:focus:border-primary"
                   >
                     <option value="male">Ikhwan</option>
                     <option value="female">Akhwat</option>
@@ -204,7 +228,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                   name="age"
                   type="number"
                   placeholder="Masukan umur kamu"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                 />
                 {errorValidation["age"] != "" ? (
                   <p className="text-danger">{errorValidation["age"]}</p>
@@ -222,29 +246,15 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                   name="address"
                   type="text"
                   placeholder="Masukan alamat kamu"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                 />
-              </div>
-              <div className="mb-4.5">
-                <label className="mb-2.5 block text-black dark:text-white">
-                  Nomor Whatsapp
-                </label>
-                <input
-                  value={formData["phone"]}
-                  onChange={handleChange}
-                  name="phone"
-                  type="text"
-                  placeholder="Masukan nomor Whatsapp kamu"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                />
-                <p className="mt-1">
-                  Optional untuk memberikan update info event selanjutnya
-                </p>
               </div>
               {isPresenceLoading ? (
                 <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
               ) : (
-                <button className="flex w-full justify-center rounded-3xl bg-primary p-3 mt-10 font-medium text-gray">
+                <button className="flex w-full justify-center rounded-3xl bg-primary p-3 mt-10 font-medium text-gray border-2 border-black"
+                style={{boxShadow: '0px 5px 0px 0px #000000'}}
+                >
                   Simpan
                 </button>
               )}

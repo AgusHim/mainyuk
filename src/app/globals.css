@@ -6,7 +6,7 @@
 
 @layer base {
   body {
-    @apply font-satoshi font-normal text-base text-body bg-whiten relative z-1;
+    @apply font-satoshi font-normal text-base text-body bg-white relative z-1;
   }
 }
 
@@ -177,4 +177,8 @@ span.flatpickr-weekday,
 
 .dropdown:hover .dropdown-menu {
   display: block;
+}
+
+.shadow-bottom {
+  box-shadow: 0px 10px 0px 0px #000000
 }

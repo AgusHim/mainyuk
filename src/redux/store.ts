@@ -7,6 +7,7 @@ import authSlice from './slices/authSlice'
 import eventRegisterSlice from './slices/eventRegisterSlice'
 import qnaSlice from './slices/qnaSlice'
 import likeSlice from './slices/likeSlice'
+import feedbackSlice from './slices/feedbackSlice'
 
 export const makeStore = () => {
   return configureStore({
@@ -19,6 +20,7 @@ export const makeStore = () => {
       presence:presenceSlice,
       qna:qnaSlice,
       like:likeSlice,
+      feedback:feedbackSlice,
     },
   })
 }

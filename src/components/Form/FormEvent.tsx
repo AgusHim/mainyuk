@@ -14,8 +14,7 @@ const FormEvent = () => {
     title: "",
     desc: "",
     speaker: "",
-    image_url:
-      "",
+    image_url: "",
     divisi_id: "1",
     start_at: "",
     end_at: "",
@@ -47,7 +46,7 @@ const FormEvent = () => {
     <>
       <div className="flex flex-col gap-9">
         {/* <!-- Contact Form --> */}
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="rounded-sm border-2 border-black bg-white shadow-bottom dark:bg-boxdark">
           <form onSubmit={handleSubmit}>
             <div className="p-6.5">
               <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
@@ -61,7 +60,7 @@ const FormEvent = () => {
                     name="title"
                     type="text"
                     placeholder="Masukan nama event"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                   />
                 </div>
 
@@ -75,7 +74,7 @@ const FormEvent = () => {
                     name="speaker"
                     type="text"
                     placeholder="Masukan pengisi acara"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                   />
                 </div>
               </div>
@@ -90,7 +89,7 @@ const FormEvent = () => {
                   name="desc"
                   rows={6}
                   placeholder="Masukan deskripsi event"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                 ></textarea>
               </div>
 
@@ -104,7 +103,7 @@ const FormEvent = () => {
                   name="image_url"
                   type="text"
                   placeholder="Masukan url gambar dari cloudinary"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                 />
               </div>
 
@@ -112,13 +111,13 @@ const FormEvent = () => {
                 <label className="mb-2.5 block text-black dark:text-white">
                   Divisi
                 </label>
-                <div className="relative z-20 bg-transparent dark:bg-form-input">
+                <div className="relative z-20 bg-transparent">
                   <select
                     value={formData["divisi_id"]}
                     onChange={handleChange}
                     name="divisi_id"
                     required
-                    className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    className="relative z-20 w-full appearance-none rounded border border-black bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:focus:border-primary"
                   >
                     <option value="">Pilih divisi</option>
                     <option value="1">Sports</option>
@@ -158,7 +157,7 @@ const FormEvent = () => {
                     name="start_at"
                     type="date"
                     placeholder="Masukan tanggal mulai event"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                   />
                 </div>
 
@@ -172,12 +171,14 @@ const FormEvent = () => {
                     name="end_at"
                     type="date"
                     placeholder="Masukan tanggal berakhir event"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                   />
                 </div>
               </div>
-
-              <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+              <button
+                className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray border-2 border-black"
+                style={{ boxShadow: "0px 5px 0px 0px #000000" }}
+              >
                 Simpan
               </button>
             </div>

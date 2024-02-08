@@ -23,27 +23,27 @@ const SignInPage: React.FC = () => {
 
   const router = useRouter();
 
-  const handleLoginEvent = async(event: any) => {
+  const handleLoginEvent = async (event: any) => {
     event.preventDefault();
 
     dispatch(loginUser(formData))
       .unwrap()
       .then((res) => {
-        if(res != null){
-          router.replace('/dashboard'); 
+        if (res != null) {
+          router.replace("/dashboard");
         }
       })
       .catch((error) => {
         toast.error("Gagal login", {
           className: "toast",
         });
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       });
   };
-  
+
   return (
     <div className="flex h-screen items-center justify-center mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <div className="rounded-sm border-2 border-black bg-white shadow-default dark:bg-boxdark shadow-bottom">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
             <div className="py-17.5 px-26 text-center">
@@ -69,7 +69,7 @@ const SignInPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
+          <div className="w-full border-black xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
                 Masuk
@@ -147,11 +147,15 @@ const SignInPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="mb-5">
-                  <input
-                    type="submit"
-                    value={loading?'Loading' :'Masuk Akun'}
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                  />
+                  {loading ? (
+                    <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
+                  ) : (
+                    <input
+                      type="submit"
+                      value="Masuk Akun"
+                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    />
+                  )}
                 </div>
               </form>
             </div>

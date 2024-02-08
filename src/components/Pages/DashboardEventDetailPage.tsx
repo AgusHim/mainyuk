@@ -66,7 +66,8 @@ export default function DashboardEventDetailPage({
           </div>
           <div className="flex flex-col xsm:flex-row">
             <a
-              className="w-40 sm:w-60 inline-flex items-center justify-center gap-2.5 rounded-md bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+              className="w-40 sm:w-60 inline-flex items-center justify-center gap-2.5 rounded-md bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10 border-2 border-black"
+              style={{boxShadow: '0px 5px 0px 0px #000000'}}
               href={`/live/${event!.slug}`}
             >
               <span>

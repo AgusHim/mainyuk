@@ -56,7 +56,9 @@ const DropdownUser = () => {
         className="flex items-center gap-4"
         href="#"
       >
-        <div className="flex items-center text-center justify-center w-12 h-12 md:h-14 md:w-14 rounded-full bg-primary">
+        <div className={`flex items-center text-center justify-center w-12 h-12 md:h-14 md:w-14 rounded-full ${user?.gender == "male"?"bg-primary":"bg-meta-7"}`}
+        style={{boxShadow: '0px 5px 0px 0px #000000'}}
+        >
           <h1 className="text-white text-lg md:text-xl">{user?.name?.substring(0,2)}</h1>
         </div>
 
@@ -82,7 +84,7 @@ const DropdownUser = () => {
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
-        className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
+        className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border-2 border-black bg-white dark:bg-boxdark ${
           dropdownOpen === true ? "block" : "hidden"
         }`}
       >

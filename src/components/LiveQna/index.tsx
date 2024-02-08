@@ -39,15 +39,25 @@ const LiveQna = () => {
         comments?.map((comment, key) => (
           <div
             onClick={() => handleClick(comment)}
-            className={`flex items-center gap-5 py-3 px-3 md:py-3 md:px-7.5 border mb-2 rounded-md ${
-              comment === selected ? "border-primary border-4" : ""
+            className={`flex items-center gap-5 py-3 px-3 md:py-3 md:px-7.5 border mb-4 rounded-md ${
+              comment === selected
+                ? "border-primary border-4"
+                : "border-2 border-black"
             }`}
+            style={{ boxShadow: "0px 5px 0px 0px #000000" }}
             key={key}
           >
             <div className="flex flex-1 items-center justify-between">
               <div>
                 <div className="flex flex-row items-center">
-                  <div className={`sm:flex items-center text-center justify-center w-10 h-10 md:h-14 md:w-14 rounded-full hidden ${comment.user?.gender == "female"?"bg-meta-7":"bg-primary"}`}>
+                  <div
+                    className={`sm:flex items-center text-center justify-center w-10 h-10 md:h-14 md:w-14 rounded-full hidden ${
+                      comment.user?.gender == "female"
+                        ? "bg-meta-7"
+                        : "bg-primary"
+                    }`}
+                    style={{ boxShadow: "0px 5px 0px 0px #000000" }}
+                  >
                     <h1 className="text-white text-lg md:text-xl">
                       {comment.user.username?.substring(0, 2)}
                     </h1>

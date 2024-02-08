@@ -15,7 +15,8 @@ const TablesPage = () => {
       <Breadcrumb pageName="Events" />
       <Link
         href="/dashboard/events/create"
-        className="mb-3 inline-flex items-center justify-center gap-2.5 rounded-lg bg-meta-3 py-2 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-3 "
+        className="mb-3 inline-flex items-center justify-center gap-2.5 rounded-lg bg-meta-3 py-2 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-3 border-2 border-black"
+        style={{boxShadow: '0px 5px 0px 0px #000000'}}
       >
         <span>
           <svg

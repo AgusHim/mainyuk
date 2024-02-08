@@ -1,19 +1,19 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import TableDivisi from "@/components/Tables/TableDivisi";
+import TableFeedback from "@/components/Tables/TableFeedback";
 
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Divisi | YukNgaji Solo",
-  description: "Halaman daftar divisi YukNgaji Solo",
+  title: "Feedback | YukNgaji Solo",
+  description: "Halaman feedback YukNgaji Solo",
   // other metadata
 };
 
 const TablesPage = () => {
   return (
     <>
-      <Breadcrumb pageName="Divisi" />
+      <Breadcrumb pageName="Feedback" />
       <div className="flex flex-col gap-10">
-        <TableDivisi />
+        <TableFeedback />
       </div>
     </>
   );
