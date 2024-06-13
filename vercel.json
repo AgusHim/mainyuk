@@ -10,8 +10,5 @@
       "env": {
         "FORCE_INSTALL": "true"
       }
-    },
-    "scripts": {
-      "build": "npm install --force && npm run build"
     }
   }
