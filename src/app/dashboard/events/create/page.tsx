@@ -2,10 +2,10 @@ import BreadcrumbEvent from "@/components/Breadcrumbs/BreadcrumbEvent";
 import FormEvent from "@/components/Form/FormEvent";
 
 import { Metadata } from "next";
-import Link from "next/link";
+
 export const metadata: Metadata = {
-  title: "Daftar Event",
-  description: "Halaman daftar event YukNgaji Solo",
+  title: "Buat Event",
+  description: "Halaman buat event YukNgaji Solo",
   // other metadata
 };
 

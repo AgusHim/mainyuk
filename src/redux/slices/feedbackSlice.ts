@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../api";
+import { api } from "../api";
 import { CreateFeedback, Feedback } from "@/types/feedback";
 
 interface FeedbackState {

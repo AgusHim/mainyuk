@@ -18,7 +18,7 @@ export default function RootLayout({
         <link rel="icon" href="/images/favicon.ico" sizes="any" />
         <body suppressHydrationWarning={true}>
           <div className="dark:bg-boxdark-2 dark:text-bodydark">
-            <ToastContainer position="top-center" theme="dark" />
+            <ToastContainer position="bottom-center" theme="dark" />
             <main>{children}</main>
           </div>
         </body>

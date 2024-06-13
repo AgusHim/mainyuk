@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import divisiSlice from './slices/divisiSlice'
+
 import counterSlice from './slices/counterSlice'
 import eventSlice from './slices/eventSlice'
 import presenceSlice from './slices/presenceSlice'
@@ -8,6 +8,10 @@ import eventRegisterSlice from './slices/eventRegisterSlice'
 import qnaSlice from './slices/qnaSlice'
 import likeSlice from './slices/likeSlice'
 import feedbackSlice from './slices/feedbackSlice'
+import agendaSlice from './slices/agendaSlice'
+import rangerSlice from './slices/rangerSlice'
+import divisiSlice from './slices/divisiSlice'
+import rangerPresenceSlice from './slices/rangerPresenceSlice'
 
 export const makeStore = () => {
   return configureStore({
@@ -21,6 +25,9 @@ export const makeStore = () => {
       qna:qnaSlice,
       like:likeSlice,
       feedback:feedbackSlice,
+      agenda:agendaSlice,
+      ranger:rangerSlice,
+      rangerPresence:rangerPresenceSlice,
     },
   })
 }

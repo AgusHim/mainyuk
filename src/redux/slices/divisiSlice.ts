@@ -1,23 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../api"
+import { admin_api } from "../api";
 import { Divisi } from "@/types/divisi";
 
 interface DivisiState {
-  data: Divisi[]|null;
+  data: Divisi[] | null;
   loading: boolean;
   error: string | null;
 }
-const initialState: DivisiState= {
-  data:null,
-  loading:false,
-  error:null
+const initialState: DivisiState = {
+  data: null,
+  loading: false,
+  error: null,
 };
 
 export const getDivisi = createAsyncThunk("divisi", async () => {
-  const res = await axiosInstance.get('/divisi');
+  const res = await admin_api.get("/divisi");
   return res.data;
 });
-
 
 export const divisiSlice = createSlice({
   name: "divisi",
@@ -37,7 +36,6 @@ export const divisiSlice = createSlice({
       state.loading = false;
       state.error = action.error.message || "Failed to fetch data";
     });
-    
   },
 });
 

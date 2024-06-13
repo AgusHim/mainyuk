@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../api";
+import { api } from "../api";
 import { Event } from "@/types/event";
 
 interface EventState {
@@ -16,14 +16,14 @@ const initialState: EventState = {
 };
 
 export const getEvents = createAsyncThunk("events", async () => {
-  const res = await axiosInstance.get("/events");
+  const res = await api.get("/events");
   return res.data;
 });
 
 export const getEventDetail = createAsyncThunk(
   "eventDetail",
   async (slug: string, thunk) => {
-    const res = await axiosInstance.get(`/events/${slug}`);
+    const res = await api.get(`/events/${slug}`);
     return res.data as Event;
   }
 );
@@ -31,13 +31,13 @@ export const getEventDetail = createAsyncThunk(
 export const getEventByCode = createAsyncThunk(
   "event.byCode",
   async (code: string, thunk) => {
-    const res = await axiosInstance.get(`/events/code/${code}`);
+    const res = await api.get(`/events/code/${code}`);
     return res.data as Event;
   }
 );
 
 export const postEvent = createAsyncThunk("event.post", async (data: Event) => {
-  const res = await axiosInstance.post(`/events`, data);
+  const res = await api.post(`/events`, data);
   return res.data as Event;
 });
 

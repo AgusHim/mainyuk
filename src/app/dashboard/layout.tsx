@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import Loader from "@/components/common/Loader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getSessionUser } from "@/redux/slices/authSlice";
-import { User } from "@/types/user";
 
 export default function DashboardLayout({
   children,
@@ -28,7 +27,7 @@ export default function DashboardLayout({
     dispatch(getSessionUser())
       .unwrap()
       .then((value) => {
-        if(value == null || value.role != 'admin'){
+        if(value == null || value.role == 'jamaah' || value.role == 'user'){
           router.replace('/signin');
         }
       })
@@ -57,7 +56,6 @@ export default function DashboardLayout({
             setSidebarOpen={setSidebarOpen}
           />
           {/* <!-- ===== Header End ===== --> */}
-
           {/* <!-- ===== Main Content Start ===== --> */}
           <main>
             <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">

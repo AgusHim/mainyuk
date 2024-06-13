@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../api";
-import { Event } from "@/types/event";
+import { api } from "../api";
 import { CreatePresence } from "@/types/presence";
 
 interface EventRegisterState {
@@ -17,7 +16,7 @@ const initialState: EventRegisterState = {
 };
 
 export const postPrecence = createAsyncThunk("presence.post", async (precence:CreatePresence) => {
-  const res = await axiosInstance.post("/presence",precence);
+  const res = await api.post("/presence",precence);
   return res.data;
 });
 

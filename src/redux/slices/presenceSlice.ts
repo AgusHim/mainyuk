@@ -1,27 +1,30 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../api"
+import { api } from "../api";
 import { Presence } from "@/types/presence";
 import { config } from "process";
 
 interface PresenceState {
-  data: Presence[]|null;
+  data: Presence[] | null;
   loading: boolean;
   error: string | null;
 }
-const initialState: PresenceState= {
-  data:null,
-  loading:false,
-  error:null
+const initialState: PresenceState = {
+  data: null,
+  loading: false,
+  error: null,
 };
 
-export const getPresence = createAsyncThunk("Presence", async (event_id:string, thunk) => {
-  const res = await axiosInstance.get('/presence',{
-    params:{
-        "event_id":event_id
-    }
-  });
-  return res.data;
-});
+export const getPresence = createAsyncThunk(
+  "Presence",
+  async (event_id: string, thunk) => {
+    const res = await api.get("/presence", {
+      params: {
+        event_id: event_id,
+      },
+    });
+    return res.data;
+  }
+);
 
 export const presenceSlice = createSlice({
   name: "Presence",
@@ -41,7 +44,6 @@ export const presenceSlice = createSlice({
       state.loading = false;
       state.error = action.error.message || "Failed to fetch data";
     });
-    
   },
 });
 

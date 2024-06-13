@@ -1,6 +1,6 @@
 import { User } from "@/types/user";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../api";
+import { api } from "../api";
 import { decryptData, encryptData } from "@/utils/crypto";
 
 interface AuthState {
@@ -19,8 +19,8 @@ export const loginUser = createAsyncThunk(
   async (userCredential: any) => {
     const response = await api.post("/login", userCredential);
     var result = encryptData(response.data.user);
-    localStorage.setItem("user",result);
-    return response.data.user;
+    localStorage.setItem("user", result);
+    return response.data.user as User;
   }
 );
 
@@ -37,7 +37,6 @@ export const getSessionUser = createAsyncThunk(
   }
 );
 
-
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -45,7 +44,7 @@ export const authSlice = createSlice({
     setAuthUser: (state, action) => {
       const user = action.payload as User;
       var encrypted = encryptData(user);
-      localStorage.setItem("user",encrypted);
+      localStorage.setItem("user", encrypted);
       state.user = user;
     },
     logOutUser: (state, _) => {
@@ -74,5 +73,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logOutUser,setAuthUser } = authSlice.actions;
+export const { logOutUser, setAuthUser } = authSlice.actions;
 export default authSlice.reducer;

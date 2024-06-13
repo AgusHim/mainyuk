@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../api";
+import { api } from "../api";
 import { Like } from "@/types/like";
 
 interface LikeState {
@@ -14,19 +14,19 @@ const initialState: LikeState = {
 };
 
 export const getLikes = createAsyncThunk("like.index", async (query: any) => {
-  const res = await axiosInstance.get("/comments/like", { params: query });
+  const res = await api.get("/comments/like", { params: query });
   return res.data;
 });
 
 export const postLike = createAsyncThunk("like.post", async (like: Like) => {
-  const res = await axiosInstance.post("/comments/like", like);
+  const res = await api.post("/comments/like", like);
   return res.data as Like;
 });
 
 export const deleteLike = createAsyncThunk(
   "like.delete",
   async (id: string) => {
-    const res = await axiosInstance.delete(`/comments/like/${id}`);
+    const res = await api.delete(`/comments/like/${id}`);
     return res.data;
   }
 );
@@ -62,8 +62,10 @@ export const likeSlice = createSlice({
       state.error = action.error.message || "Failed to fetch data";
     });
     builder.addCase(postLike.fulfilled, (state, action) => {
-      const index = state.data?.findIndex((e)=>e.comment_id == action.payload.comment_id);
-      if(index !== undefined){
+      const index = state.data?.findIndex(
+        (e) => e.comment_id == action.payload.comment_id
+      );
+      if (index !== undefined) {
         state.data![index].id = action.payload.id;
       }
     });

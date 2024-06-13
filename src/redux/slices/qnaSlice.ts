@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../api";
+import { api } from "../api";
 import { Comment, CreateComment } from "@/types/comment";
 
 interface QnaState {
@@ -18,7 +18,7 @@ const initialState: QnaState = {
 export const getComments = createAsyncThunk(
   "comments.index",
   async (event_id: string) => {
-    const res = await axiosInstance.get("/comments", {
+    const res = await api.get("/comments", {
       params: {
         event_id: event_id,
       },
@@ -30,7 +30,7 @@ export const getComments = createAsyncThunk(
 export const postComment = createAsyncThunk(
   "comments.post",
   async (comment: CreateComment) => {
-    const res = await axiosInstance.post("/comments", comment);
+    const res = await api.post("/comments", comment);
     return res.data;
   }
 );

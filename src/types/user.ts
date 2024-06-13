@@ -9,6 +9,7 @@ export type User = {
   age?:number|string;
   address?:string;
   role?:string;
+  activity?:string|null;
   event?:Event;
   createdAt?:string;
 };

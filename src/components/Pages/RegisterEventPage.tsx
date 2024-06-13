@@ -26,11 +26,12 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
     age: "0",
     address: "",
     phone: "",
+    activity: "Pelajar",
   });
 
   const [errorValidation, setErrorValidation] = useState({
     name: "",
-    phone:"",
+    phone: "",
     age: "",
   });
 
@@ -46,7 +47,8 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
     setErrorValidation((prevErrors) => ({
       ...prevErrors,
       name: formData["name"] === "" ? "Mohon isi Nama anda" : "",
-      phone: formData["phone"].length < 9 ? "Mohon isi Nomor Whatsapp anda" : "",
+      phone:
+        formData["phone"].length < 9 ? "Mohon isi Nomor Whatsapp anda" : "",
       age: parseInt(formData["age"]) <= 0 ? "Mohon isi Umur anda" : "",
     }));
   };
@@ -55,10 +57,11 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
     setErrorValidation((prevErrors) => ({
       ...prevErrors,
       name: formData["name"] === "" ? "Mohon isi Nama anda" : "",
-      phone: formData["phone"].length < 9 ? "Mohon isi Nomor Whatsapp anda" : "",
+      phone:
+        formData["phone"].length < 9 ? "Mohon isi Nomor Whatsapp anda" : "",
       age: parseInt(formData["age"]) <= 0 ? "Mohon isi Umur anda" : "",
     }));
-    console.log("Errors = ",errorValidation);
+    console.log("Errors = ", errorValidation);
     if (errorValidation["name"] !== "" || errorValidation["age"] !== "") {
       return false;
     } else {
@@ -72,7 +75,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
     if (!isValid) {
       return;
     }
-    if(formData.name == "" || formData.age =="0"){
+    if (formData.name == "" || formData.age == "0") {
       return;
     }
     let createPresence: CreatePresence;
@@ -116,7 +119,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
             <div className="p-6.5">
               <Image
                 className="mx-auto mb-5 rounded-xl border-4 border-black"
-                style={{boxShadow: '10px 10px 0px 0px #000000'}}
+                style={{ boxShadow: "10px 10px 0px 0px #000000" }}
                 width={300}
                 height={300}
                 alt="Gambar event"
@@ -239,22 +242,60 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
               </div>
               <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
-                  Alamat
+                  Domisili
                 </label>
                 <input
                   value={formData["address"]}
                   onChange={handleChange}
                   name="address"
                   type="text"
-                  placeholder="Masukan alamat kamu"
+                  placeholder="Masukan domisili kamu"
                   className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                 />
+              </div>
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
+                  Aktifitas <span className="text-meta-1">*</span>
+                </label>
+                <div className="relative z-20 bg-transparent">
+                  <select
+                    value={formData["activity"]}
+                    onChange={handleChange}
+                    name="activity"
+                    className="relative z-20 w-full appearance-none rounded border border-black bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:focus:border-primary"
+                  >
+                    <option value="Pelajar">Pelajar</option>
+                    <option value="Mahasiswa">Mahasiswa</option>
+                    <option value="Bekerja">Bekerja</option>
+                    <option value="Wirausaha">Wirausaha</option>
+                  </select>
+                  <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
+                    <svg
+                      className="fill-current"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g opacity="0.8">
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                          fill=""
+                        ></path>
+                      </g>
+                    </svg>
+                  </span>
+                </div>
               </div>
               {isPresenceLoading ? (
                 <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
               ) : (
-                <button className="flex w-full justify-center rounded-3xl bg-primary p-3 mt-10 font-medium text-gray border-2 border-black"
-                style={{boxShadow: '5px 5px 0px 0px #000000'}}
+                <button
+                  className="flex w-full justify-center rounded-3xl bg-primary p-3 mt-10 font-medium text-gray border-2 border-black"
+                  style={{ boxShadow: "5px 5px 0px 0px #000000" }}
                 >
                   Simpan
                 </button>
