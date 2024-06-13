@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm install --force && next build",
     "start": "next start",
     "lint": "next lint"
+  },
+  "resolutions": {
+    "react-qr-reader/react": "17.0.2"
   },
   "dependencies": {
     "@react-jvectormap/core": "^1.0.4",
@@ -22,9 +25,9 @@
     "jsvectormap": "^1.5.3",
     "next": "14.0.4",
     "qrcode.react": "^3.1.0",
-    "react": "^18",
+    "react": "^18.3.1",
     "react-apexcharts": "^1.4.1",
-    "react-dom": "^18",
+    "react-dom": "^18.3.1",
     "react-jvectormap": "^0.0.16",
     "react-qr-reader": "^3.0.0-beta-1",
     "react-redux": "^9.0.4",
