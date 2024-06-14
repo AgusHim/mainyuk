@@ -155,7 +155,7 @@ const FormEvent = () => {
                     value={formData["start_at"]}
                     onChange={handleChange}
                     name="start_at"
-                    type="date"
+                    type="datetime-local"
                     placeholder="Masukan tanggal mulai event"
                     className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                   />
@@ -169,7 +169,7 @@ const FormEvent = () => {
                     value={formData["end_at"]}
                     onChange={handleChange}
                     name="end_at"
-                    type="date"
+                    type="datetime-local"
                     placeholder="Masukan tanggal berakhir event"
                     className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
                   />
