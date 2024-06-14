@@ -122,7 +122,7 @@ const QRScanner = ({
         }}
         containerStyle={{ width: "100%", height: "500px" }}
         videoStyle={{ width: "100%", height: "100%" }}
-        constraints={{ facingMode: "user" }}
+        constraints={{ facingMode: "environment" }}
       />
 
       <dialog
