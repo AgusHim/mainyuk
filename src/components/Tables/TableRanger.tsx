@@ -14,10 +14,13 @@ const TableRanger = () => {
                 Nama
               </th>
               <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
-                Divisi
+                Tim
               </th>
               <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
-                Regional
+                Alamat
+              </th>
+              <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
+                Aktifitas
               </th>
               <th className="py-3 px-2 font-medium text-black dark:text-white text-center">
                 Total Hadir
@@ -39,15 +42,21 @@ const TableRanger = () => {
                   </h5>
                 </td>
                 <td className="border-b border-black py-3 px-2 dark:border-strokedark">
-                  <div className="flex justify-center items-center">
+                  <div className="flex flex-col justify-center items-center">
                     <p className="text-black dark:text-white">
                       {ranger.divisi?.name}
                     </p>
+                    <p className="text-black dark:text-white">{ranger.divisi?.regional}</p>
                   </div>
                 </td>
                 <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                   <div className="flex justify-center items-center">
-                    <p className="text-black dark:text-white">{ranger.divisi?.regional}</p>
+                    <p className="text-black dark:text-white">{ranger.user?.address}</p>
+                  </div>
+                </td>
+                <td className="border-b border-black py-3 px-2 dark:border-strokedark">
+                  <div className="flex justify-center items-center">
+                    <p className="text-black dark:text-white">{ranger.user?.activity}</p>
                   </div>
                 </td>
                 <td className="border-b border-black py-3 px-2 dark:border-strokedark">
