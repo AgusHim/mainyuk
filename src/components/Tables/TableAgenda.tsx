@@ -73,7 +73,7 @@ const TableAgenda = () => {
                   </h5>
                 </td>
                 <td className="min-w-[120px] border-b border-black py-3 px-2">
-                  <p className="text-primary font-extrabold">{data.type.toUpperCase()}</p>
+                  <p className={`badge badge-outline text-primary font-bold ${data.type == "meeting"?"badge-primary":data.type =="event"?"badge-error":"badge-secondary"}`}>{data.type.toUpperCase()}</p>
                 </td>
                 <td className="border-b border-black py-3 px-2">
                   <p className="text-black dark:text-white">{data.location}</p>

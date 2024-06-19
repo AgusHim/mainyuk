@@ -62,8 +62,7 @@ api.interceptors.response.use(
     let message;
 
     if (error.response) {
-      if (error.response.status === 500) message = "Terjadi kesalahan";
-      else message = error.response.data.error;
+      message = error.response.data.error;
       if (typeof message === "string") {
         toast.error(message, {
           className: "toast",
@@ -102,8 +101,7 @@ admin_api.interceptors.response.use(
     let message;
 
     if (error.response) {
-      if (error.response.status === 500) message = "Terjadi kesalahan";
-      else message = error.response.data.error;
+      message = error.response.data.error;
       if (typeof message === "string") {
         toast.error(message, {
           className: "toast",
@@ -142,8 +140,7 @@ ranger_api.interceptors.response.use(
     let message;
 
     if (error.response) {
-      if (error.response.status === 500) message = "Terjadi kesalahan";
-      else message = error.response.data.error;
+      message = error.response.data.error;
       if (typeof message === "string") {
         toast.error(message, {
           className: "toast",

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { admin_api, ranger_api } from "../api";
-import { Ranger } from "@/types/ranger";
+import { CreateRanger, Ranger } from "@/types/ranger";
 
 interface RangerState {
   rangers: Ranger[] | null;
@@ -34,14 +34,14 @@ export const getRangerDetail = createAsyncThunk(
 
 export const postRanger = createAsyncThunk(
   "rangers.post",
-  async (data: Ranger) => {
-    const res = await admin_api.post(`/Ranger`, data);
+  async (data:CreateRanger) => {
+    const res = await admin_api.post(`/rangers`, data);
     return res.data as Ranger;
   }
 );
 
 export const RangerSlice = createSlice({
-  name: "Ranger",
+  name: "ranger",
   initialState,
   reducers: {
     resetRanger: (state, _) => {

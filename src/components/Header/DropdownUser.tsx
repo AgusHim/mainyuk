@@ -41,7 +41,7 @@ const DropdownUser = () => {
 
   const handleLogout = () => {
     dispatch(logOutUser(null))
-    router.replace('/'); 
+    router.replace('/signin'); 
   };
 
   if(user == null){

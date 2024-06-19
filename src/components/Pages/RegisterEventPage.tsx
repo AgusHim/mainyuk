@@ -143,6 +143,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                   type="text"
                   placeholder="Masukan nama kamu"
                   className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
+                  required
                 />
                 {errorValidation["name"] != "" ? (
                   <p className="text-danger">{errorValidation["name"]}</p>
@@ -161,6 +162,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                   type="text"
                   placeholder="Masukan nomor Whatsapp kamu"
                   className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
+                  required
                 />
                 {errorValidation["phone"] != "" ? (
                   <p className="text-danger">{errorValidation["phone"]}</p>
@@ -197,6 +199,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                     onChange={handleChange}
                     name="gender"
                     className="relative z-20 w-full appearance-none rounded border border-black bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:focus:border-primary"
+                    required
                   >
                     <option value="male">Ikhwan</option>
                     <option value="female">Akhwat</option>
@@ -233,6 +236,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                   type="number"
                   placeholder="Masukan umur kamu"
                   className="w-full rounded border-[1.5px] border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:focus:border-primary"
+                  required
                 />
                 {errorValidation["age"] != "" ? (
                   <p className="text-danger">{errorValidation["age"]}</p>
@@ -263,6 +267,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                     onChange={handleChange}
                     name="activity"
                     className="relative z-20 w-full appearance-none rounded border border-black bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:focus:border-primary"
+                    required
                   >
                     <option value="Pelajar">Pelajar</option>
                     <option value="Mahasiswa">Mahasiswa</option>

@@ -1,9 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { getEvents, postEvent } from "@/redux/slices/eventSlice";
 import { useEffect, useState } from "react";
-import { Event as EventYN } from "@/types/event";
 import { useRouter } from "next/navigation";
 import { getDivisi } from "@/redux/slices/divisiSlice";
 import { Agenda } from "@/types/agenda";

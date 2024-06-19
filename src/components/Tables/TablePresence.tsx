@@ -2,6 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getPresence } from "@/redux/slices/presenceSlice";
+import { formatStrToDateTime } from "@/utils/convert";
 import { format } from "date-fns";
 import { useEffect } from "react";
 
@@ -47,6 +48,9 @@ const TablePresence = () => {
                 Umur
               </th>
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+                Aktifitas
+              </th>
+              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                 Tgl Dibuat
               </th>
             </tr>
@@ -83,7 +87,12 @@ const TablePresence = () => {
                 </td>
                 <td className="border-b border-black py-5 px-4">
                   <p className="text-black dark:text-white">
-                  {format(Date.parse(data.created_at!), "dd MMM yyyy HH:mm")}
+                    {data.user.activity}
+                  </p>
+                </td>
+                <td className="border-b border-black py-5 px-4">
+                  <p className="text-black dark:text-white">
+                  {formatStrToDateTime(data.created_at!, "dd MMM yyyy HH:mm")}
                   </p>
                 </td>
               </tr>

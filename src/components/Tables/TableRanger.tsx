@@ -17,6 +17,9 @@ const TableRanger = () => {
                 Tim
               </th>
               <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
+                No WhatsApp
+              </th>
+              <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
                 Alamat
               </th>
               <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
@@ -43,10 +46,15 @@ const TableRanger = () => {
                 </td>
                 <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                   <div className="flex flex-col justify-center items-center">
-                    <p className="text-black dark:text-white">
+                    <p className="text-black dark:text-white text-center">
                       {ranger.divisi?.name}
                     </p>
                     <p className="text-black dark:text-white">{ranger.divisi?.regional}</p>
+                  </div>
+                </td>
+                <td className="border-b border-black py-3 px-2 dark:border-strokedark">
+                  <div className="flex justify-center items-center">
+                    <p className="text-black dark:text-white">{ranger.user?.phone}</p>
                   </div>
                 </td>
                 <td className="border-b border-black py-3 px-2 dark:border-strokedark">
@@ -61,12 +69,12 @@ const TableRanger = () => {
                 </td>
                 <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                   <div className="flex justify-center items-center">
-                    <p className="text-black dark:text-white">{ranger.present}</p>
+                    <p className="badge badge-outline badge-success font-extrabold text-black dark:text-white">{ranger.present}</p>
                   </div>
                 </td>
                 <td className="text-center border-b border-black py-3 px-2 dark:border-strokedark">
                 <div className="flex justify-center items-center">
-                    <p className="text-black dark:text-white">{ranger.absent}</p>
+                    <p className="badge badge-outline badge-error font-extrabold text-black dark:text-white">{ranger.absent}</p>
                   </div>
                 </td>
                 <td className="border-b border-black py-3 px-2 dark:border-strokedark">

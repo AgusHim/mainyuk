@@ -10,7 +10,7 @@ const TableRangerPresence = () => {
     <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 shadow-bottom border-2 border-black dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto mb-3">
-          <thead className="border border-black">
+          <th className="border border-black">
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[220px] py-3 px-2 font-medium text-black dark:text-white xl:pl-11 text-center">
                 Nama
@@ -28,7 +28,7 @@ const TableRangerPresence = () => {
                 Tanggal Absen
               </th> 
             </tr>
-          </thead>
+          </th>
           <tbody>
             {presence?.map((presence, key) => (
               <tr key={key}>

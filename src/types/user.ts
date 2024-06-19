@@ -12,4 +12,6 @@ export type User = {
   activity?:string|null;
   event?:Event;
   createdAt?:string;
+  email?:string |null;
+  password?:string |null;
 };

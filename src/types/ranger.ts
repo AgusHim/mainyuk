@@ -8,4 +8,9 @@ export type Ranger = {
     present:number |null,
     absent:number |null
   };
+
+  export type CreateRanger = {
+    divisi_id:string,
+    user?:User|null,
+  };
   
