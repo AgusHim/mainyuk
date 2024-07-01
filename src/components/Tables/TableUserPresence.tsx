@@ -1,22 +1,33 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { getPresences } from "@/redux/slices/presenceSlice";
+import {  getPresencesByAuth } from "@/redux/slices/presenceSlice";
 import { formatStrToDateTime } from "@/utils/convert";
 import { useEffect } from "react";
 import DashboardLoader from "../common/Loader/DashboardLoader";
+import Image from "next/image";
 
-const TablePresence = () => {
+const TableUserPresence = () => {
   const dispatch = useAppDispatch();
 
-  const event = useAppSelector((state) => state.event.event);
   const presenceData = useAppSelector((state) => state.presences.data);
   const isLoading = useAppSelector((state) => state.presences.loading);
   const error = useAppSelector((state) => state.presences.error);
 
   useEffect(() => {
     if (!isLoading) {
-      dispatch(getPresences(event!.id!));
+     
+        dispatch(getPresencesByAuth())
+        .then((res: any) => {
+          if (res != null) {
+           console.log(res);
+          }
+        })
+        .catch((error) => {
+          // Handle errors here if needed
+          console.error("Error delete data:", error);
+        });
+      
     }
   }, []);
 
@@ -32,64 +43,41 @@ const TablePresence = () => {
         <table className="w-full table-auto mb-3">
           <thead className="border border-black">
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
+            <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white text-center">
+                Poster
+              </th>
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                Nama
+                Nama Event
               </th>
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white text-center">
-                Gender
+                Pengisi
               </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white text-center">
-                No HP
-              </th>
+              
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                Asal
-              </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                Umur
-              </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                Aktifitas
-              </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                Tgl Dibuat
+                Waktu Kehadiran
               </th>
             </tr>
           </thead>
           <tbody>
             {presenceData?.map((data, key) => (
               <tr key={key}>
+                <td className="flex justify-center border-b border-black py-2 ">
+                 <Image className="px-auto" width={100} height={100} src={data.event?.image_url??''} alt="poster event" unoptimized={true}></Image>
+                </td>
                 <td className="border-b border-black py-5 px-4 pl-9 xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {data.user.name}
+                    {data.event?.title}
                   </h5>
                 </td>
                 <td className="border-b border-black py-5 px-4">
                   <div className="flex justify-center items-center">
                     <p className="text-black dark:text-white">
-                      {data.user.gender == "male" ? "Ikhwan" : "Akhwat"}
+                      {data.event?.speaker}
                     </p>
                   </div>
                 </td>
-                <td className="border-b border-black py-5 px-4">
-                  <p className="text-black dark:text-white">
-                    {data.user.phone}
-                  </p>
-                </td>
-                <td className="border-b border-black py-5 px-4">
-                  <p className="text-black dark:text-white">
-                    {data.user.address}
-                  </p>
-                </td>
-                <td className="border-b border-black py-5 px-4">
-                  <p className="text-black dark:text-white">
-                    {data.user.age} th
-                  </p>
-                </td>
-                <td className="border-b border-black py-5 px-4">
-                  <p className="text-black dark:text-white">
-                    {data.user.activity}
-                  </p>
-                </td>
+                
+                
                 <td className="border-b border-black py-5 px-4">
                   <p className="text-black dark:text-white">
                     {formatStrToDateTime(data.created_at!, "dd MMM yyyy HH:mm")}
@@ -104,4 +92,4 @@ const TablePresence = () => {
   );
 };
 
-export default TablePresence;
+export default TableUserPresence;

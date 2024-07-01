@@ -1,10 +1,8 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { useEffect } from "react";
 import CardDataStats from "../CardDataStats";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
-import { getPresencesByAuth } from "@/redux/slices/presenceSlice";
-import TablePresence from "../Tables/TablePresence";
+import TableUserPresence from "../Tables/TableUserPresence";
 
 export default function DashboardPresencesPage() {
   const dispatch = useAppDispatch();
@@ -80,7 +78,7 @@ export default function DashboardPresencesPage() {
         </CardDataStats>
       </div>
       <div className="flex flex-col gap-10">
-        <TablePresence />
+        <TableUserPresence />
       </div>
     </>
   );
