@@ -35,6 +35,7 @@ const Header = () => {
             {/* <!-- Dark Mode Toggler --> */}
             <DarkModeSwitcher />
             {/* <!-- Dark Mode Toggler --> */}
+            
           </ul>
           {/* <!-- User Area --> */}
           <DropdownUser />

@@ -1,11 +1,13 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import CardDataStats from "../CardDataStats";
 import TableRanger from "../Tables/TableRanger";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 import { getRangers } from "@/redux/slices/rangerSlice";
 import FormRanger from "../Form/FormRanger";
+import DashboardLoader from "../common/Loader/DashboardLoader";
+import Dialog from "../common/Dialog/Dialog";
 
 export default function DashboardRangersPage() {
   const dispatch = useAppDispatch();
@@ -13,26 +15,33 @@ export default function DashboardRangersPage() {
   const isLoading = useAppSelector((state) => state.ranger.loading);
   const error = useAppSelector((state) => state.ranger.error);
 
-  const formRef = useRef<HTMLDialogElement>(null);
-  const openForm = () => {
-    if (formRef.current) {
-      formRef.current.showModal();
-    }
-  };
-
-
   useEffect(() => {
     if (rangers == null && !isLoading) {
       dispatch(getRangers());
     }
   }, []);
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
+  const [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
+
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  function toggleDialog() {
+    if (!dialogRef.current) {
+      return;
+    }
+    dialogRef.current.hasAttribute("open")
+      ? dialogRef.current.close()
+      : dialogRef.current.showModal();
   }
+
+  if (rangers == null && isLoading) {
+    return <DashboardLoader />;
+  }
+
   if (error != null) {
     return <h1>{error}</h1>;
   }
+
   if (rangers == null) {
     return <div></div>;
   }
@@ -50,7 +59,10 @@ export default function DashboardRangersPage() {
       </div>
       <div className="mb-3 w-full flex justify-end">
         <button
-          onClick={openForm}
+          onClick={()=>{
+            setDialogContent(<FormRanger ranger={null} toggleDialog={toggleDialog}/>);
+            toggleDialog();
+          }}
           className="w-full sm:w-50 inline-flex items-center justify-center gap-2.5 rounded-lg bg-meta-3 py-2 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-3 border-2 border-black"
           style={{ boxShadow: "5px 5px 0px 0px #000000" }}
         >
@@ -59,9 +71,11 @@ export default function DashboardRangersPage() {
         </button>
       </div>
       <div className="flex flex-col gap-10">
-        <TableRanger />
+        <TableRanger toggleDialog={toggleDialog} setDialogContent={setDialogContent} />
       </div>
-      <FormRanger formRef={formRef}/>
+      <Dialog ref={dialogRef} toggleDialog={toggleDialog}>
+        {dialogContent}
+      </Dialog>
     </>
   );
 }

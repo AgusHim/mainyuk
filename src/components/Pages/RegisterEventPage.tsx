@@ -3,12 +3,12 @@ import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { FormEventHandler, useEffect, useState } from "react";
 import { getEventDetail } from "@/redux/slices/eventSlice";
-import Loader from "../common/Loader";
 import { postPrecence } from "@/redux/slices/eventRegisterSlice";
 import { User } from "@/types/user";
 import { CreatePresence } from "@/types/presence";
 import { useRouter } from "next/navigation";
 import { setAuthUser } from "@/redux/slices/authSlice";
+import DashboardLoader from "../common/Loader/DashboardLoader";
 
 const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
   const router = useRouter();
@@ -18,7 +18,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
   const isPresenceLoading = useAppSelector(
     (state) => state.eventRegister.loading
   );
-
+  
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -88,7 +88,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
       .unwrap()
       .then((res) => {
         if (res != null) {
-          dispatch(setAuthUser(res.user as User));
+          dispatch(setAuthUser(res.presence.user as User));
           router.replace(`/events/${params.slug}`);
         }
       })
@@ -99,11 +99,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
   };
 
   if (isLoading) {
-    return <Loader></Loader>;
-  }
-
-  if (event == null) {
-    return <div></div>;
+    return <DashboardLoader/>;
   }
 
   return (

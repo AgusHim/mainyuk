@@ -2,9 +2,12 @@
 import { format } from 'date-fns';
 import Link from "next/link";
 import Image from "next/image";
+import { Event } from "@/types/event";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect } from "react";
 import { getEvents } from "@/redux/slices/eventSlice";
+import { useRouter } from 'next/navigation';
+
 
 
 const TableThree = () => {
@@ -18,6 +21,12 @@ const TableThree = () => {
       dispatch(getEvents());
     }
   }, []);
+
+  const router = useRouter();
+  
+  const clickDetailEvent = (event: Event) => {
+    router.push(`/dashboard/events/${event.slug}`);
+  };
   
   if (isLoading) {
     return <h1>Loading...</h1>;
@@ -53,7 +62,7 @@ const TableThree = () => {
           </thead>
           <tbody>
             {eventData?.map((data, key) => (
-              <tr key={key}>
+              <tr key={key} onClick={() => clickDetailEvent(data)} className="hover:bg-primary hover:bg-opacity-40">
                 <td className="flex justify-center border-b border-black py-2 ">
                  <Image className="px-auto" width={100} height={100} src={data.image_url??''} alt="poster event" unoptimized={true}></Image>
                 </td>

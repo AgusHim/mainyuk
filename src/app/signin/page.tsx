@@ -9,7 +9,9 @@ export const metadata: Metadata = {
 };
 
 const SignIn: React.FC = () => {
-  return <SignInPage/>;
+  return <>
+  <SignInPage/>
+  </>
 };
 
 export default SignIn;

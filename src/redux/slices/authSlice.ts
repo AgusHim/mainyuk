@@ -1,6 +1,6 @@
 import { User } from "@/types/user";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { api } from "../api";
+import { api, user_api } from "../api";
 import { decryptData, encryptData } from "@/utils/crypto";
 
 interface AuthState {
@@ -28,12 +28,23 @@ export const getSessionUser = createAsyncThunk(
   "auth.getSessionUser",
   async () => {
     const str = localStorage.getItem("user");
-    if (str != null && str != "") {
+    const token = localStorage.getItem("access_token")
+    if (str != null && str != "" && token != null && token != "") {
       var decrypt = decryptData(str);
       const user = decrypt as User;
       return user;
     }
     return null;
+  }
+);
+
+export const editAccount = createAsyncThunk(
+  "auth.edit",
+  async (user: User) => {
+    const response = await user_api.put(`/auth`, user);
+    var result = encryptData(response.data.user);
+    localStorage.setItem("user", result);
+    return response.data.user as User;
   }
 );
 

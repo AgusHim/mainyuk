@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { api } from "../api";
+import { api, user_api } from "../api";
 import { Presence } from "@/types/presence";
 import { config } from "process";
 
@@ -14,8 +14,17 @@ const initialState: PresenceState = {
   error: null,
 };
 
-export const getPresence = createAsyncThunk(
-  "Presence",
+export const getPresencesByAuth = createAsyncThunk(
+  "presences.getByAuth",
+  async (_, thunk) => {
+    const res = await user_api.get("/presence");
+    console.log("getPresencesByAuth = ", res);
+    return res.data;
+  }
+);
+
+export const getPresences = createAsyncThunk(
+  "presences.get",
   async (event_id: string, thunk) => {
     const res = await api.get("/presence", {
       params: {
@@ -27,23 +36,38 @@ export const getPresence = createAsyncThunk(
 );
 
 export const presenceSlice = createSlice({
-  name: "Presence",
+  name: "presences",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getPresence.fulfilled, (state, action) => {
+    builder.addCase(getPresences.fulfilled, (state, action) => {
+      console.log("action payload = ", action.payload);
       state.data = action.payload as Presence[];
       state.loading = false;
-    });
-    builder.addCase(getPresence.pending, (state, _) => {
-      state.loading = true;
+
       state.error = null;
     });
-    builder.addCase(getPresence.rejected, (state, action) => {
+    builder.addCase(getPresencesByAuth.fulfilled, (state, action) => {
+      console.log("action payload = ", action.payload);
+      state.data = action.payload as Presence[];
       state.loading = false;
-      state.error = action.error.message || "Failed to fetch data";
+      state.error = null;
     });
+    builder.addCase(
+      getPresences.pending || getPresencesByAuth.pending,
+      (state, _) => {
+        state.loading = true;
+        state.error = null;
+      }
+    );
+    builder.addCase(
+      getPresences.rejected || getPresencesByAuth.rejected,
+      (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch data";
+      }
+    );
   },
 });
 

@@ -29,13 +29,13 @@ export default function DashboardRangerCardPage() {
       <Breadcrumb pageName="Kartu Ranger" />
       <div className="ranger-card relative   w-full sm:w-100 h-full flex items-center content-center p-5 bg-meta-7 rounded-xl">
         {ranger == null ? (
-          <div className="w-full min-h-115 flex items-center content-center justify-center">
+          <div className="w-full h-45 flex items-center content-center justify-center text-black text-lg">
             Belum terdaftar ranger
           </div>
         ) : (
           <div className="flex flex-row items-center justify-center">
             <QRCode
-              value={ranger.id}
+              value={ranger?.id ?? ""}
               className="w-30 h-30 p-2 bg-white rounded-xl my-4 mr-4 border-6 border-black"
             />
             <div className="flex flex-col">

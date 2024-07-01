@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import EventWebsocket from "../Websocket/EventWebsocket";
 import { getSessionUser } from "@/redux/slices/authSlice";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function LiveEventPage({
   params,
@@ -20,6 +20,7 @@ export default function LiveEventPage({
   const error = useAppSelector((state) => state.event.error);
 
   const router = useRouter();
+  const pathname = usePathname() ?? "/";
 
   useEffect(() => {
     if (!isLoading) {
@@ -27,7 +28,7 @@ export default function LiveEventPage({
       .unwrap()
       .then((value) => {
         if(value == null || value.role != 'admin'){
-          router.replace('/signin');
+          router.replace(`/signin?redirectTo=${pathname}`);
         }
         dispatch(getEventDetail(params.slug));
       })

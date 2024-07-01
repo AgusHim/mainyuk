@@ -21,7 +21,7 @@ export const makeStore = () => {
       counter:counterSlice,
       event:eventSlice,
       eventRegister:eventRegisterSlice,
-      presence:presenceSlice,
+      presences:presenceSlice,
       qna:qnaSlice,
       like:likeSlice,
       feedback:feedbackSlice,

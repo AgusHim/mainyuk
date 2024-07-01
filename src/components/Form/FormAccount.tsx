@@ -1,59 +1,35 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { editAccount } from "@/redux/slices/authSlice";
 import { getDivisi } from "@/redux/slices/divisiSlice";
 import { editRanger, getRangers, postRanger } from "@/redux/slices/rangerSlice";
-import { CreateRanger, Ranger } from "@/types/ranger";
 import { User } from "@/types/user";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 
 interface FormProps {
-  ranger: Ranger | null;
-  toggleDialog:()=>void;
+  toggleDialog: () => void;
 }
 
-const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
+const FormAccount: React.FC<FormProps> = ({ toggleDialog }) => {
   const dispatch = useAppDispatch();
-  const listDivisi = useAppSelector((state) => state.divisi.data);
-  const isLoadingDivisi = useAppSelector((state) => state.divisi.loading);
-  const isLoadingRanger = useAppSelector((state) => state.ranger.loading);
+  const user = useAppSelector((state) => state.auth.user);
+  const isLoading = useAppSelector((state) => state.auth.loading);
 
-  useEffect(() => {
-    if (listDivisi == null && !isLoadingDivisi) {
-      dispatch(getDivisi());
-    }
-  }, []);
-
-  const [formData, setFormData] = useState(
-    ranger != null
-      ? {
-          id: ranger.id ?? "",
-          name: ranger.user?.name ?? "",
-          username: ranger.user?.username ?? "",
-          gender: ranger.user?.gender ?? "",
-          age: ranger.user?.age != null ? ranger.user?.age.toString() : "0",
-          address: ranger.user?.address ?? "",
-          phone: ranger.user?.phone ?? "",
-          activity: ranger.user?.activity ?? "",
-          email: ranger.user?.email ?? "",
-          password: "",
-          divisi_id: ranger.divisi?.id ?? "",
-        }
-      : {
-          name: "",
-          username: "",
-          gender: "male",
-          age: "",
-          address: "",
-          phone: "",
-          activity: "Pelajar",
-          email: "",
-          password: "",
-          divisi_id: "1",
-        }
-  );
+  const [formData, setFormData] = useState({
+    id: user?.id ?? "",
+    name: user?.name ?? "",
+    username: user?.username ?? "",
+    gender: user?.gender ?? "",
+    age: user?.age != null ? user?.age.toString() : "0",
+    address: user?.address ?? "",
+    phone: user?.phone ?? "",
+    activity: user?.activity ?? "",
+    email: user?.email ?? "",
+    password: "",
+  });
 
   const [errorValidation, setErrorValidation] = useState({
     name: "",
@@ -75,47 +51,19 @@ const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    var userData = {
-      name: formData.name,
-      username: formData.username,
-      gender: formData.gender,
-      age: formData.age,
-      address: formData.address,
-      phone: formData.phone,
-      activity: formData.activity,
-      email: formData.email,
-      password: formData.password,
-    } as User;
+    var _user = formData as User;
 
-    var bodyData = {
-      id: formData.id,
-      divisi_id: formData.divisi_id,
-      user: userData,
-    } as Ranger;
+    dispatch(editAccount(_user))
+      .unwrap()
+      .then((res) => {
+        if (res != null) {
+          dispatch(getRangers());
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
 
-    if (ranger == null) {
-      dispatch(postRanger(bodyData))
-        .unwrap()
-        .then((res) => {
-          if (res != null) {
-            dispatch(getRangers());
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-    } else {
-      dispatch(editRanger(bodyData))
-        .unwrap()
-        .then((res) => {
-          if (res != null) {
-            dispatch(getRangers());
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-    }
     toggleDialog();
   };
 
@@ -123,33 +71,10 @@ const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
     <>
       {" "}
       <h3 className="font-bold text-2xl text-black dark:text-white">
-        {ranger == null ? "Tambah Ranger" : "Edit Ranger"}
+        Setting Account
       </h3>
       <div className="divider"></div>
       <form onSubmit={handleSubmit}>
-        {/* Divisi */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="divisi_id">
-            <span className="label-text text-black dark:text-white">
-              Divisi <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <select
-            value={formData["divisi_id"]}
-            onChange={handleChange}
-            name="divisi_id"
-            className="select select-bordered bg-white dark:bg-boxdark focus:border-primary"
-          >
-            <option disabled>Pilih divisi ranger</option>
-            {listDivisi?.map((divisi, key) => (
-              <option key={key} value={divisi.id}>
-                {divisi.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        {/* End of Divisi */}
-        <div className="mt-8 divider">Profile Ranger</div>
         {/* Name */}
         <div className="form-control my-2">
           <label className="label font-bold" htmlFor="name">
@@ -326,21 +251,17 @@ const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
             id="password"
             placeholder="Masukan password untuk login"
             className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
-            required={ranger == null}
           />
-          {ranger != null ? (
-            <p className="m-2 text-sm text-primary font-bold">
-              <span>
-                <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>
-              </span>{" "}
-              Biarkan kosong jika tidak ingin mengganti password
-            </p>
-          ) : (
-            <div></div>
-          )}
+
+          <p className="m-2 text-sm text-primary font-bold">
+            <span>
+              <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>
+            </span>{" "}
+            Biarkan kosong jika tidak ingin mengganti password
+          </p>
         </div>
         <div className="form-control my-2 mt-10">
-          {isLoadingRanger ? (
+          {isLoading ? (
             <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
           ) : (
             <button
@@ -348,7 +269,7 @@ const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
               className="btn btn-primary text-white border-2 border-black"
               style={{ boxShadow: "0px 5px 0px 0px #000000" }}
             >
-              {ranger == null ? "Tambah Ranger Baru" : "Simpan Perubahan"}
+              Simpan Perubahan
             </button>
           )}
         </div>
@@ -357,4 +278,4 @@ const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
   );
 };
 
-export default FormRanger;
+export default FormAccount;

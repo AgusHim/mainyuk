@@ -1,27 +1,47 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { getPresence } from "@/redux/slices/presenceSlice";
+import { getPresences, getPresencesByAuth } from "@/redux/slices/presenceSlice";
 import { formatStrToDateTime } from "@/utils/convert";
-import { format } from "date-fns";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
+import DashboardLoader from "../common/Loader/DashboardLoader";
+import { usePathname } from "next/navigation";
 
 const TablePresence = () => {
   const dispatch = useAppDispatch();
+
+  const pathname = usePathname() ?? "/";
+
+  const user = useAppSelector((state) => state.auth.user);
   const event = useAppSelector((state) => state.event.event);
-  const presenceData = useAppSelector((state) => state.presence.data);
-  const isLoading = useAppSelector((state) => state.presence.loading);
-  const error = useAppSelector((state) => state.presence.error);
+  const presenceData = useAppSelector((state) => state.presences.data);
+  const isLoading = useAppSelector((state) => state.presences.loading);
+  const error = useAppSelector((state) => state.presences.error);
 
   useEffect(() => {
-    if (presenceData == null && event != null && !isLoading) {
-        console.log("RUN GET PRESENCE")
-      dispatch(getPresence(event!.id!));
+    if (!isLoading) {
+      console.log("RUN GET PRESENCE");
+      console.log("Pathname ", pathname);
+      if (pathname.includes("/dashboard/events")) {
+        dispatch(getPresences(event!.id!));
+      } else {
+        dispatch(getPresencesByAuth())
+        .then((res: any) => {
+          if (res != null) {
+           console.log(res);
+          }
+        })
+        .catch((error) => {
+          // Handle errors here if needed
+          console.error("Error delete data:", error);
+        });
+      }
     }
   }, []);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <DashboardLoader />;
   }
   if (error != null) {
     return <h1>{error}</h1>;
@@ -66,7 +86,7 @@ const TablePresence = () => {
                 <td className="border-b border-black py-5 px-4">
                   <div className="flex justify-center items-center">
                     <p className="text-black dark:text-white">
-                      {data.user.gender == 'male'?'Ikhwan':'Akhwat'}
+                      {data.user.gender == "male" ? "Ikhwan" : "Akhwat"}
                     </p>
                   </div>
                 </td>
@@ -92,7 +112,7 @@ const TablePresence = () => {
                 </td>
                 <td className="border-b border-black py-5 px-4">
                   <p className="text-black dark:text-white">
-                  {formatStrToDateTime(data.created_at!, "dd MMM yyyy HH:mm")}
+                    {formatStrToDateTime(data.created_at!, "dd MMM yyyy HH:mm")}
                   </p>
                 </td>
               </tr>

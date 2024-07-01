@@ -6,7 +6,7 @@ import "../satoshi.css";
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import HeaderDashboard from "@/components/Header/HeaderDashboard";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Loader from "@/components/common/Loader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getSessionUser } from "@/redux/slices/authSlice";
@@ -18,6 +18,8 @@ export default function DashboardLayout({
 }) {
   const dispatch = useAppDispatch();
   const router =useRouter();
+  const pathname = usePathname() ?? "/";
+  
   const auth = useAppSelector((state) => state.auth);
   const user = useAppSelector((state) => state.auth.user);
 
@@ -27,8 +29,8 @@ export default function DashboardLayout({
     dispatch(getSessionUser())
       .unwrap()
       .then((value) => {
-        if(value == null || value.role == 'jamaah' || value.role == 'user'){
-          router.replace('/signin');
+        if(value == null){
+          router.replace(`/signin?redirectTo=${pathname}`);
         }
       })
       .catch((error) => {

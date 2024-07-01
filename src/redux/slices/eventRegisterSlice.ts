@@ -28,7 +28,7 @@ export const eventSlice = createSlice({
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(postPrecence.fulfilled, (state, action) => {
-      state.event_id = action.payload.event.id
+      state.event_id = action.payload.presence.event.id
       state.isRegistered = true
       state.loading = false;
     });

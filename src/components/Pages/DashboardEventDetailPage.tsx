@@ -9,6 +9,7 @@ import { getEventDetail } from "@/redux/slices/eventSlice";
 import TablePresence from "@/components/Tables/TablePresence";
 import CardDataStats from "../CardDataStats";
 import ExcelExportButton from "../Export/ExportPresence";
+import { getPresences } from "@/redux/slices/presenceSlice";
 
 export default function DashboardEventDetailPage({
   params,
@@ -20,7 +21,7 @@ export default function DashboardEventDetailPage({
   const isLoading = useAppSelector((state) => state.event.loading);
   const error = useAppSelector((state) => state.event.error);
 
-  const presence = useAppSelector((state) => state.presence.data);
+  const presence = useAppSelector((state) => state.presences.data);
 
   const totalMale = presence?.filter((p) => p.user.gender === "male").length;
   const totalFemale = presence?.filter(
@@ -30,6 +31,16 @@ export default function DashboardEventDetailPage({
   useEffect(() => {
     if (!isLoading) {
       dispatch(getEventDetail(params.slug));
+    }
+  }, []);
+
+  const presences = useAppSelector((state) => state.presences.data);
+  const isLoadingPresence = useAppSelector((state) => state.presences.loading);
+
+  useEffect(() => {
+    if (presences == null && event != null && !isLoadingPresence) {
+        console.log("RUN GET PRESENCE")
+      dispatch(getPresences(event!.id!));
     }
   }, []);
 

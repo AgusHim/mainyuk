@@ -20,12 +20,19 @@ const rolePath = (role: string) => {
   if (role == "ranger") {
     rolePath = "ranger_api";
   }
+  if (role == "user") {
+    rolePath = "user_api";
+  }
   return rolePath;
 };
 
 // Create an axios instance with the dynamically determined baseURL
 const api = axios.create({
   baseURL: `${baseURL("jamaah")}`, // Use the dynamically determined host
+});
+
+const user_api = axios.create({
+  baseURL: `${baseURL("user")}`, // Use the dynamically determined host
 });
 
 const admin_api = axios.create({
@@ -51,6 +58,45 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
+  (response) => {
+    if (response.data.access_token != null) {
+      var result = encryptData(response.data.access_token);
+      localStorage.setItem("access_token", result);
+    }
+    return response;
+  },
+  (error) => {
+    let message;
+
+    if (error.response) {
+      message = error.response.data.error;
+      if (typeof message === "string") {
+        toast.error(message, {
+          className: "toast",
+        });
+      }
+      return Promise.reject(error);
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+user_api.interceptors.request.use(
+  (config) => {
+    let sessionAuth = localStorage.getItem("access_token");
+    if (sessionAuth != null) {
+      const token = decryptData(sessionAuth);
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+user_api.interceptors.response.use(
   (response) => {
     if (response.data.access_token != null) {
       var result = encryptData(response.data.access_token);
@@ -153,4 +199,4 @@ ranger_api.interceptors.response.use(
   }
 );
 
-export { api, admin_api, ranger_api };
+export { api, user_api, admin_api, ranger_api };

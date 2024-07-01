@@ -23,9 +23,9 @@ export const getRangers = createAsyncThunk("rangers", async () => {
 export const getRangerDetail = createAsyncThunk(
   "rangers.detail",
   async (id: string | null, _) => {
-    if(id != null){
+    if (id != null) {
       const res = await admin_api.get(`/rangers/${id == null ? "me" : id}`);
-       return res.data as Ranger;
+      return res.data as Ranger;
     }
     const res = await ranger_api.get(`/rangers/${id == null ? "me" : id}`);
     return res.data as Ranger;
@@ -34,9 +34,25 @@ export const getRangerDetail = createAsyncThunk(
 
 export const postRanger = createAsyncThunk(
   "rangers.post",
-  async (data:CreateRanger) => {
+  async (data: Ranger) => {
     const res = await admin_api.post(`/rangers`, data);
     return res.data as Ranger;
+  }
+);
+
+export const editRanger = createAsyncThunk(
+  "rangers.edit",
+  async (ranger: Ranger) => {
+    const res = await admin_api.put(`/rangers/${ranger.id}`, ranger);
+    return res.data as Ranger;
+  }
+);
+
+export const deleteRanger = createAsyncThunk(
+  "ranger.delete",
+  async (id: String) => {
+    const res = await admin_api.delete(`/rangers/${id}`);
+    return res.data;
   }
 );
 
@@ -47,6 +63,12 @@ export const RangerSlice = createSlice({
     resetRanger: (state, _) => {
       state.ranger = null;
     },
+    deleteFromListRanger: (state, action) => {
+      const updated = state.rangers?.filter(
+        (ranger) => ranger.id !== action.payload
+      );
+      state.rangers = updated!;
+    },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
@@ -56,14 +78,22 @@ export const RangerSlice = createSlice({
       state.error = null;
     });
     builder.addCase(
-      getRangers.pending || getRangerDetail.pending || postRanger.pending,
+      getRangers.pending ||
+        getRangerDetail.pending ||
+        postRanger.pending ||
+        editRanger.pending ||
+        deleteRanger.pending,
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
     builder.addCase(
-      getRangers.rejected || getRangerDetail.rejected || postRanger.rejected,
+      getRangers.rejected ||
+        getRangerDetail.rejected ||
+        postRanger.rejected ||
+        editRanger.rejected ||
+        deleteRanger.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";
@@ -76,5 +106,5 @@ export const RangerSlice = createSlice({
   },
 });
 
-export const { resetRanger } = RangerSlice.actions;
+export const { resetRanger, deleteFromListRanger } = RangerSlice.actions;
 export default RangerSlice.reducer;
