@@ -45,7 +45,7 @@ const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
           name: "",
           username: "",
           gender: "male",
-          age: "",
+          age: "0",
           address: "",
           phone: "",
           activity: "Pelajar",
@@ -209,7 +209,7 @@ const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
         {/* End of Username */}
 
         {/* Age */}
-        <div className="form-control my-2">
+        {/* <div className="form-control my-2">
           <label className="label font-bold" htmlFor="age">
             <span className="label-text text-black dark:text-white">
               Usia <span className="text-meta-1 text-lg">*</span>
@@ -224,7 +224,7 @@ const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
             className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
             required
           />
-        </div>
+        </div> */}
         {/* End of Age */}
 
         {/* Phone */}

@@ -22,7 +22,7 @@ const TableRanger: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
   const [dialogContent, setConfirmDialog] = useState<React.ReactNode>(null);
 
   const dialogRef = useRef<HTMLDialogElement>(null);
-  
+
   function toggleConfirmDialog() {
     if (!dialogRef.current) {
       return;
@@ -47,7 +47,7 @@ const TableRanger: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
         });
       });
   }
-  
+
   return (
     <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 shadow-bottom border-2 border-black dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -84,118 +84,121 @@ const TableRanger: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
             </tr>
           </thead>
           <tbody>
-            {rangers?.map((ranger, key) => (
-              <tr key={key}>
-                <td className="border-b border-black py-3 px-2 pl-9 dark:border-strokedark xl:pl-11">
-                  <h5 className="font-medium text-black dark:text-white">
-                    {ranger.user?.name}
-                  </h5>
-                </td>
-                <td className="border-b border-black py-3 px-2 dark:border-strokedark">
-                  <div className="flex flex-col justify-center items-center">
-                    <p className="text-black dark:text-white text-center">
-                      {ranger.divisi?.name}
-                    </p>
-                    <p className="text-black dark:text-white">
-                      {ranger.divisi?.regional}
-                    </p>
-                  </div>
-                </td>
-                <td className="border-b border-black py-3 px-2 dark:border-strokedark">
-                  <div className="flex justify-center items-center">
-                    <p className="text-black dark:text-white">
-                      {ranger.user?.phone}
-                    </p>
-                  </div>
-                </td>
-                <td className="border-b border-black py-3 px-2 dark:border-strokedark">
-                  <div className="flex justify-center items-center">
-                    <p className="text-black dark:text-white">
-                      {ranger.user?.address}
-                    </p>
-                  </div>
-                </td>
-                <td className="border-b border-black py-3 px-2 dark:border-strokedark">
-                  <div className="flex justify-center items-center">
-                    <p className="text-black dark:text-white">
-                      {ranger.user?.activity}
-                    </p>
-                  </div>
-                </td>
-                <td className="border-b border-black py-3 px-2 dark:border-strokedark">
-                  <div className="flex justify-center items-center">
-                    <p className="badge badge-outline badge-success font-extrabold text-black dark:text-white">
-                      {ranger?.present}
-                    </p>
-                  </div>
-                </td>
-                <td className="text-center border-b border-black py-3 px-2 dark:border-strokedark">
-                  <div className="flex justify-center items-center">
-                    <p className="badge badge-outline badge-error font-extrabold text-black dark:text-white">
-                      {ranger?.absent}
-                    </p>
-                  </div>
-                </td>
-                <td className="border-b border-black py-3 px-2 dark:border-strokedark">
-                  <div className="flex justify-center items-center">
-                    <p className="text-primary font-bold text-xl">
-                      {(
-                        (ranger.present! / (ranger.present! + ranger.absent!)) *
-                        100
-                      ).toFixed(0)}
-                      %
-                    </p>
-                  </div>
-                </td>
-                <td
-                  className="disable border-b border-black py-3 px-2"
-                  data-no-click={true}
-                >
-                  <div className="flex items-center space-x-3.5 justify-center">
-                    <button
-                      className="text-success"
-                      onClick={(e) => {
-                        e.stopPropagation();
+            {rangers?.map((ranger, key) => {
+              const present = (ranger.present! >= 2 ? 2 : ranger.present) ?? 0;
+              return (
+                <tr key={key}>
+                  <td className="border-b border-black py-3 px-2 pl-9 dark:border-strokedark xl:pl-11">
+                    <h5 className="font-medium text-black dark:text-white">
+                      {ranger.user?.name}
+                    </h5>
+                  </td>
+                  <td className="border-b border-black py-3 px-2 dark:border-strokedark">
+                    <div className="flex flex-col justify-center items-center">
+                      <p className="text-black dark:text-white text-center">
+                        {ranger.divisi?.name}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="border-b border-black py-3 px-2 dark:border-strokedark">
+                    <div className="flex justify-center items-center">
+                      <p className="text-black dark:text-white">
+                        {ranger.user?.phone}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="border-b border-black py-3 px-2 dark:border-strokedark">
+                    <div className="flex justify-center items-center">
+                      <p className="text-black dark:text-white">
+                        {ranger.user?.address}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="border-b border-black py-3 px-2 dark:border-strokedark">
+                    <div className="flex justify-center items-center">
+                      <p className="text-black dark:text-white">
+                        {ranger.user?.activity}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="border-b border-black py-3 px-2 dark:border-strokedark">
+                    <div className="flex justify-center items-center">
+                      <p className="badge badge-outline badge-success font-extrabold text-black dark:text-white">
+                        {ranger?.present}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="text-center border-b border-black py-3 px-2 dark:border-strokedark">
+                    <div className="flex justify-center items-center">
+                      <p className="badge badge-outline badge-error font-extrabold text-black dark:text-white">
+                        {ranger?.absent}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="border-b border-black py-3 px-2 dark:border-strokedark">
+                    <div className="flex justify-center items-center">
+                      <p className="text-primary font-bold text-xl">
+                        {((present / 2) * 100).toFixed(0)}%
+                      </p>
+                    </div>
+                  </td>
+                  <td
+                    className="disable border-b border-black py-3 px-2"
+                    data-no-click={true}
+                  >
+                    <div className="flex items-center space-x-3.5 justify-center">
+                      <button
+                        className="text-success"
+                        onClick={(e) => {
+                          e.stopPropagation();
 
-                        setDialogContent(<FormRanger ranger={ranger} toggleDialog={toggleDialog} />);
-                        toggleDialog();
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faEdit} className="fill-black" />
-                    </button>
-                    <button
-                      className="text-danger"
-                      onClick={(e) => {
-                        e.stopPropagation();
+                          setDialogContent(
+                            <FormRanger
+                              ranger={ranger}
+                              toggleDialog={toggleDialog}
+                            />
+                          );
+                          toggleDialog();
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faEdit} className="fill-black" />
+                      </button>
+                      <button
+                        className="text-danger"
+                        onClick={(e) => {
+                          e.stopPropagation();
 
-                        setConfirmDialog(
-                          <ConfirmDialog
-                            ranger={ranger}
-                            onConfirm={() => {
-                              toggleConfirmDialog();
-                              submitDeleteRanger(ranger.id!);
-                            }}
-                            onCancel={toggleConfirmDialog}
-                          />
-                        );
+                          setConfirmDialog(
+                            <ConfirmDialog
+                              ranger={ranger}
+                              onConfirm={() => {
+                                toggleConfirmDialog();
+                                submitDeleteRanger(ranger.id!);
+                              }}
+                              onCancel={toggleConfirmDialog}
+                            />
+                          );
 
-                        toggleConfirmDialog();
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrash} className="fill-black" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                          toggleConfirmDialog();
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          className="fill-black"
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
       <Dialog toggleDialog={toggleConfirmDialog} ref={dialogRef}>
-          {dialogContent}
-        </Dialog>
+        {dialogContent}
+      </Dialog>
     </div>
-    
   );
 };
 
@@ -217,7 +220,9 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
       </h3>
       <p className="py-4 text-black dark:text-white">
         Kamu yakin ingin menghapus ranger{" "}
-        <span className="font-bold text-lg text-primary">{ranger?.user?.name}</span>
+        <span className="font-bold text-lg text-primary">
+          {ranger?.user?.name}
+        </span>
       </p>
       <div className="modal-action">
         <label
