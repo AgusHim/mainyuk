@@ -40,9 +40,9 @@ const TableRangerPresence = () => {
                 <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                   <div className="flex flex-col justify-center items-center">
                     <p className="text-black dark:text-white">
-                      {presence.divisi?.name}
+                      {presence.ranger?.divisi?.name}
                     </p>
-                    <p className="text-black dark:text-white">{presence.divisi?.regional}</p>
+                    
                   </div>
                 </td>
                 <td className="border-b border-black py-3 px-2 dark:border-strokedark">
