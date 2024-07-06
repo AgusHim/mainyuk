@@ -198,7 +198,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   }}
                 </SidebarLinkGroup>
               ) : (
-                <div></div>
+                <></>
               )}
 
               {/* <!-- Menu Item Dashboard --> */}
@@ -230,7 +230,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </Link>
                 </li>
               ) : (
-                <div></div>
+                <></>
               )}
               {/* <!-- Menu Item Agenda --> */}
 
@@ -292,7 +292,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </Link>
                 </li>
               ) : (
-                <div></div>
+                <></>
               )}
               {/* <!-- Menu Item Ranger Card --> */}
 
@@ -329,7 +329,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </Link>
                 </li>
               ) : (
-                <div></div>
+                <></>
               )}
               {/* <!-- Menu Item Contributions --> */}
 
@@ -394,7 +394,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </Link>
                 </li>
               ) : (
-                <div></div>
+                <></>
               )}
               {/* <!-- Menu Item Rangers --> */}
 
@@ -441,7 +441,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </Link>
                 </li>
               ) : (
-                <div></div>
+                <></>
               )}
               {/* <!-- Menu Item Event --> */}
 
@@ -473,7 +473,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </Link>
                 </li>
               ) : (
-                <div></div>
+                <></>
               )}
               {/* <!-- Menu Item Divisi --> */}
 
@@ -522,7 +522,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </Link>
                 </li>
               ) : (
-                <div></div>
+                <></>
               )}
 
               {/* <!-- Menu Feedback --> */}
@@ -556,7 +556,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       fill="currentColor"
                     />
                   </svg>
-                  Riwayat Kehadiran Event
+                  Kehadiran Event
                 </Link>
               </li>
               {/* <!-- Menu Item Presence --> */}

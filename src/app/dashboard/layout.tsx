@@ -4,7 +4,7 @@ import "../globals.css";
 import "../data-tables-css.css";
 import "../satoshi.css";
 import { useState, useEffect } from "react";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/Sidebar/Sidebar";
 import HeaderDashboard from "@/components/Header/HeaderDashboard";
 import { usePathname, useRouter } from "next/navigation";
 import Loader from "@/components/common/Loader";

@@ -7,10 +7,10 @@ import { Agenda } from "@/types/agenda";
 import { editAgenda, getAgenda, postAgenda } from "@/redux/slices/agendaSlice";
 import { formatStrToDateTime } from "@/utils/convert";
 type Props = {
-  toggleDialog:()=>void;
-}
+  toggleDialog: () => void;
+};
 
-const FormAgenda: React.FC<Props> = ({ toggleDialog }) =>  {
+const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
   const dispatch = useAppDispatch();
 
   const agenda = useAppSelector((state) => state.agenda.agenda);
@@ -18,19 +18,13 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) =>  {
   const isLoadingDivisi = useAppSelector((state) => state.divisi.loading);
   const isLoadingAgenda = useAppSelector((state) => state.agenda.loading);
 
-  const [formData, setFormData] = useState(agenda != null?{
-    id:agenda.id,
-    name: agenda.name,
-    type: agenda.type,
-    location: agenda.location,
-    divisi_id: agenda.divisi?.id ?? "",
-    start_at: agenda.start_at!.replace('Z',''),
-  }:{
-    name: "",
-    type: "meeting",
-    location: "",
-    divisi_id: "1",
-    start_at: "",
+  const [formData, setFormData] = useState({
+    id: agenda?.id ?? "",
+    name: agenda?.name,
+    type: agenda?.type,
+    location: agenda?.location,
+    divisi_id: agenda?.divisi?.id ?? "",
+    start_at: agenda?.start_at!.replace("Z", ""),
   });
 
   useEffect(() => {
@@ -47,40 +41,39 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) =>  {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    if(agenda == null){
+    if (agenda == null) {
       dispatch(postAgenda(formData as Agenda))
-      .unwrap()
-      .then((res) => {
-        if (res != null) {
-          toggleDialog();
-          dispatch(getAgenda());
-        }
-      })
-      .catch((error) => {
-        // Handle errors here if needed
-        console.error("Error fetching data:", error);
-      });  
-    }else{
+        .unwrap()
+        .then((res) => {
+          if (res != null) {
+            toggleDialog();
+            dispatch(getAgenda());
+          }
+        })
+        .catch((error) => {
+          // Handle errors here if needed
+          console.error("Error fetching data:", error);
+        });
+    } else {
       dispatch(editAgenda(formData as Agenda))
-      .unwrap()
-      .then((res) => {
-        if (res != null) {
-          toggleDialog();
-          dispatch(getAgenda());
-        }
-      })
-      .catch((error) => {
-        // Handle errors here if needed
-        console.error("Error fetching data:", error);
-      });
+        .unwrap()
+        .then((res) => {
+          if (res != null) {
+            toggleDialog();
+            dispatch(getAgenda());
+          }
+        })
+        .catch((error) => {
+          // Handle errors here if needed
+          console.error("Error fetching data:", error);
+        });
     }
-    
   };
 
   return (
     <>
       <h3 className="font-bold text-2xl text-black dark:text-white">
-        {agenda != null?"Edit Agenda":"Tambah Agenda"}
+        {agenda != null ? "Edit Agenda" : "Tambah Agenda"}
       </h3>
       <div className="divider"></div>
       <form onSubmit={handleSubmit}>
@@ -194,7 +187,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) =>  {
               className="btn btn-primary text-white border-2 border-black"
               style={{ boxShadow: "0px 5px 0px 0px #000000" }}
             >
-              {agenda == null?"Tambah Agenda Baru":"Simpan Perubahan"}
+              {agenda == null ? "Tambah Agenda Baru" : "Simpan Perubahan"}
             </button>
           )}
         </div>

@@ -66,7 +66,7 @@ export default function LiveEventPage({
             Gabung ke <span className="font-extrabold">{hostUrl}</span>
           </h1>
           <p className="text-2xl md:text-4xl text-white mx-5 text-center font-bold">
-            {`#${event?.code}`}
+            {`Kode: ${event?.code}`}
           </p>
         </div>
         <div className="w-full md:w-3/4 flex flex-col items-center justify-center p-5 bg-boxdark">

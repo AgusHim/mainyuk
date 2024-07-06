@@ -54,9 +54,6 @@ const SignInPage: React.FC = () => {
         }
       })
       .catch((error) => {
-        toast.error("Gagal login", {
-          className: "toast",
-        });
         console.error("Error fetching data:", error);
       });
   };

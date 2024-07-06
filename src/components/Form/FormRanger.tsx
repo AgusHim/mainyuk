@@ -11,49 +11,35 @@ import { useEffect, useState } from "react";
 
 interface FormProps {
   ranger: Ranger | null;
-  toggleDialog:()=>void;
+  toggleDialog: () => void;
 }
 
-const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
+const FormRanger: React.FC<FormProps> = ({ ranger, toggleDialog }) => {
   const dispatch = useAppDispatch();
   const listDivisi = useAppSelector((state) => state.divisi.data);
   const isLoadingDivisi = useAppSelector((state) => state.divisi.loading);
   const isLoadingRanger = useAppSelector((state) => state.ranger.loading);
 
+  const [formData, setFormData] = useState({
+    id: ranger?.id ?? "",
+    name: ranger?.user?.name ?? "",
+    username: ranger?.user?.username ?? "",
+    gender: ranger?.user?.gender ?? "",
+    age: ranger?.user?.age != null ? ranger?.user?.age.toString() : "0",
+    address: ranger?.user?.address ?? "",
+    phone: ranger?.user?.phone ?? "",
+    activity: ranger?.user?.activity ?? "",
+    email: ranger?.user?.email ?? "",
+    password: "",
+    divisi_id: ranger?.divisi?.id ?? "",
+  });
+
   useEffect(() => {
+   console.log(`Show FORM = ${ranger?.user?.name}`);
     if (listDivisi == null && !isLoadingDivisi) {
       dispatch(getDivisi());
     }
   }, []);
-
-  const [formData, setFormData] = useState(
-    ranger != null
-      ? {
-          id: ranger.id ?? "",
-          name: ranger.user?.name ?? "",
-          username: ranger.user?.username ?? "",
-          gender: ranger.user?.gender ?? "",
-          age: ranger.user?.age != null ? ranger.user?.age.toString() : "0",
-          address: ranger.user?.address ?? "",
-          phone: ranger.user?.phone ?? "",
-          activity: ranger.user?.activity ?? "",
-          email: ranger.user?.email ?? "",
-          password: "",
-          divisi_id: ranger.divisi?.id ?? "",
-        }
-      : {
-          name: "",
-          username: "",
-          gender: "male",
-          age: "0",
-          address: "",
-          phone: "",
-          activity: "Pelajar",
-          email: "",
-          password: "",
-          divisi_id: "1",
-        }
-  );
 
   const [errorValidation, setErrorValidation] = useState({
     name: "",
@@ -121,7 +107,6 @@ const FormRanger: React.FC<FormProps> = ({ ranger , toggleDialog }) => {
 
   return (
     <>
-      {" "}
       <h3 className="font-bold text-2xl text-black dark:text-white">
         {ranger == null ? "Tambah Ranger" : "Edit Ranger"}
       </h3>

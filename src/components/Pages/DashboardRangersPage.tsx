@@ -16,12 +16,12 @@ export default function DashboardRangersPage() {
   const error = useAppSelector((state) => state.ranger.error);
 
   useEffect(() => {
-    if (rangers == null && !isLoading) {
+    if ( !isLoading) {
       dispatch(getRangers());
     }
   }, []);
 
-  const [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
+  let [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
 
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -71,7 +71,7 @@ export default function DashboardRangersPage() {
         </button>
       </div>
       <div className="flex flex-col gap-10">
-        <TableRanger toggleDialog={toggleDialog} setDialogContent={setDialogContent} />
+        <TableRanger/>
       </div>
       <Dialog ref={dialogRef} toggleDialog={toggleDialog}>
         {dialogContent}

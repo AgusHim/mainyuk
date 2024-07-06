@@ -23,9 +23,12 @@ export default function DashboardAgendaPage() {
     if (!dialogRef.current) {
       return;
     }
-    dialogRef.current.hasAttribute("open")
-      ? dialogRef.current.close()
-      : dialogRef.current.showModal();
+    if(dialogRef.current.hasAttribute("open")){
+      dialogRef.current.close();
+      setDialogContent(null);
+    }else{
+      dialogRef.current.showModal();
+    }
   }
 
   useEffect(() => {
@@ -90,7 +93,6 @@ export default function DashboardAgendaPage() {
         <TableAgenda
           toggleDialog={toggleOnDialog}
           setDialogContent={() => {
-            console.log("setDialogContent");
             setDialogContent(<FormAgenda toggleDialog={toggleOnDialog} />);
           }}
         />

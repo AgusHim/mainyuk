@@ -10,26 +10,26 @@ import { Ranger } from "@/types/ranger";
 import { deleteFromListRanger, deleteRanger } from "@/redux/slices/rangerSlice";
 import { toast } from "react-toastify";
 
-type Props = {
-  toggleDialog: () => void;
-  setDialogContent: Dispatch<SetStateAction<ReactNode>>;
-};
 
-const TableRanger: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
+
+const TableRanger: React.FC = () => {
   const dispatch = useAppDispatch();
   const rangers = useAppSelector((state) => state.ranger.rangers);
 
-  const [dialogContent, setConfirmDialog] = useState<React.ReactNode>(null);
+  const [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
 
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  function toggleConfirmDialog() {
+  function toggleDialog() {
     if (!dialogRef.current) {
       return;
     }
-    dialogRef.current.hasAttribute("open")
-      ? dialogRef.current.close()
-      : dialogRef.current.showModal();
+    if(dialogRef.current.hasAttribute("open")){
+      dialogRef.current.close();
+      setDialogContent(null);
+    }else{
+      dialogRef.current.showModal();
+    }
   }
 
   function submitDeleteRanger(id: string) {
@@ -168,18 +168,18 @@ const TableRanger: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
                         onClick={(e) => {
                           e.stopPropagation();
 
-                          setConfirmDialog(
+                          setDialogContent(
                             <ConfirmDialog
                               ranger={ranger}
                               onConfirm={() => {
-                                toggleConfirmDialog();
+                                toggleDialog();
                                 submitDeleteRanger(ranger.id!);
                               }}
-                              onCancel={toggleConfirmDialog}
+                              onCancel={toggleDialog}
                             />
                           );
 
-                          toggleConfirmDialog();
+                          toggleDialog();
                         }}
                       >
                         <FontAwesomeIcon
@@ -195,7 +195,7 @@ const TableRanger: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
           </tbody>
         </table>
       </div>
-      <Dialog toggleDialog={toggleConfirmDialog} ref={dialogRef}>
+      <Dialog toggleDialog={toggleDialog} ref={dialogRef}>
         {dialogContent}
       </Dialog>
     </div>
