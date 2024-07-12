@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect } from "react";
 import { getEvents } from "@/redux/slices/eventSlice";
 import { useRouter } from 'next/navigation';
+import { formatStrToDateTime } from '@/utils/convert';
 
 
 
@@ -101,7 +102,7 @@ const TableThree = () => {
                 </td>
                 <td className="border-b border-black py-5 px-4">
                   <p className="text-black dark:text-white">
-                    {format(Date.parse(data.start_at!),"dd MMM yyyy")} - {format(Date.parse(data.end_at!),"dd MMM yyyy")}
+                    {formatStrToDateTime(data.start_at! ,"dd MMM yyyy")} - {formatStrToDateTime(data.end_at!,"dd MMM yyyy")}
                   </p>
                 </td>
                 <td className="border-b border-black py-5 px-4">

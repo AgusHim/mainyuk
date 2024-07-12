@@ -1,5 +1,4 @@
 "use client";
-import { format } from "date-fns";
 import BreadcrumbEvent from "@/components/Breadcrumbs/BreadcrumbEvent";
 import Image from "next/image";
 
@@ -10,6 +9,7 @@ import TablePresence from "@/components/Tables/TablePresence";
 import CardDataStats from "../CardDataStats";
 import ExcelExportButton from "../Export/ExportPresence";
 import { getPresences } from "@/redux/slices/presenceSlice";
+import { formatStrToDateTime } from "@/utils/convert";
 
 export default function DashboardEventDetailPage({
   params,
@@ -72,8 +72,8 @@ export default function DashboardEventDetailPage({
             {event?.speaker}
           </h1>
           <h1 className="text-center text-md font-light  text-black dark:text-white">
-            {format(Date.parse(event!.start_at!), "dd MMM yyyy")} -{" "}
-            {format(Date.parse(event!.end_at!), "dd MMM yyyy")}
+            {formatStrToDateTime(event!.start_at!, "dd MMM yyyy")} -{" "}
+            {formatStrToDateTime(event!.end_at!, "dd MMM yyyy")}
           </h1>
           </div>
           <div className="flex flex-col xsm:flex-row">

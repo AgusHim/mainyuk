@@ -1,5 +1,4 @@
 "use client";
-import { format } from "date-fns";
 import Image from "next/image";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
@@ -15,6 +14,7 @@ import CommentField from "../CommentField";
 import DropdownFilter from "../LiveQna/DropdownFilter";
 import ReadMoreParagraph from "../ReadMoreParagraph/ReadMoreParagraph";
 import FeedbackField from "../FeedbackField/FeedbackField";
+import { formatStrToDateTime } from "@/utils/convert";
 
 export default function EventDetailPage({
   params,
@@ -92,8 +92,8 @@ export default function EventDetailPage({
             {event.speaker}
           </p>
           <h1 className="mb-3 text-center text-sm md:text-md font-bold  text-black dark:text-white">
-            {format(Date.parse(event!.start_at!), "dd MMM yyyy")} -{" "}
-            {format(Date.parse(event!.end_at!), "dd MMM yyyy")}
+            {formatStrToDateTime(event!.start_at!, "dd MMM yyyy")} -{" "}
+            {formatStrToDateTime(event!.end_at!, "dd MMM yyyy")}
           </h1>
           <ReadMoreParagraph text={event.desc??''} maxLength={200} />
         </div>

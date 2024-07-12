@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import {
@@ -6,7 +5,6 @@ import {
   getComments,
   increaseLike,
 } from "@/redux/slices/qnaSlice";
-import { format } from "date-fns";
 import {
   addLike,
   deleteLike,
@@ -17,6 +15,7 @@ import {
 import { Like } from "@/types/like";
 import { Comment } from "@/types/comment";
 import EventWebsocket from "../Websocket/EventWebsocket";
+import { formatStrToDateTime } from "@/utils/convert";
 
 const QnaList = () => {
   const dispatch = useAppDispatch();
@@ -97,7 +96,7 @@ const QnaList = () => {
                 </span>
               </p>
               <p className="text-xs mt-2">
-                {format(Date.parse(comment.created_at!), "dd-MM-yyyy hh:mm")}
+                {formatStrToDateTime(comment.created_at!, "dd-MM-yyyy hh:mm")}
               </p>
             </div>
           </div>

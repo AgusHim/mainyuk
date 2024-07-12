@@ -2,7 +2,7 @@ import { Comment } from "@/types/comment";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getComments } from "@/redux/slices/qnaSlice";
-import { format } from "date-fns";
+import { formatStrToDateTime } from "@/utils/convert";
 
 const LiveQna = () => {
   const dispatch = useAppDispatch();
@@ -74,7 +74,7 @@ const LiveQna = () => {
                   </span>
                 </p>
                 <p className="text-md mt-2">
-                  {format(Date.parse(comment.created_at!), "dd-MM-yyyy hh:mm")}
+                  {formatStrToDateTime(comment.created_at!, "dd-MM-yyyy hh:mm")}
                 </p>
               </div>
               <div className="flex flex-col items-center justify-center">

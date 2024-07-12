@@ -1,7 +1,7 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getFeedback } from "@/redux/slices/feedbackSlice";
-import { format } from "date-fns";
+import { formatStrToDateTime } from "@/utils/convert";
 import { useEffect } from "react";
 
 const TableFeedback = () => {
@@ -62,7 +62,7 @@ const TableFeedback = () => {
                 </td>
                 <td className="border-b border-black py-5 px-4">
                   <p className="text-black dark:text-white">
-                  {format(Date.parse(data.created_at!), "dd MMM yyyy HH:mm")}
+                  {formatStrToDateTime(data.created_at!, "dd MMM yyyy HH:mm")}
                   </p>
                 </td>
               </tr>

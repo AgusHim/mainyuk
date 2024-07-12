@@ -2,7 +2,7 @@ import React from "react";
 import * as XLSX from "xlsx";
 import FileSaver, { saveAs } from "file-saver";
 import { Presence } from "@/types/presence";
-import { format } from "date-fns";
+import { formatStrToDateTime } from "@/utils/convert";
 
 interface Props {
   data: Presence[]; // Assuming your data is an array of objects
@@ -20,7 +20,7 @@ const filterData = (data: Presence[]): any[] => {
       Alamat: `${e.user.address}`,
       "No HP": `${e.user.phone ?? "-"}`,
       Event: `${e.event.title}`,
-      Dibuat: `${format(Date.parse(e.created_at!), "dd MMM yyyy HH:mm")}`,
+      Dibuat: `${formatStrToDateTime(e.created_at!, "dd MMM yyyy HH:mm")}`,
     });
   });
   return load;
