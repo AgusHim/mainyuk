@@ -5,6 +5,7 @@ import { getEvents, postEvent } from "@/redux/slices/eventSlice";
 import { useState } from "react";
 import { Event as EventYN } from "@/types/event";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
 const FormEvent = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +29,23 @@ const FormEvent = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    dispatch(postEvent(formData as EventYN))
+    var bodyData = {
+      title: formData.title,
+      desc: formData.desc,
+      speaker: formData.speaker,
+      image_url: formData.image_url,
+      divisi_id: formData.divisi_id,
+      start_at: format(
+        Date.parse(formData.start_at!.replace("Z", "")),
+        "yyyy-MM-dd hh:mm"
+      ).replace(" ", "T"),
+      end_at: format(
+        Date.parse(formData.end_at!.replace("Z", "")),
+        "yyyy-MM-dd hh:mm"
+      ).replace(" ", "T"),
+    };
+
+    dispatch(postEvent(bodyData as EventYN))
       .unwrap()
       .then((res) => {
         if (res != null) {
@@ -190,4 +207,3 @@ const FormEvent = () => {
 };
 
 export default FormEvent;
-

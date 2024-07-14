@@ -6,6 +6,7 @@ import { getDivisi } from "@/redux/slices/divisiSlice";
 import { Agenda } from "@/types/agenda";
 import { editAgenda, getAgenda, postAgenda } from "@/redux/slices/agendaSlice";
 import { formatStrToDateTime } from "@/utils/convert";
+import { format } from "date-fns";
 type Props = {
   toggleDialog: () => void;
 };
@@ -40,9 +41,20 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    var bodyData = {
+      id: formData.id,
+      name: formData.name,
+      type: formData.type,
+      location: formData.location,
+      divisi_id: formData.divisi_id,
+      start_at: format(
+        Date.parse(formData.start_at!.replace("Z", "")),
+        "yyyy-MM-dd hh:mm"
+      ).replace(" ", "T"),
+    };
 
     if (agenda == null) {
-      dispatch(postAgenda(formData as Agenda))
+      dispatch(postAgenda(bodyData as Agenda))
         .unwrap()
         .then((res) => {
           if (res != null) {
@@ -55,7 +67,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
           console.error("Error fetching data:", error);
         });
     } else {
-      dispatch(editAgenda(formData as Agenda))
+      dispatch(editAgenda(bodyData as Agenda))
         .unwrap()
         .then((res) => {
           if (res != null) {
