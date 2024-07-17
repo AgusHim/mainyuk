@@ -49,7 +49,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
       divisi_id: formData.divisi_id,
       start_at: format(
         Date.parse(formData.start_at!.replace("Z", "")),
-        "yyyy-MM-dd hh:mm"
+        "yyyy-MM-dd HH:mm"
       ).replace(" ", "T"),
     };
 

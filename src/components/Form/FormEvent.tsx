@@ -37,11 +37,11 @@ const FormEvent = () => {
       divisi_id: formData.divisi_id,
       start_at: format(
         Date.parse(formData.start_at!.replace("Z", "")),
-        "yyyy-MM-dd hh:mm"
+        "yyyy-MM-dd HH:mm"
       ).replace(" ", "T"),
       end_at: format(
         Date.parse(formData.end_at!.replace("Z", "")),
-        "yyyy-MM-dd hh:mm"
+        "yyyy-MM-dd HH:mm"
       ).replace(" ", "T"),
     };
 
