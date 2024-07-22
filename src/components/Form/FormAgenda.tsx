@@ -185,6 +185,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
             name="start_at"
             placeholder="Waktu Pelaksanaan Agenda"
             className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            min="2024-01-01T00:00"
             required
           />
         </div>
