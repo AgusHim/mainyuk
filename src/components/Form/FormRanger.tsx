@@ -31,7 +31,7 @@ const FormRanger: React.FC<FormProps> = ({ ranger, toggleDialog }) => {
     activity: ranger?.user?.activity ?? "",
     email: ranger?.user?.email ?? "",
     password: "",
-    divisi_id: ranger?.divisi?.id ?? "",
+    divisi_id: ranger?.divisi?.id ?? "1",
   });
 
   useEffect(() => {
