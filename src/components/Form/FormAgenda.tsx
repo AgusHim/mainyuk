@@ -24,7 +24,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
     name: agenda?.name,
     type: agenda?.type,
     location: agenda?.location,
-    divisi_id: agenda?.divisi?.id ?? "",
+    divisi_id: agenda?.divisi?.id ?? "1",
     start_at: agenda?.start_at!.replace("Z", ""),
   });
 
