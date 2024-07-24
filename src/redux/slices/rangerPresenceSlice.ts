@@ -4,24 +4,31 @@ import { RangerPresence } from "@/types/rengerPresence";
 
 interface RangerPresenceState {
   data: RangerPresence[] | null;
+  rangers: RangerPresence[] | null;
   loading: boolean;
   error: string | null;
 }
 const initialState: RangerPresenceState = {
   data: null,
+  rangers: null,
   loading: false,
   error: null,
 };
 
 export const getRangerPresence = createAsyncThunk(
   "ranger.presence.get",
-  async (isAdmin:boolean | null, _) => {
-    let res;
-    if(isAdmin){
-      res = await admin_api.get("/rangers/presence");
-    }else{
-      res = await ranger_api.get("/rangers/presence");
-    }
+  async () => {
+    const res = await ranger_api.get("/rangers/presence");
+
+    return res.data;
+  }
+);
+
+export const getRangersPresence = createAsyncThunk(
+  "rangers.presence.get",
+  async () => {
+    const res = await admin_api.get("/rangers/presence");
+
     return res.data;
   }
 );
@@ -57,15 +64,20 @@ export const rPresenceSlice = createSlice({
       state.loading = false;
       state.error = null;
     });
+    builder.addCase(getRangersPresence.fulfilled, (state, action) => {
+      state.rangers = action.payload as RangerPresence[];
+      state.loading = false;
+      state.error = null;
+    });
     builder.addCase(
-      getRangerPresence.pending || postRangerPresence.pending,
+      getRangerPresence.pending || getRangersPresence.pending || postRangerPresence.pending,
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
     builder.addCase(
-      getRangerPresence.rejected || postRangerPresence.rejected,
+      getRangerPresence.rejected || getRangersPresence.rejected || postRangerPresence.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";
