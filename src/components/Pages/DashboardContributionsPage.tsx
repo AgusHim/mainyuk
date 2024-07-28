@@ -4,7 +4,10 @@ import { useEffect } from "react";
 import CardDataStats from "../CardDataStats";
 import TableRangerPresence from "../Tables/TableRangerPresence";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
-import { getRangerPresence, getRangersPresence } from "@/redux/slices/rangerPresenceSlice";
+import {
+  getRangerPresence,
+  getRangersPresence,
+} from "@/redux/slices/rangerPresenceSlice";
 import TableRangersPresence from "../Tables/TableRangersPresence";
 
 export default function DashboardContributionsPage() {
@@ -12,14 +15,16 @@ export default function DashboardContributionsPage() {
   const user = useAppSelector((state) => state.auth.user);
 
   const presence = useAppSelector((state) => state.rangerPresence.data);
-  const rangersPresence = useAppSelector((state) => state.rangerPresence.rangers);
+  const rangersPresence = useAppSelector(
+    (state) => state.rangerPresence.rangers
+  );
   const isLoading = useAppSelector((state) => state.rangerPresence.loading);
   const error = useAppSelector((state) => state.rangerPresence.error);
 
   useEffect(() => {
     if (!isLoading) {
       const isAdmin = user?.role == "admin" || user?.role == "pj";
-      if(isAdmin){
+      if (isAdmin) {
         dispatch(getRangersPresence());
       }
       dispatch(getRangerPresence());
@@ -54,7 +59,7 @@ export default function DashboardContributionsPage() {
           <div className="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
             <CardDataStats
               title="Total Kontribusi"
-              total={presence!.length.toString()}
+              total={presence == null ? "0" : presence!.length.toString()}
               rate=""
             >
               <svg
@@ -127,7 +132,11 @@ export default function DashboardContributionsPage() {
               <div className="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
                 <CardDataStats
                   title="Total Kontribusi Ranger"
-                  total={rangersPresence!.length.toString()}
+                  total={
+                    rangersPresence == null
+                      ? "0"
+                      : rangersPresence!.length.toString()
+                  }
                   rate=""
                 >
                   <svg
