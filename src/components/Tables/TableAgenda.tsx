@@ -27,11 +27,11 @@ const TableAgenda: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
   const isLoading = useAppSelector((state) => state.agenda.loading);
   const error = useAppSelector((state) => state.agenda.error);
 
-  useEffect(() => {
-    if (listAgenda == null && !isLoading) {
-      dispatch(getAgenda());
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (listAgenda == null && !isLoading) {
+  //     dispatch(getAgenda({}));
+  //   }
+  // }, []);
 
   const [dialogContent, setConfirmDialog] = useState<React.ReactNode>(null);
 
@@ -86,6 +86,9 @@ const TableAgenda: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                 Tipe
               </th>
+              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                Tim
+              </th>
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
                 Lokasi
               </th>
@@ -121,6 +124,9 @@ const TableAgenda: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
                   >
                     {data.type.toUpperCase()}
                   </p>
+                </td>
+                <td className="border-b border-black py-3 px-2">
+                  <p className="text-black dark:text-white">{data.divisi?.name}</p>
                 </td>
                 <td className="border-b border-black py-3 px-2">
                   <p className="text-black dark:text-white">{data.location}</p>

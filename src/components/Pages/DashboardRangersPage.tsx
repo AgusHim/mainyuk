@@ -4,20 +4,29 @@ import { useEffect, useRef, useState } from "react";
 import CardDataStats from "../CardDataStats";
 import TableRanger from "../Tables/TableRanger";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
-import { getRangers } from "@/redux/slices/rangerSlice";
+import { getRangers, setEndAt, setStartAt } from "@/redux/slices/rangerSlice";
 import FormRanger from "../Form/FormRanger";
 import DashboardLoader from "../common/Loader/DashboardLoader";
 import Dialog from "../common/Dialog/Dialog";
+import DatePicker, {
+  leftPopupTheme,
+  rightPopupTheme,
+} from "../common/DatePicker/DatePicker";
+import { formatStrToDateTime } from "@/utils/convert";
 
 export default function DashboardRangersPage() {
   const dispatch = useAppDispatch();
   const rangers = useAppSelector((state) => state.ranger.rangers);
   const isLoading = useAppSelector((state) => state.ranger.loading);
   const error = useAppSelector((state) => state.ranger.error);
+  const startAt = useAppSelector((state) => state.ranger.startAt);
+  const endAt = useAppSelector((state) => state.ranger.endAt);
 
   useEffect(() => {
-    if ( !isLoading) {
-      dispatch(getRangers());
+    if (!isLoading) {
+      const start = formatStrToDateTime(startAt, "dd-MM-yyyy", false);
+      const end = formatStrToDateTime(endAt, "dd-MM-yyyy", false);
+      dispatch(getRangers({ start_at: start, end_at: end }));
     }
   }, []);
 
@@ -59,8 +68,10 @@ export default function DashboardRangersPage() {
       </div>
       <div className="mb-3 w-full flex justify-end">
         <button
-          onClick={()=>{
-            setDialogContent(<FormRanger ranger={null} toggleDialog={toggleDialog}/>);
+          onClick={() => {
+            setDialogContent(
+              <FormRanger ranger={null} toggleDialog={toggleDialog} />
+            );
             toggleDialog();
           }}
           className="w-full sm:w-50 inline-flex items-center justify-center gap-2.5 rounded-lg bg-meta-3 py-2 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-3 border-2 border-black"
@@ -70,8 +81,39 @@ export default function DashboardRangersPage() {
           Tambah Ranger
         </button>
       </div>
+      <div className="flex items-center my-5">
+        <DatePicker
+          theme={rightPopupTheme}
+          value={formatStrToDateTime(startAt, "dd MMMM yyyy", false)}
+          onSelectedDateChanged={(date: Date) => {
+            dispatch(setStartAt(date.toISOString()));
+            const start = formatStrToDateTime(
+              date.toISOString(),
+              "dd-MM-yyyy",
+              false
+            );
+            const end = formatStrToDateTime(endAt, "dd-MM-yyyy", false);
+            dispatch(getRangers({ start_at: start, end_at: end }));
+          }}
+        />
+        <span className="mx-4 text-gray-500">to</span>
+        <DatePicker
+          theme={leftPopupTheme}
+          value={formatStrToDateTime(endAt, "dd MMMM yyyy", false)}
+          onSelectedDateChanged={(date: Date) => {
+            dispatch(setEndAt(date.toISOString()));
+            const start = formatStrToDateTime(startAt, "dd-MM-yyyy", false);
+            const end = formatStrToDateTime(
+              date.toISOString(),
+              "dd-MM-yyyy",
+              false
+            );
+            dispatch(getRangers({ start_at: start, end_at: end }));
+          }}
+        />
+      </div>
       <div className="flex flex-col gap-10">
-        <TableRanger/>
+        <TableRanger />
       </div>
       <Dialog ref={dialogRef} toggleDialog={toggleDialog}>
         {dialogContent}

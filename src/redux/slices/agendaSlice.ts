@@ -1,23 +1,43 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { admin_api } from "../api";
 import { Agenda } from "@/types/agenda";
+import { formatStrToDateTime } from "@/utils/convert";
 
 interface AgendaState {
   data: Agenda[] | null;
   agenda: Agenda | null;
   loading: boolean;
   error: string | null;
+  agendaStartAt: string | null;
+  agendaEndAt: string | null;
 }
+
+const today = new Date();
+const currentYear = today.getFullYear();
+const currentMonth = today.getMonth();
+const nextMonth = today.getMonth() + 1; // Months are zero-based, so add 1
+
+// Get the last day of the current month
+const lastDay = new Date(currentYear, nextMonth, 0).getDate();
 
 const initialState: AgendaState = {
   data: null,
   agenda: null,
   loading: false,
   error: null,
+  agendaStartAt: formatStrToDateTime( new Date(currentYear, currentMonth, 1).toISOString(),"dd-MM-yyyy",false),
+  agendaEndAt: formatStrToDateTime( new Date(currentYear, currentMonth, lastDay).toISOString(),"dd-MM-yyyy",false),
 };
 
-export const getAgenda = createAsyncThunk("agenda", async () => {
-  const res = await admin_api.get("/agenda");
+interface getAgendaParams {
+  start_at?: string|null;
+  end_at?:string|null;
+}
+
+export const getAgenda = createAsyncThunk("agenda", async (params: getAgendaParams) => {
+  const res = await admin_api.get("/agenda",{
+    params:params,
+  });
   return res.data;
 });
 
@@ -64,6 +84,14 @@ export const agendaSlice = createSlice({
       const updated = state.data?.filter(agenda => agenda.id !== action.payload);
       state.data = updated!;
     },
+    setAgendaStartAt: (state, action) => {
+      const date = action.payload as string;
+      state.agendaStartAt = date;
+    },
+    setAgendaEndAt: (state, action) => {
+      const date = action.payload as string;
+      state.agendaEndAt = date;
+    },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
@@ -94,5 +122,5 @@ export const agendaSlice = createSlice({
   },
 });
 
-export const { setAgenda, deleteFromListAgenda } = agendaSlice.actions;
+export const { setAgenda, deleteFromListAgenda, setAgendaStartAt, setAgendaEndAt } = agendaSlice.actions;
 export default agendaSlice.reducer;

@@ -97,10 +97,11 @@ export default function EventDetailPage({
           </h1>
           <ReadMoreParagraph text={event.desc??''} maxLength={200} />
         </div>
-        <div className="w-auto md:w-2/4 md:mx-4 flex flex-col mb-5 p-5 md:p-10 rounded-xl border-2 bg-white shadow-bottom dark:bg-boxdark border-black dark:border-black">
-          <h1 className="mb-5 text-2xl font-bold text-black dark:text-white">
+        <div className="w-auto md:w-2/4 md:mx-4 flex flex-col mb-5 p-10 rounded-xl border-2 bg-white shadow-bottom dark:bg-boxdark border-black dark:border-black">
+          <h1 className="mb-2 text-2xl font-bold text-black dark:text-white">
             Tanya Ustadz
           </h1>
+          <p className="mb-5">Masukan pertanyaan atau keresahan kamu</p>
           <CommentField />
           <div className="mt-5">
             <div className="mb-5"><DropdownFilter isLivePage={false}/></div>     

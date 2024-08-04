@@ -5,13 +5,17 @@ import CardDataStats from "../CardDataStats";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 import TableAgenda from "../Tables/TableAgenda";
 import FormAgenda from "../Form/FormAgenda";
-import { getAgenda, setAgenda } from "@/redux/slices/agendaSlice";
+import { getAgenda, setAgenda, setAgendaEndAt, setAgendaStartAt } from "@/redux/slices/agendaSlice";
 import Dialog from "../common/Dialog/Dialog";
 import DashboardLoader from "../common/Loader/DashboardLoader";
+import DatePicker, { leftPopupTheme, rightPopupTheme } from "../common/DatePicker/DatePicker";
+import { formatStrToDateTime } from "@/utils/convert";
 
 export default function DashboardAgendaPage() {
   const dispatch = useAppDispatch();
   const agenda = useAppSelector((state) => state.agenda.data);
+  const agendaStartAt = useAppSelector((state) => state.agenda.agendaStartAt);
+  const agendaEndAt = useAppSelector((state) => state.agenda.agendaEndAt);
   const isLoading = useAppSelector((state) => state.agenda.loading);
   const error = useAppSelector((state) => state.agenda.error);
 
@@ -33,7 +37,7 @@ export default function DashboardAgendaPage() {
 
   useEffect(() => {
     if (agenda == null && !isLoading) {
-      dispatch(getAgenda());
+      dispatch(getAgenda({start_at:agendaStartAt,end_at:agendaEndAt}));
     }
   }, []);
   
@@ -88,6 +92,27 @@ export default function DashboardAgendaPage() {
           <span>{iconAgenda("fill-white")}</span>
           Tambah Agenda
         </button>
+      </div>
+      <div className="flex items-center my-5">
+        <DatePicker
+          theme={rightPopupTheme}
+          value={agendaStartAt!}
+          onSelectedDateChanged={(date: Date) => {
+            const start = formatStrToDateTime(date.toISOString(), "dd-MM-yyyy", false);
+            dispatch(setAgendaStartAt(start));
+            dispatch(getAgenda({ start_at: start, end_at: agendaEndAt! }));
+          }}
+        />
+        <span className="mx-4 text-gray-500">to</span>
+        <DatePicker
+          theme={leftPopupTheme}
+          value={agendaEndAt!}
+          onSelectedDateChanged={(date: Date) => {
+            const end = formatStrToDateTime(date.toISOString(), "dd-MM-yyyy", false);
+            dispatch(setAgendaEndAt(end));
+            dispatch(getAgenda({ start_at: agendaStartAt!, end_at: end}));
+          }}
+        />
       </div>
       <div className="flex flex-col gap-10">
         <TableAgenda

@@ -4,8 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect, useState } from "react";
 import { getDivisi } from "@/redux/slices/divisiSlice";
 import { Agenda } from "@/types/agenda";
-import { editAgenda, getAgenda, postAgenda } from "@/redux/slices/agendaSlice";
-import { formatStrToDateTime } from "@/utils/convert";
+import { editAgenda, getAgenda, postAgenda, setAgendaStartAt } from "@/redux/slices/agendaSlice";
 import { format } from "date-fns";
 type Props = {
   toggleDialog: () => void;
@@ -15,6 +14,8 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
   const dispatch = useAppDispatch();
 
   const agenda = useAppSelector((state) => state.agenda.agenda);
+  const agendaStartAt = useAppSelector((state) => state.agenda.agendaStartAt);
+  const agendaEndAt = useAppSelector((state) => state.agenda.agendaEndAt);
   const listDivisi = useAppSelector((state) => state.divisi.data);
   const isLoadingDivisi = useAppSelector((state) => state.divisi.loading);
   const isLoadingAgenda = useAppSelector((state) => state.agenda.loading);
@@ -59,7 +60,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
         .then((res) => {
           if (res != null) {
             toggleDialog();
-            dispatch(getAgenda());
+            dispatch(getAgenda({start_at:agendaStartAt,end_at:agendaEndAt}));
           }
         })
         .catch((error) => {
@@ -72,7 +73,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
         .then((res) => {
           if (res != null) {
             toggleDialog();
-            dispatch(getAgenda());
+            dispatch(getAgenda({start_at:agendaStartAt,end_at:agendaEndAt}));
           }
         })
         .catch((error) => {

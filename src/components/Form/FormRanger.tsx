@@ -84,7 +84,7 @@ const FormRanger: React.FC<FormProps> = ({ ranger, toggleDialog }) => {
         .unwrap()
         .then((res) => {
           if (res != null) {
-            dispatch(getRangers());
+            dispatch(getRangers({}));
           }
         })
         .catch((error) => {
@@ -95,7 +95,7 @@ const FormRanger: React.FC<FormProps> = ({ ranger, toggleDialog }) => {
         .unwrap()
         .then((res) => {
           if (res != null) {
-            dispatch(getRangers());
+            dispatch(getRangers({}));
           }
         })
         .catch((error) => {

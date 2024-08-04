@@ -57,7 +57,7 @@ const FormAccount: React.FC<FormProps> = ({ toggleDialog }) => {
       .unwrap()
       .then((res) => {
         if (res != null) {
-          dispatch(getRangers());
+          dispatch(getRangers({}));
         }
       })
       .catch((error) => {

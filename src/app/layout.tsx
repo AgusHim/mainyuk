@@ -6,6 +6,7 @@ import "./data-tables-css.css";
 import "./satoshi.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import 'flowbite/dist/flowbite.css';
 
 export default function RootLayout({
   children,

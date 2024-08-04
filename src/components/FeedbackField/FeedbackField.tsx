@@ -40,18 +40,18 @@ const FeedbackField = () => {
   return (
     <div className="w-full md:w-1/4 h-1/2 p-10 rounded-xl border-2 border-black bg-white dark:bg-boxdark shadow-bottom dark:border-black">
       <h1 className="mb-2 text-2xl font-bold text-black dark:text-white">
-        Masukan & Saran
+        Kritik & Saran
       </h1>
-      <p>Untuk evaluasi tim demi keseruan event berikutnya</p>
+      <p>Evaluasi kegiatan taklim agar lebih baik kedepan</p>
         <textarea
           onChange={handleChange}
           name="message"
           value={formData["message"]}
-          className="w-full max-h-40 my-5 rounded-lg border-2 focus:border-4 border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-black dark:bg-boxdark dark:focus:border-primary resize-none"
-          rows={4}
+          className="w-full max-h-14 my-5 rounded-lg border-2 focus:border-4 border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-black dark:bg-boxdark dark:focus:border-primary resize-none"
+          rows={5}
           cols={50}
           maxLength={300}
-          placeholder="Tulis masukan..."
+          placeholder="Tulis kritik dan saran"
         />
         {isLoading ? (
           <div className="ml-2 h-8 w-8 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>

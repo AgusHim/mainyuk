@@ -36,13 +36,13 @@ const CommentField = () => {
   };
 
   return (
-    <div className="w-full flex items-center justify-center">
+    <div className="w-full flex flex-col md:flex-row items-end md:items-center md:justify-center">
       <textarea
         onChange={handleChange}
         name="comment"
         value={formData["comment"]}
         className="w-full max-h-14 focus:max-h-40 rounded-lg border-2 focus:border-4 border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-black dark:bg-boxdark dark:focus:border-primary resize-none"
-        rows={4}
+        rows={5}
         cols={50}
         maxLength={300}
         placeholder="Tulis Pertanyaan ..."
@@ -52,7 +52,7 @@ const CommentField = () => {
       ) : (
         <button
           onClick={handleSubmit}
-          className="max-h-12 ml-4 w-40 btn bg-primary text-white p-2 rounded-md border-2 border-black"
+          className="mt-3 md:mt-0 max-h-12 ml-0 md:ml-4 w-30 lg:w-40 btn bg-primary text-white p-2 rounded-md border-2 border-black"
           style={{boxShadow: '5px 5px 0px 0px #000000'}}
         >
           Kirim

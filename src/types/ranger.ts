@@ -6,7 +6,8 @@ export type Ranger = {
     user?:User|null,
     divisi?:Divisi|null,
     present?:number |0,
-    absent?:number |0,
+    present_divisi?:number |0,
+    absent_divisi?:number |0,
   };
 
   export type CreateRanger = {
