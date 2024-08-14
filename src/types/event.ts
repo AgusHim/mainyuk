@@ -12,5 +12,6 @@ export type Event = {
     divisi?:Divisi;
     start_at?:string;
     end_at?:string;
+    close_at?:string|null;
   };
   

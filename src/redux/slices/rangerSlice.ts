@@ -9,6 +9,7 @@ interface RangerState {
   error: string | null;
   startAt: string;
   endAt: string;
+  rangerDivisi: string;
 }
 const today = new Date();
 const currentYear = today.getFullYear();
@@ -25,6 +26,7 @@ const initialState: RangerState = {
   error: null,
   startAt: new Date(currentYear, currentMonth, 1).toISOString(),
   endAt: new Date(currentYear, currentMonth, lastDay).toISOString(),
+  rangerDivisi:'All',
 };
 
 interface getRengerParams {
@@ -98,6 +100,10 @@ export const RangerSlice = createSlice({
     setEndAt: (state, action) => {
       const date = action.payload as string;
       state.endAt = date;
+    },
+    setFilterDivisi: (state, action) => {
+      const divisi = action.payload as string;
+      state.endAt = divisi;
     },
   },
   extraReducers: (builder) => {

@@ -9,6 +9,12 @@ import { CreatePresence } from "@/types/presence";
 import { useRouter } from "next/navigation";
 import { setAuthUser } from "@/redux/slices/authSlice";
 import DashboardLoader from "../common/Loader/DashboardLoader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHandsPraying } from "@fortawesome/free-solid-svg-icons";
+import { formatStrToDateTime } from "@/utils/convert";
+import ReadMoreParagraph from "../ReadMoreParagraph/ReadMoreParagraph";
+import Loader from "../common/Loader";
+
 
 const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
   const router = useRouter();
@@ -98,8 +104,60 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
       });
   };
 
-  if (isLoading) {
-    return <DashboardLoader/>;
+  if (eventDetail == null || isLoading) {
+    return <Loader></Loader>;
+  }
+
+  if (eventDetail?.close_at != null) {
+    const closeAt = new Date(eventDetail?.close_at!);
+    const startAt = new Date(eventDetail?.start_at!);
+    if (closeAt < startAt) {
+      return (
+        <div className="min-w-screen min-h-screen flex flex-col md:flex-row items-center md:items-start">
+          <div className="w-full md:w-1/4 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
+            <div className="flex flex-row items-center justify-center">
+              <FontAwesomeIcon
+                icon={faHandsPraying}
+                className={"w-15 h-15 my-4 mr-4"}
+                color="#7480FF"
+              ></FontAwesomeIcon>
+              <h1 className="text-black dark:text-white text-xl">
+                Maaf, pendaftaran sudah ditutup{" "}
+                <span className="font-bold text-black dark:text-white text-xl">
+                  {formatStrToDateTime(
+                    eventDetail?.close_at ?? "",
+                    "dd MMMM yyyy HH:mm",
+                    true
+                  )}
+                </span>
+              </h1>
+            </div>
+          </div>
+          <div className="w-full md:w-1/4 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
+            <Image
+              className="w-full mb-5 rounded-xl shadow-bottom border-4 border-black"
+              style={{ boxShadow: "10px 10px 0px 0px #000000" }}
+              width={400}
+              height={400}
+              alt={`Image ${eventDetail?.title??''}`}
+              src={eventDetail?.image_url ?? ""}
+              unoptimized={true}
+            />
+            <h1 className="flex w-full justify-center text-lg md:text-xl lg:text-2xl font-bold text-black dark:text-white text-center">
+              {eventDetail?.title}
+            </h1>
+            <p className="my-2 flex w-full justify-center text-md md:text-lg font-light text-center text-black dark:text-white">
+              {eventDetail?.speaker}
+            </p>
+            <h1 className="mb-3 text-center text-sm md:text-md font-bold  text-black dark:text-white">
+              {formatStrToDateTime(eventDetail?.start_at!, "dd MMM yyyy")} -{" "}
+              {formatStrToDateTime(eventDetail.end_at!, "dd MMM yyyy")}
+            </h1>
+            <ReadMoreParagraph text={eventDetail.desc ?? ""} maxLength={200} />
+          </div>
+        </div>
+      );
+    }
   }
 
   return (

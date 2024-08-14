@@ -22,9 +22,9 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
 
   const [formData, setFormData] = useState({
     id: agenda?.id ?? "",
-    name: agenda?.name,
-    type: agenda?.type,
-    location: agenda?.location,
+    name: agenda?.name??"",
+    type: agenda?.type??"meeting",
+    location: agenda?.location??"",
     divisi_id: agenda?.divisi?.id ?? "1",
     start_at: agenda?.start_at!.replace("Z", ""),
   });

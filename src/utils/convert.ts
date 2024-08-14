@@ -1,4 +1,5 @@
 import { format, parseISO } from "date-fns";
+import { id } from "date-fns/locale";
 
 function formatStrToDateTime(
   dateStr: string,
@@ -21,7 +22,7 @@ function formatStrToDateTime(
     );
   }
 
-  return format(newDate, formatStr);
+  return format(newDate, formatStr, { locale: id });
 }
 
 export { formatStrToDateTime };

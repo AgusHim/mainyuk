@@ -13,6 +13,7 @@ import DatePicker, {
   rightPopupTheme,
 } from "../common/DatePicker/DatePicker";
 import { formatStrToDateTime } from "@/utils/convert";
+import DropdownDivisi from "../Dropdowns/DropdownDivisi";
 
 export default function DashboardRangersPage() {
   const dispatch = useAppDispatch();
@@ -81,36 +82,40 @@ export default function DashboardRangersPage() {
           Tambah Ranger
         </button>
       </div>
-      <div className="flex items-center my-5">
-        <DatePicker
-          theme={rightPopupTheme}
-          value={formatStrToDateTime(startAt, "dd MMMM yyyy", false)}
-          onSelectedDateChanged={(date: Date) => {
-            dispatch(setStartAt(date.toISOString()));
-            const start = formatStrToDateTime(
-              date.toISOString(),
-              "dd-MM-yyyy",
-              false
-            );
-            const end = formatStrToDateTime(endAt, "dd-MM-yyyy", false);
-            dispatch(getRangers({ start_at: start, end_at: end }));
-          }}
-        />
-        <span className="mx-4 text-gray-500">to</span>
-        <DatePicker
-          theme={leftPopupTheme}
-          value={formatStrToDateTime(endAt, "dd MMMM yyyy", false)}
-          onSelectedDateChanged={(date: Date) => {
-            dispatch(setEndAt(date.toISOString()));
-            const start = formatStrToDateTime(startAt, "dd-MM-yyyy", false);
-            const end = formatStrToDateTime(
-              date.toISOString(),
-              "dd-MM-yyyy",
-              false
-            );
-            dispatch(getRangers({ start_at: start, end_at: end }));
-          }}
-        />
+
+      <div className="flex items-center justify-between my-5">
+        <DropdownDivisi label={"Dropdown"} onClick={()=>{}}/>
+        <div className="flex items-center">
+          <DatePicker
+            theme={rightPopupTheme}
+            value={formatStrToDateTime(startAt, "dd MMMM yyyy", false)}
+            onSelectedDateChanged={(date: Date) => {
+              dispatch(setStartAt(date.toISOString()));
+              const start = formatStrToDateTime(
+                date.toISOString(),
+                "dd-MM-yyyy",
+                false
+              );
+              const end = formatStrToDateTime(endAt, "dd-MM-yyyy", false);
+              dispatch(getRangers({ start_at: start, end_at: end }));
+            }}
+          />
+          <span className="mx-4 text-gray-500">to</span>
+          <DatePicker
+            theme={leftPopupTheme}
+            value={formatStrToDateTime(endAt, "dd MMMM yyyy", false)}
+            onSelectedDateChanged={(date: Date) => {
+              dispatch(setEndAt(date.toISOString()));
+              const start = formatStrToDateTime(startAt, "dd-MM-yyyy", false);
+              const end = formatStrToDateTime(
+                date.toISOString(),
+                "dd-MM-yyyy",
+                false
+              );
+              dispatch(getRangers({ start_at: start, end_at: end }));
+            }}
+          />
+        </div>
       </div>
       <div className="flex flex-col gap-10">
         <TableRanger />
