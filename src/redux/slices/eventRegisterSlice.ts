@@ -34,10 +34,12 @@ export const eventSlice = createSlice({
     });
     builder.addCase(postPrecence.pending, (state, _) => {
       state.loading = true;
+      state.isRegistered = false;
       state.error = null;
     });
     builder.addCase(postPrecence.rejected, (state, action) => {
         state.loading = false;
+        state.isRegistered = false;
         state.error = action.error.message || "Failed to fetch data";
       });
   },

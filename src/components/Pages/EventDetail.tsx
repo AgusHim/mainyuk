@@ -49,13 +49,11 @@ export default function EventDetailPage({
               router.replace(`/events/${params.slug}/register`);
             }
             if (user != null && presence.event_id != params.slug) {
-              if (event != null && event!.close_at == null) {
-                const presence: CreatePresence = {
-                  event_id: params.slug,
-                  user_id: user.id,
-                };
-                dispatch(postPrecence(presence));
-              }
+              const presence: CreatePresence = {
+                event_id: params.slug,
+                user_id: user.id,
+              };
+              dispatch(postPrecence(presence));
             }
           });
         setIsInit(false);
@@ -69,7 +67,7 @@ export default function EventDetailPage({
     }
   }, [isInit, dispatch]);
 
-  if (isLoading) {
+  if (isLoading || presence.loading) {
     return <Loader></Loader>;
   }
   if (error != null) {
@@ -78,7 +76,7 @@ export default function EventDetailPage({
   if (event == null || (user == null && event?.close_at == null)) {
     return <Loader></Loader>;
   }
-  if (event?.close_at != null) {
+  if (event?.close_at != null && (presence.isRegistered == false)) {
     const now = new Date();
     const closeAt = new Date(event?.close_at!);
     const startAt = new Date(event?.start_at!);
