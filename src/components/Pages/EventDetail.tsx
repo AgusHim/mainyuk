@@ -76,10 +76,10 @@ export default function EventDetailPage({
   if (event == null || (user == null && event?.close_at == null)) {
     return <Loader></Loader>;
   }
-  if (event?.close_at != null && (presence.isRegistered == false)) {
-    const now = new Date();
-    const closeAt = new Date(event?.close_at!);
-    const startAt = new Date(event?.start_at!);
+  const now = new Date();
+  const closeAt = new Date(event?.close_at!);
+  const startAt = new Date(event?.start_at!);
+  if (event?.close_at != null && presence.isRegistered == false) {
     if (closeAt < startAt && now < startAt) {
       return (
         <div className="min-w-screen min-h-screen flex flex-col md:flex-row items-center md:items-start">
@@ -128,8 +128,32 @@ export default function EventDetailPage({
       );
     }
   }
+  const phoneNumber = "+6281241000056";
+  const message = `Konfirmasi Pendaftaran%0A%0A*${event?.title}*%0A%0ANama:${presence.data?.user?.name}%0AUsia:${presence.data?.user?.age}%0ADomisili:${presence.data?.user?.address}%0ANo HP:${presence.data?.user?.phone}%0APekerjaan:${presence.data?.user?.activity}%0A`;
+
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
   return (
     <>
+      {presence.data != null && now < startAt ? (
+        <div className="w-full mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
+          <div className="flex flex-row justify-between items-center">
+            <p className="text-black dark:text-white">
+              Konfirmasi kehadiran bisa klik tombol berikut
+            </p>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary ml-4"
+              style={{ boxShadow: "5px 5px 0px 0px #000000" }}
+            >
+              Whatsapp
+            </a>
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
       <div className="min-w-screen min-h-screen flex flex-col md:flex-row items-center md:items-start">
         <div className="w-full md:w-1/4 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
           <Image
@@ -222,8 +246,8 @@ const DialogSuccesRegistered: React.FC<DialogProps> = ({ event }) => {
               )}
             </p>
             <p className="text-center text-black dark:text-white">
-              Kamu juga bisa mengirimkan pertanyaan untuk dibacakan saat acara
-              nanti
+              Kamu bisa konfirmasi kehadiran dan juga bisa mengirimkan
+              pertanyaan untuk dibacakan saat acara nanti
             </p>
             <div className="modal-action justify-center">
               <a

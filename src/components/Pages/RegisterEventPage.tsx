@@ -108,10 +108,11 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
     return <Loader></Loader>;
   }
 
-  if (eventDetail?.close_at != null) {
+  if (eventDetail != null) {
+    const now = new Date();
     const closeAt = new Date(eventDetail?.close_at!);
-    const startAt = new Date(eventDetail?.start_at!);
-    if (closeAt < startAt) {
+    const endAt = new Date(eventDetail?.end_at!);
+    if (now > closeAt || now > endAt) {
       return (
         <div className="min-w-screen min-h-screen flex flex-col md:flex-row items-center md:items-start">
           <div className="w-full md:w-1/4 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
@@ -125,7 +126,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
                 Maaf, pendaftaran sudah ditutup{" "}
                 <span className="font-bold text-black dark:text-white text-xl">
                   {formatStrToDateTime(
-                    eventDetail?.close_at ?? "",
+                    now > endAt? eventDetail?.end_at??"":eventDetail?.close_at ?? "",
                     "dd MMMM yyyy HH:mm",
                     true
                   )}

@@ -45,7 +45,6 @@ export const presenceSlice = createSlice({
       console.log("action payload = ", action.payload);
       state.data = action.payload as Presence[];
       state.loading = false;
-
       state.error = null;
     });
     builder.addCase(getPresencesByAuth.fulfilled, (state, action) => {
