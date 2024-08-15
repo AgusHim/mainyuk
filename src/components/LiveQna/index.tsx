@@ -1,10 +1,25 @@
 import { Comment } from "@/types/comment";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getComments } from "@/redux/slices/qnaSlice";
 import { formatStrToDateTime } from "@/utils/convert";
+import DialogShowQnA from "../common/Dialog/DialogShowQnA";
 
 const LiveQna = () => {
+  const [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  function toggleDialog() {
+    if (!dialogRef.current) {
+      return;
+    }
+    if (dialogRef.current.hasAttribute("open")) {
+      dialogRef.current.close();
+      setDialogContent(null);
+    } else {
+      dialogRef.current.showModal();
+    }
+  }
+
   const dispatch = useAppDispatch();
   const event = useAppSelector((state) => state.event.event);
   const comments = useAppSelector((state) => state.qna.data);
@@ -74,7 +89,7 @@ const LiveQna = () => {
                   </span>
                 </p>
                 <p className="text-md mt-2">
-                  {formatStrToDateTime(comment.created_at!, "dd-MM-yyyy hh:mm")}
+                  {formatStrToDateTime(comment.created_at!, "dd-MM-yyyy HH:mm",true)}
                 </p>
               </div>
               <div className="flex flex-col items-center justify-center">
@@ -97,6 +112,9 @@ const LiveQna = () => {
           </div>
         ))
       )}
+      <DialogShowQnA toggleDialog={toggleDialog} ref={dialogRef}>
+        {dialogContent}
+      </DialogShowQnA>
     </div>
   );
 };

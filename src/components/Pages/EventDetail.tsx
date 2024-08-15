@@ -16,11 +16,11 @@ import ReadMoreParagraph from "../ReadMoreParagraph/ReadMoreParagraph";
 import FeedbackField from "../FeedbackField/FeedbackField";
 import { formatStrToDateTime } from "@/utils/convert";
 import Dialog from "../common/Dialog/Dialog";
-import { set } from "date-fns";
 import { Event } from "@/types/event";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons/faCircleCheck";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandsPraying } from "@fortawesome/free-solid-svg-icons";
+import { faArrowTrendUp } from "@fortawesome/free-solid-svg-icons/faArrowTrendUp";
 
 export default function EventDetailPage({
   params,
@@ -73,7 +73,11 @@ export default function EventDetailPage({
   if (error != null) {
     return <h1>{error}</h1>;
   }
-  if (event == null || (user == null && event?.close_at == null)) {
+  if (
+    event == null ||
+    (user == null && event?.close_at == null) ||
+    presence.data == null
+  ) {
     return <Loader></Loader>;
   }
   const now = new Date();
@@ -86,8 +90,8 @@ export default function EventDetailPage({
   if (event?.close_at != null && presence.isRegistered == false) {
     if (closeAt < startAt && now < startAt) {
       return (
-        <div className="min-w-screen min-h-screen flex flex-col md:flex-row items-center md:items-start">
-          <div className="w-full md:w-1/4 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
+        <div className="min-w-screen min-h-screen flex flex-col items-center">
+          <div className="w-full md:w-1/2 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
             <div className="flex flex-row items-center justify-center">
               <FontAwesomeIcon
                 icon={faHandsPraying}
@@ -106,25 +110,25 @@ export default function EventDetailPage({
               </h1>
             </div>
           </div>
-          <div className="w-full md:w-1/4 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
+          <div className="w-full md:w-1/2 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
             <Image
               className="w-full mb-5 rounded-xl shadow-bottom border-4 border-black"
               style={{ boxShadow: "10px 10px 0px 0px #000000" }}
               width={400}
               height={400}
-              alt={`Image ${event.title}`}
-              src={event.image_url ?? ""}
+              alt={`Image ${event?.title ?? ""}`}
+              src={event?.image_url ?? ""}
               unoptimized={true}
             />
             <h1 className="flex w-full justify-center text-lg md:text-xl lg:text-2xl font-bold text-black dark:text-white text-center">
-              {event.title}
+              {event?.title}
             </h1>
             <p className="my-2 flex w-full justify-center text-md md:text-lg font-light text-center text-black dark:text-white">
-              {event.speaker}
+              {event?.speaker}
             </p>
             <h1 className="mb-3 text-center text-sm md:text-md font-bold  text-black dark:text-white">
-              {formatStrToDateTime(event!.start_at!, "dd MMM yyyy")} -{" "}
-              {formatStrToDateTime(event!.end_at!, "dd MMM yyyy")}
+              {formatStrToDateTime(event?.start_at!, "dd MMM yyyy HH:mm", true)}{" "}
+              - {formatStrToDateTime(event.end_at!, "dd MMM yyyy HH:mm", true)}
             </h1>
             <ReadMoreParagraph text={event.desc ?? ""} maxLength={200} />
           </div>
@@ -186,8 +190,12 @@ export default function EventDetailPage({
             {event.speaker}
           </p>
           <h1 className="mb-3 text-center text-sm md:text-md font-bold  text-black dark:text-white">
-            {formatStrToDateTime(event!.start_at!, "dd MMM yyyy")} -{" "}
-            {formatStrToDateTime(event!.end_at!, "dd MMM yyyy")}
+            {formatStrToDateTime(event!.start_at!, "dd MMM yyyy HH:mm", true)} -{" "}
+            {formatStrToDateTime(
+              event!.end_at!,
+              "dd MMM yyyy HH:mm",
+              true
+            )}
           </h1>
           <ReadMoreParagraph text={event.desc ?? ""} maxLength={200} />
         </div>

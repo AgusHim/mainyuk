@@ -96,7 +96,7 @@ const QnaList = () => {
                 </span>
               </p>
               <p className="text-xs mt-2">
-                {formatStrToDateTime(comment.created_at!, "dd-MM-yyyy hh:mm")}
+                {formatStrToDateTime(comment.created_at!, "dd-MM-yyyy HH:mm", true)}
               </p>
             </div>
           </div>

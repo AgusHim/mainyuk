@@ -114,8 +114,8 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
     const endAt = new Date(eventDetail?.end_at!.replace('Z',''));
     if (now > closeAt || now > endAt) {
       return (
-        <div className="min-w-screen min-h-screen flex flex-col md:flex-row items-center md:items-start">
-          <div className="w-full md:w-1/4 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
+        <div className="min-w-screen min-h-screen flex flex-col items-center">
+          <div className="w-full md:w-1/2 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
             <div className="flex flex-row items-center justify-center">
               <FontAwesomeIcon
                 icon={faHandsPraying}
@@ -134,7 +134,7 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
               </h1>
             </div>
           </div>
-          <div className="w-full md:w-1/4 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
+          <div className="w-full md:w-1/2 h-1/2 mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
             <Image
               className="w-full mb-5 rounded-xl shadow-bottom border-4 border-black"
               style={{ boxShadow: "10px 10px 0px 0px #000000" }}
