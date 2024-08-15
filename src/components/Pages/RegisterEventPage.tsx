@@ -110,8 +110,8 @@ const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
 
   if (eventDetail != null) {
     const now = new Date();
-    const closeAt = new Date(eventDetail?.close_at!);
-    const endAt = new Date(eventDetail?.end_at!);
+    const closeAt = new Date(eventDetail?.close_at!.replace('Z',''));
+    const endAt = new Date(eventDetail?.end_at!.replace('Z',''));
     if (now > closeAt || now > endAt) {
       return (
         <div className="min-w-screen min-h-screen flex flex-col md:flex-row items-center md:items-start">

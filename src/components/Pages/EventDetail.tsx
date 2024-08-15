@@ -77,8 +77,9 @@ export default function EventDetailPage({
     return <Loader></Loader>;
   }
   const now = new Date();
-  const closeAt = new Date(event?.close_at!);
-  const startAt = new Date(event?.start_at!);
+  const closeAt = new Date(event?.close_at!.replace('Z',''));
+  const startAt = new Date(event?.start_at!.replace('Z',''));
+  console.log(`now At ${now} close At ${closeAt} Start At ${startAt}`);
   if (event?.close_at != null && presence.isRegistered == false) {
     if (closeAt < startAt && now < startAt) {
       return (
@@ -131,7 +132,17 @@ export default function EventDetailPage({
   const phoneNumber = "+6281241000056";
   const message = `Konfirmasi Pendaftaran%0A%0A*${event?.title}*%0A%0ANama:${presence.data?.user?.name}%0AUsia:${presence.data?.user?.age}%0ADomisili:${presence.data?.user?.address}%0ANo HP:${presence.data?.user?.phone}%0APekerjaan:${presence.data?.user?.activity}%0A`;
 
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+  const getWhatsAppUrl = () => {
+    const isMobile = /Android|iPhone/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      // Use intent for Android
+      return `intent://send/?phone=${phoneNumber}&text=${message}#Intent;scheme=whatsapp;package=com.whatsapp;end;`;
+    } else {
+      // Use wa.me for web and desktop
+      return `https://wa.me/${phoneNumber}?text=${message}`;
+    }
+  };
   return (
     <>
       {presence.data != null && now < startAt ? (
@@ -141,10 +152,10 @@ export default function EventDetailPage({
               Konfirmasi kehadiran bisa klik tombol berikut
             </p>
             <a
-              href={whatsappUrl}
+              href={getWhatsAppUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-primary ml-4"
+              className="btn btn-primary ml-4 text-white"
               style={{ boxShadow: "5px 5px 0px 0px #000000" }}
             >
               Whatsapp
