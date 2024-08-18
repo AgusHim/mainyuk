@@ -36,10 +36,10 @@ const DialogShowQnA = forwardRef<HTMLDialogElement, Props>(
             <Image
               width={70}
               height={70}
-              src={"/images/logo/yn_logo.png"}
+              src={"/images/logo/yn_logo_w.png"}
               alt="Logo"
             />
-            <h1 className="ml-3 text-[#3C4DDC] font-medium text-3xl">YukNgaji Solo</h1>
+            <h1 className="ml-3 text-white font-medium text-3xl">YukNgaji Solo</h1>
           </div>
         </div>
       </dialog>
