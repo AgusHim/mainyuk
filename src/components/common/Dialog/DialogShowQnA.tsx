@@ -16,7 +16,7 @@ const DialogShowQnA = forwardRef<HTMLDialogElement, Props>(
             toggleDialog();
           }
         }}
-        className="modal bg-meta-7"
+        className="modal bg-boxdark"
       >
         <div className="flex flex-col items-center">
           <div
