@@ -22,10 +22,10 @@ const Header = () => {
         <div className="flex items-center  ">
           <Link className="block flex-shrink-0 " href="/">
             <Image
-              width={60}
-              height={60}
+              width={40}
+              height={40}
               src={"/images/logo/yn_logo.png"}
-              alt="Logo"
+              alt="YukNgaji Solo"
             />
           </Link>
         </div>

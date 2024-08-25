@@ -1,11 +1,15 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getEventByCode } from "@/redux/slices/eventSlice";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Header from "../Header/Header";
+import { Carousel } from "flowbite-react";
+import { HomeCarousel } from "../Carousel/HomeCarousel";
+import { HomeFooter } from "../Footer/HomeFooter";
+import HomeLinktree from "../Linktree/HomeLinktree";
+import GridEvents from "../Grid/GridEvents";
 
 export default function IndexPage() {
   const dispatch = useAppDispatch();
@@ -46,45 +50,13 @@ export default function IndexPage() {
   };
   return (
     <>
-      {/* <!-- ===== Header Start ===== --> */}
-      <Header />
-      {/* <!-- ===== Header End ===== --> */}
-      <div className="h-screen flex flex-col items-center justify-center bg-white dark:bg-boxdark-2">
-        <div className="flex flex-col items-center justify-center w-3/4 sm:w-1/2 h-3/4 sm:h-1/2 border-4 border-black shadow-bottom rounded-lg bg-white dark:bg-boxdark">
-          <Image
-            className="mb-2"
-            src={"/images/logo/yn_logo.png"}
-            alt="Logo"
-            width={150}
-            height={32}
-          />
-          <p className="text-xl font-light 2xl:px-10">
-            Taat bahagia maksiat sengsara
-          </p>
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row items-center justify-center my-5 mt-10"
-          >
-            <input
-              onChange={handleChange}
-              value={formData["code"]}
-              name="code"
-              className="p-2 m-3 border-2 border-black rounded-md bg-transparent text-center"
-              type="text"
-              placeholder="Masukan Kode"
-            />
-            {isLoading ? (
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>
-            ) : (
-              <button
-                className="btn w-30 bg-primary hover:bg-secondary text-white p-2 rounded-md border-2 border-black"
-                style={{ boxShadow: "3px 3px 0px 0px #000000" }}
-              >
-                Masuk
-              </button>
-            )}
-          </form>
+      <div className="bg-yellow-300">
+        <div className="p-5 md:p-10 md:px-50">
+          <HomeLinktree />
+          <HomeCarousel />
+          <GridEvents />
         </div>
+        <HomeFooter />
       </div>
     </>
   );

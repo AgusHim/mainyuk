@@ -20,6 +20,15 @@ export const getEvents = createAsyncThunk("events", async () => {
   return res.data;
 });
 
+export const getEventsHome = createAsyncThunk("home.events", async () => {
+  const res = await api.get("/events", {
+    params: {
+      limit: 10,
+    },
+  });
+  return res.data;
+});
+
 export const getEventDetail = createAsyncThunk(
   "eventDetail",
   async (slug: string, thunk) => {
@@ -47,19 +56,34 @@ export const eventSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getEvents.fulfilled, (state, action) => {
+    builder.addCase(
+      getEvents.fulfilled || getEventsHome.fulfilled,
+      (state, action) => {
+        state.data = action.payload as Event[];
+        state.loading = false;
+      }
+    );
+    builder.addCase(getEventsHome.fulfilled, (state, action) => {
       state.data = action.payload as Event[];
       state.loading = false;
     });
     builder.addCase(
-      getEvents.pending || getEventDetail.pending || getEventByCode.pending || postEvent.pending,
+      getEvents.pending ||
+        getEventsHome.pending ||
+        getEventDetail.pending ||
+        getEventByCode.pending ||
+        postEvent.pending,
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
     builder.addCase(
-      getEvents.rejected || getEventDetail.rejected || getEventByCode.rejected || postEvent.rejected,
+      getEvents.rejected ||
+        getEventsHome.rejected ||
+        getEventDetail.rejected ||
+        getEventByCode.rejected ||
+        postEvent.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

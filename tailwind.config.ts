@@ -1,12 +1,12 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
 import flowbite from "flowbite-react/tailwind";
 
 const config: Config = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/flowbite-react/lib/**/*.js",
     flowbite.content(),
   ],
@@ -237,6 +237,7 @@ const config: Config = {
         6: "0px 3px 15px rgba(0, 0, 0, 0.1)",
         7: "-5px 0 0 #313D4A, 5px 0 0 #313D4A",
         8: "1px 0 0 #313D4A, -1px 0 0 #313D4A, 0 1px 0 #313D4A, 0 -1px 0 #313D4A, 0 3px 13px rgb(0 0 0 / 8%)",
+        custom: "10px 10px 0px -1px rgba(0,0,0,1)",
       },
       dropShadow: {
         1: "0px 1px 0px #E2E8F0",
@@ -257,9 +258,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    require('daisyui'),
-    require("flowbite/plugin")
-  ],
-}
-export default config
+  plugins: [require("daisyui"), require("flowbite/plugin")],
+};
+export default config;
