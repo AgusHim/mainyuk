@@ -43,7 +43,7 @@ export function HomeCarousel() {
           Momen Bahagia
         </h1>
       </div>
-      <div className="h-75 md:h-150">
+      <div className="h-60 md:h-150">
       <Carousel
         theme={carouselTheme}
         leftControl={<div></div>}
