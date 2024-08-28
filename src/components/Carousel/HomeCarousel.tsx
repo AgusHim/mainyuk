@@ -50,17 +50,17 @@ export function HomeCarousel() {
         rightControl={<div></div>}
       >
         <img
-          className="h-full"
+          className="w-full h-full object-cover"
           src="https://i.ibb.co.com/dtcz1tw/teori-of-life-1.png"
           alt="teori-of-life-1"
         />
         <img
-          className="h-full"
+          className="w-full h-full object-cover"
           src="https://i.ibb.co.com/kQw8pRK/teori-of-life-2.png"
           alt="teori-of-life-2"
         />
         <img
-          className="h-full"
+          className="w-full h-full object-cover"
           src="https://i.ibb.co.com/9s0bFzN/teori-of-life-3.png"
           alt="teori-of-life-3"
         />
