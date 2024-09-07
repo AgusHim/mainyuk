@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
-import Dialog from "../common/Dialog/Dialog";
+import Dialog from "../Common/Dialog/Dialog";
 import { formatStrToDateTime } from "@/utils/convert";
 
 type Props = {

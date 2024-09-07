@@ -4,12 +4,11 @@ import { getEventByCode } from "@/redux/slices/eventSlice";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import Header from "../Header/Header";
-import { Carousel } from "flowbite-react";
 import { HomeCarousel } from "../Carousel/HomeCarousel";
 import { HomeFooter } from "../Footer/HomeFooter";
 import HomeLinktree from "../Linktree/HomeLinktree";
-import GridEvents from "../Grid/GridEvents";
+import GridEventsHome from "../Grid/GridEventsHome";
+import { BottomNavBar } from "../BottomNavBar/BottomNavBar";
 
 export default function IndexPage() {
   const dispatch = useAppDispatch();
@@ -50,14 +49,14 @@ export default function IndexPage() {
   };
   return (
     <>
-      <div className="bg-yellow-300">
-        <div className="p-5 md:p-10 md:px-50">
-          <HomeLinktree />
-          <HomeCarousel />
-          <GridEvents />
-        </div>
+      <div className="mx-4">
+        <HomeLinktree />
+        <HomeCarousel />
+        <GridEventsHome />
         <HomeFooter />
+        
       </div>
+      <BottomNavBar />
     </>
   );
 }

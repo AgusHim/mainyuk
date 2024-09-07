@@ -6,6 +6,7 @@ import "./data-tables-css.css";
 import "./satoshi.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function RootLayout({
   children,
@@ -13,16 +14,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Provider store={makeStore()}>
-      <html lang="en">
-        <link rel="icon" href="/images/favicon.ico" sizes="any" />
-        <body suppressHydrationWarning={true}>
-          <div className="bg-white dark:bg-boxdark">
+    <GoogleOAuthProvider clientId={`${process.env.GOOGLE_CLIENT_ID}`}>
+      <Provider store={makeStore()}>
+        <html lang="en">
+          <link rel="icon" href="/images/favicon.ico" sizes="any" />
+          <body suppressHydrationWarning={true}>
             <ToastContainer position="bottom-center" theme="dark" />
-            <main>{children}</main>
-          </div>
-        </body>
-      </html>
-    </Provider>
+            {children}
+          </body>
+        </html>
+      </Provider>
+    </GoogleOAuthProvider>
   );
 }

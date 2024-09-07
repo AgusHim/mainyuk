@@ -6,6 +6,7 @@ const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/layout/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/flowbite-react/lib/**/*.js",
     flowbite.content(),
@@ -156,6 +157,7 @@ const config: Config = {
         242.5: "60.625rem",
       },
       maxWidth: {
+        layout: "430px",
         2.5: "0.625rem",
         3: "0.75rem",
         4: "1rem",
@@ -238,6 +240,7 @@ const config: Config = {
         7: "-5px 0 0 #313D4A, 5px 0 0 #313D4A",
         8: "1px 0 0 #313D4A, -1px 0 0 #313D4A, 0 1px 0 #313D4A, 0 -1px 0 #313D4A, 0 3px 13px rgb(0 0 0 / 8%)",
         custom: "10px 10px 0px -1px rgba(0,0,0,1)",
+        custom2: "5px 5px 0px -1px rgba(0,0,0,1)",
       },
       dropShadow: {
         1: "0px 1px 0px #E2E8F0",

@@ -48,6 +48,16 @@ export const editAccount = createAsyncThunk(
   }
 );
 
+export const getAuthGoogleCallback = createAsyncThunk(
+  "auth.google.callback",
+  async (param: any) => {
+    const response = await api.get(`/auth/google/callback`, {params:param});
+    var result = encryptData(response.data.user);
+    localStorage.setItem("user", result);
+    return response.data.user as User;
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -65,15 +75,15 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(loginUser.fulfilled, (state, action) => {
+    builder.addCase(loginUser.fulfilled || getAuthGoogleCallback.fulfilled, (state, action) => {
       state.user = action.payload;
       state.loading = false;
     });
-    builder.addCase(loginUser.pending || getSessionUser.pending, (state, _) => {
+    builder.addCase(loginUser.pending || getSessionUser.pending || getAuthGoogleCallback.pending, (state, _) => {
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(loginUser.rejected, (state, action) => {
+    builder.addCase(loginUser.rejected || getAuthGoogleCallback.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || "Failed to fetch data";
     });

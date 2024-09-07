@@ -1,6 +1,6 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import DashboardLoader from "../common/Loader/DashboardLoader";
+import DashboardLoader from "../Common/Loader/DashboardLoader";
 import Admin from "../Dashboard/Admin";
 import Image from "next/image";
 

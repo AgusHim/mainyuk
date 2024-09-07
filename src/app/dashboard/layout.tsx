@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import HeaderDashboard from "@/components/Header/HeaderDashboard";
 import { usePathname, useRouter } from "next/navigation";
-import Loader from "@/components/common/Loader";
+import Loader from "@/components/Common/Loader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getSessionUser } from "@/redux/slices/authSlice";
 

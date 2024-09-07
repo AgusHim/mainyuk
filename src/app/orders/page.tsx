@@ -1,21 +1,22 @@
 import { BottomNavBar } from "@/components/BottomNavBar/BottomNavBar";
-import GridEvents from "@/components/Grid/GridEvents";
+import GridOrders from "@/components/Grid/GridOrders";
 import { CommonHeader } from "@/components/Header/CommonHeader";
 import { MainLayout } from "@/layout/MainLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Events",
-  description: "Daftar events seru yang dibuat YukNgaji Solo",
+  title: "Daftar Transaksi",
+  description:
+    "Daftar transaksi tiket event YukNgaji Solo yang pernah kamu beli",
   // other metadata
 };
 
-export default function Event() {
+export default function Orders() {
   return (
     <>
       <MainLayout>
-        <CommonHeader title="Events" />
-        <GridEvents />
+        <CommonHeader title="Transaksi" />
+        <GridOrders />
         <BottomNavBar />
       </MainLayout>
     </>

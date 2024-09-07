@@ -2,70 +2,115 @@
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getEventsHome } from "@/redux/slices/eventSlice";
+import { Event } from "@/types/event";
+import { formatStrToDateTime } from "@/utils/convert";
+import Link from "next/link";
 import { useEffect } from "react";
+import Loader from "../Common/Loader";
 
 export default function GridEvents() {
   const dispatch = useAppDispatch();
-  const eventData = useAppSelector((state) => state.event.data);
+  const eventsData = useAppSelector((state) => state.event.data);
   const isLoading = useAppSelector((state) => state.event.loading);
   const rectangles = Array(6).fill(null);
-const error = useAppSelector((state) => state.event.error);
+  const error = useAppSelector((state) => state.event.error);
 
-    useEffect(() => {
-      if (eventData == null) {
-        dispatch(getEventsHome());
-      }
-    }, []);
+  useEffect(() => {
+    if (eventsData == null) {
+      dispatch(getEventsHome());
+    }
+  }, []);
 
+  if(eventsData == null || isLoading){
+    return <Loader></Loader>
+  }
   return (
-    <section id="events">
-      <div className="mb-10 py-2 bg-yellow-300 border border-black rounded-full shadow-custom">
-        <h1 className="flex-1 text-black text-center font-extrabold text-3xl md:text-5xl">
-          Event Terbaru
-        </h1>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
-        {eventData == null
-          ? rectangles.map((_, index) => (
-              <div key={index} className="bg-gray-300 h-40 md:h-90 rounded-xl md:rounded-3xl"></div>
-            ))
-          : eventData?.map((event, index) => {
-              const baseURL = process.env.BASE_URL;
-              const link = `https://${baseURL}/events/${event?.slug ?? ""}`;
-              const now = new Date();
-              const end = new Date(event?.end_at!.replace("Z", ""));
-              const isEnded = now > end;
-              return (
-                <a href={link} key={index} target="_blank">
-                  <div className="w-full h-40 md:h-90 relative rounded-xl md:rounded-3xl shadow-custom hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1">
-                    <img
-                      src={event?.image_url}
-                      alt={event?.title}
-                      className="w-full h-full object-cover rounded-xl md:rounded-3xl"
-                    />
-                    <div
-                      className={`absolute inset-0 flex items-center justify-center rounded-xl md:rounded-3xl ${
-                        isEnded
-                          ? "bg-black opacity-60"
-                          : "opacity-0 hover:opacity-50 transition-opacity duration-300"
-                      }`}
-                    ></div>
-                    <div
-                      className={`absolute inset-0 flex items-center justify-center ${
-                        isEnded
-                          ? ""
-                          : "opacity-0 hover:opacity-50 transition-opacity duration-300"
-                      }`}
-                    >
-                      <p className="text-white  text-xl font-bold">
-                        Event Selesai
+    <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
+      <div className="grid gap-4">
+        {eventsData?.map((event) => (
+          <Link href={`/events/${event.slug}`}>
+            <div className="flex w-full rounded-xl border-2 border-black bg-yellow-300 shadow-custom hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1">
+              <div className="relative w-2/5">
+                <div className="block overflow-hidden rounded-xl m-2">
+                  <img
+                    className="lazy max-w-full entered loaded object-cover"
+                    width={400}
+                    height={500}
+                    src={event.image_url}
+                  />
+                </div>
+              </div>
+              <div className="flex w-3/5 justify-between p-2">
+                <div className="flex cursor-pointer flex-col text-left">
+                  <div className="flex-1">
+                    <div className="mb-1 line-clamp-2 w-full cursor-pointer">
+                      <h1 className="font-satoshi font-semibold text-md text-black">
+                        {event.title}
+                      </h1>
+                    </div>
+                    <div>
+                      <p className="font-satoshi text-sm text-black">
+                        {formatStrToDateTime(
+                          event.start_at!.replace("Z", ""),
+                          "EEEE, dd MMMM yyyy"
+                        )}
                       </p>
                     </div>
+                    <div className="mt-4 flex w-full items-center">
+                      <div className="mr-2">
+                        <div className="size-6">
+                          <img
+                            className="lazy max-w-full entered loaded"
+                            src="/images/logo/yn_logo.png"
+                            width={24}
+                            height={24}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="line-clamp-1">
+                          <p className="font-satoshi font-semibold text-sm text-black">
+                            YukNgaji Solo
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </a>
-              );
-            })}
+                  <div className="flex gap-2">
+                    <AllowedGender event={event}/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
-    </section>
+    </div>
   );
 }
+
+const AllowedGender: React.FC<{ event: Event }> = ({ event }) => {
+  if (event.allowed_gender == "FEMALE") {
+    return (
+      <div className="mb-2 flex items-center gap-1 rounded-xl bg-meta-7 p-2">
+        <div className="flex-1">
+          <h1 className="font-satoshi font-medium text-xs text-black">
+            Akhwat Only
+          </h1>
+        </div>
+      </div>
+    );
+  }
+  if (event.allowed_gender == "MALE") {
+    return (
+      <div className="mb-2 flex items-center gap-1 rounded-xl bg-meta-5 p-2">
+        <div className="flex-1">
+          <h1 className="font-satoshi font-medium text-xs text-black">
+            Rijal Only
+          </h1>
+        </div>
+      </div>
+    );
+  }
+  return <></>;
+};

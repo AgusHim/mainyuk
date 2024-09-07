@@ -6,12 +6,12 @@ import TableRanger from "../Tables/TableRanger";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 import { getRangers, setEndAt, setStartAt } from "@/redux/slices/rangerSlice";
 import FormRanger from "../Form/FormRanger";
-import DashboardLoader from "../common/Loader/DashboardLoader";
-import Dialog from "../common/Dialog/Dialog";
+import DashboardLoader from "../Common/Loader/DashboardLoader";
+import Dialog from "../Common/Dialog/Dialog";
 import DatePicker, {
   leftPopupTheme,
   rightPopupTheme,
-} from "../common/DatePicker/DatePicker";
+} from "../Common/DatePicker/DatePicker";
 import { formatStrToDateTime } from "@/utils/convert";
 import DropdownDivisi from "../Dropdowns/DropdownDivisi";
 

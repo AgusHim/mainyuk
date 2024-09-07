@@ -6,6 +6,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { loginUser } from "@/redux/slices/authSlice";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { GoogleLogin } from "@react-oauth/google";
+import ButtonLoginGoogle from "../Common/Button/ButtonLoginGoogle";
 
 const SignInPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -170,12 +172,13 @@ const SignInPage: React.FC = () => {
                     ) : (
                       <input
                         type="submit"
-                        value="Masuk Akun"
-                        style={{ boxShadow: "5px 5px 0px 0px #000000" }}
-                        className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                        value="Login Akun"
+                        
+                        className="w-full cursor-pointer rounded-lg bg-primary px-4 py-2 space-x-2 text-black hover:bg-opacity-90 border-2 border-black shadow-custom hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1"
                       />
                     )}
                   </div>
+                  <ButtonLoginGoogle/>
                 </form>
               </div>
             </div>

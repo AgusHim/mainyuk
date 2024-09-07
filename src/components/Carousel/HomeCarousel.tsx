@@ -39,11 +39,11 @@ export function HomeCarousel() {
   return (
     <section className="mb-10">
       <div className="mb-10 py-2 bg-yellow-300 border border-black rounded-full shadow-custom">
-        <h1 className="text-black text-center font-extrabold text-3xl md:text-5xl">
+        <h1 className="text-black text-center font-extrabold text-3xl">
           Momen Bahagia
         </h1>
       </div>
-      <div className="h-60 md:h-150">
+      <div className="h-60">
       <Carousel
         theme={carouselTheme}
         leftControl={<div></div>}

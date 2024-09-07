@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import {  getPresencesByAuth } from "@/redux/slices/presenceSlice";
 import { formatStrToDateTime } from "@/utils/convert";
 import { useEffect } from "react";
-import DashboardLoader from "../common/Loader/DashboardLoader";
+import DashboardLoader from "../Common/Loader/DashboardLoader";
 import Image from "next/image";
 
 const TableUserPresence = () => {

@@ -6,9 +6,9 @@ import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 import TableAgenda from "../Tables/TableAgenda";
 import FormAgenda from "../Form/FormAgenda";
 import { getAgenda, setAgenda, setAgendaEndAt, setAgendaStartAt } from "@/redux/slices/agendaSlice";
-import Dialog from "../common/Dialog/Dialog";
-import DashboardLoader from "../common/Loader/DashboardLoader";
-import DatePicker, { leftPopupTheme, rightPopupTheme } from "../common/DatePicker/DatePicker";
+import Dialog from "../Common/Dialog/Dialog";
+import DashboardLoader from "../Common/Loader/DashboardLoader";
+import DatePicker, { leftPopupTheme, rightPopupTheme } from "../Common/DatePicker/DatePicker";
 import { formatStrToDateTime } from "@/utils/convert";
 
 export default function DashboardAgendaPage() {
