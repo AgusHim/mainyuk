@@ -17,6 +17,6 @@ export type Order = {
 };
 
 export type CreateOrder = {
-  user_tickets: UserTicket[] | null;
+  user_tickets: number | null;
   donation: number;
 };

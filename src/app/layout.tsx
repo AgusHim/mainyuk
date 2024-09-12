@@ -19,7 +19,7 @@ export default function RootLayout({
         <html lang="en">
           <link rel="icon" href="/images/favicon.ico" sizes="any" />
           <body suppressHydrationWarning={true}>
-            <ToastContainer position="bottom-center" theme="dark" />
+            <ToastContainer position="top-center" theme="dark"/>
             {children}
           </body>
         </html>

@@ -2,23 +2,27 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { user_api } from "../api";
 import { UserTicket } from "@/types/user_ticket";
 import { CreateOrder, Order } from "@/types/order";
-
-interface OrderTicket {
-  ticket_id: string | null;
-  qty: UserTicket[] | null;
-  user_tickets: UserTicket[];
-}
+import { PaymentMethod } from "@/types/PaymentMethod";
 
 interface OrderState {
   orders: Order[] | null;
-  checkout: OrderTicket[];
+  checkout: UserTicket[];
+  payment_method: PaymentMethod | null;
+  admin_fee:number;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: OrderState = {
   orders: null,
-  checkout: [],
+  checkout: [
+    {
+      ticket_id: "ticket_id_1",
+      ticket_name: "Tiket Name 1",
+    },
+  ],
+  payment_method: null,
+  admin_fee:0,
   loading: false,
   error: null,
 };
@@ -36,30 +40,42 @@ export const postOrder = createAsyncThunk(
   }
 );
 
+const generateRandomNumber = (min: number, max: number): number => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 export const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
-    setQtyTickets: (state, action) => {
-      const data = action.payload as OrderTicket;
-      const index = state.checkout?.findIndex(
-        (item) => item.ticket_id === data.ticket_id
-      );
-      if (index != -1) {
-        state.checkout[index].qty = data.qty;
-      } else {
-        state.checkout.push({
-          ticket_id: data.ticket_id,
-          qty: data.qty,
-          user_tickets: [],
-        });
-      }
+    setCheckout: (state, action) => {
+      console.log(`ActionPayload = ${action.payload}`);
+      state.checkout = action.payload as UserTicket[];
     },
     setUserTicket: (state, action) => {
       const data = action.payload as any;
-
-      state.checkout[data.index].user_tickets[data.user_index] =
-        data.user_ticket;
+      if (data.type == "name") {
+        state.checkout[data.index].user_name = data.value;
+      }
+      if (data.type == "email") {
+        state.checkout[data.index].user_email = data.value;
+      }
+      if (data.type == "gender") {
+        state.checkout[data.index].user_gender = data.value;
+      }
+    },
+    setAuthToUserTicket: (state, action) => {
+      const data = action.payload as any;
+      state.checkout[data.index].user_name = data.auth.name;
+      state.checkout[data.index].user_email = data.auth.email;
+      state.checkout[data.index].user_gender = data.auth.gender;
+    },
+    setPaymentMethod: (state, action) => {
+      state.payment_method = action.payload as PaymentMethod;
+      if(state.payment_method.type == "BANK" && state.admin_fee ==0){
+        const randomCode = generateRandomNumber(10,200);
+        state.admin_fee = randomCode;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -82,5 +98,6 @@ export const orderSlice = createSlice({
   },
 });
 
-export const { setQtyTickets, setUserTicket } = orderSlice.actions;
+export const { setCheckout, setUserTicket, setAuthToUserTicket,setPaymentMethod } =
+  orderSlice.actions;
 export default orderSlice.reducer;
