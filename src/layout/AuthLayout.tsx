@@ -2,17 +2,23 @@
 
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getSessionUser } from "@/redux/slices/authSlice";
+import Loader from "@/components/Common/Loader";
 
 interface LayoutProps {
   children: ReactNode;
-  redirectTo?:string|null;
+  redirectTo?: string | null;
 }
 
-export const RequiredAuthLayout: React.FC<LayoutProps> = ({ children, redirectTo }) => {
+export const RequiredAuthLayout: React.FC<LayoutProps> = ({
+  children,
+  redirectTo,
+}) => {
+  const currentPath: string = window.location.pathname;
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const user = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(getSessionUser())
@@ -21,12 +27,26 @@ export const RequiredAuthLayout: React.FC<LayoutProps> = ({ children, redirectTo
         if (value == null) {
           router.replace(`/signin?redirectTo=${redirectTo ?? "/"}`);
         }
+        console.log(value);
+        console.log(value?.province == null);
+        if (value?.province == null) {
+          router.replace(`/profile/update`);
+        }
+        if(currentPath === "/scan"){
+          if(value !== null && (value?.role != "ranger" && value?.role != "admin")){
+          router.replace(`/signin`);
+          }
+        }
       })
       .catch((error) => {
         // Handle errors here if needed
-        console.error("Error fetching data:", error);
+        console.error("Error get Session", error);
       });
   }, [dispatch]);
 
-  return (<div>{ children }</div>);
+  if (user === null) {
+    return <Loader></Loader>;
+  }
+
+  return <div>{children}</div>;
 };

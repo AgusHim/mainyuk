@@ -1,5 +1,5 @@
 import { RequiredAuthLayout } from "@/layout/AuthLayout";
-import OrderLayout from "@/layout/OrderLayout";
+import OrderTicketsLayout from "@/layout/OrderTicketsLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,14 +7,14 @@ export const metadata: Metadata = {
   description: "Detail transaksi tiket event YukNgaji Solo",
 };
 
-export default function OrderPage({
+export default function OrderTicketsPage({
   params,
 }: {
   params: { public_id: string };
 }) {
   return (
     <RequiredAuthLayout>
-      <OrderLayout params={params} />
+      <OrderTicketsLayout params={params} />
     </RequiredAuthLayout>
   );
 }

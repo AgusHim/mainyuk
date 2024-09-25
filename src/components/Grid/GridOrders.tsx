@@ -1,34 +1,36 @@
 "use client";
 
-// import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-// import { getEventsHome } from "@/redux/slices/eventSlice";
-// import { Event } from "@/types/event";
-// import { formatStrToDateTime } from "@/utils/convert";
-// import Link from "next/link";
-// import { useEffect } from "react";
-// import Loader from "../common/Loader";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { getEventsHome } from "@/redux/slices/eventSlice";
+import { getOrders } from "@/redux/slices/orderSlice";
+import { Event } from "@/types/event";
+import { formatStrToDateTime } from "@/utils/convert";
+import Link from "next/link";
+import { useEffect } from "react";
+import Loader from "../Common/Loader";
 
 export default function GridOrders() {
-  //   const dispatch = useAppDispatch();
-  //   const eventsData = useAppSelector((state) => state.event.data);
-  //   const isLoading = useAppSelector((state) => state.event.loading);
-  //   const rectangles = Array(6).fill(null);
-  //   const error = useAppSelector((state) => state.event.error);
+    const dispatch = useAppDispatch();
+    const orders = useAppSelector((state) => state.order.orders);
+    const isLoading = useAppSelector((state) => state.order.loading);
+    const error = useAppSelector((state) => state.order.error);
 
-  //   useEffect(() => {
-  //     if (eventsData == null) {
-  //       dispatch(getEventsHome());
-  //     }
-  //   }, []);
+    useEffect(() => {
+      if (orders == null) {
+        dispatch(getOrders());
+      }
+    }, []);
 
-  //   if(eventsData == null || isLoading){
-  //     return <Loader></Loader>
-  //   }
+    if(orders == null || isLoading){
+      return <Loader></Loader>
+    }
   return (
     <div className="max-w-layout xs:w-full h-full w-screen p-4 bg-yellow-400">
       <div>
-        <div className="flex flex-col gap-4">
-          <div className="rounded-xl border border-black bg-yellow-300 p-4 shadow-custom hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1">
+        {orders?.map((e)=>{
+          const total = (e.amount??0) +(e.donation??0)+(e.admin_fee??0);
+          return <div key={e.id} className="mb-4 grid gap-4">
+          <Link href={`/orders/${e.public_id}`} className="rounded-xl border border-black bg-yellow-300 p-4 shadow-custom hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1">
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <div className="text-black">
@@ -59,16 +61,16 @@ export default function GridOrders() {
                   </svg>
                 </div>
                 <div>
-                  <h1 className="font-sans font-semibold text-xs text-black">
-                    #IDSD80S
+                  <h1 className="font-semibold text-xs text-black">
+                    #YNS{e.public_id}
                   </h1>
-                  <p className="font-sans text-xs text-black">
-                    28 Agustus 2024 20:30
+                  <p className="text-xs text-black">
+                    {formatStrToDateTime(e.created_at??'','dd MMMM yyyy HH:mm')}
                   </p>
                 </div>
                 <div className="ml-auto">
-                  <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-0.5 text-xs tag-error border-black text-white border bg-danger">
-                    Expired
+                  <button className={`h-full whitespace-nowrap rounded-full font-medium px-2 py-0.5 text-xs tag-error border-black text-white border ${e.status == 'paid'?'bg-success':e.status == 'pending'?'bg-yellow-500':'bg-danger'}`}>
+                    {e.status?.toUpperCase()}
                   </button>
                 </div>
               </div>
@@ -77,21 +79,21 @@ export default function GridOrders() {
                 <div>
                   <img
                     className="lazy max-w-full rounded-lg entered loaded object-cover w-16.5 h-20"
-                    src="https://i.ibb.co.com/6bGyWfy/Whats-App-Image-2024-08-01-at-21-49-20.jpg"
+                    src={e.event?.image_url??''}
                   />
                 </div>
                 <div className="flex flex-1 flex-col">
-                  <h1 className="font-sans font-semibold text-sm text-black">
-                    ASMARA BAGINDA - KELAS PRANIKAH{" "}
+                  <h1 className="font-semibold text-sm text-black">
+                    {e.event?.title??''}
                   </h1>
                   <div className="text-sm font-normal text-black">
-                    2 Sep 2024
+                  {formatStrToDateTime(e.event?.start_at??'','dd MMM yyyy HH:mm')}
                   </div>
                   <div className="mt-2 flex items-end justify-end gap-4">
                     <div>
-                      <p className="font-sans text-xs text-black text-center">Total</p>
-                      <h1 className="font-sans font-semibold text-xs text-black">
-                        Rp 249.000
+                      <p className="text-xs text-black text-center">Total</p>
+                      <h1 className="font-semibold text-xs text-black">
+                        {e.amount == 0?'Gratis':`Rp ${total.toLocaleString("id-ID")}`}
                       </h1>
                     </div>
                     <div>
@@ -100,15 +102,17 @@ export default function GridOrders() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="grid justify-center p-4">
-          
+          </Link>
+        </div>;
+        })}
+      
+        {/* <div className="grid justify-center p-4">
             <div className="flex items-center justify-center gap-x-2 text-black">
               <span>Semua data ditampilkan</span>
             </div>
-        </div>
+        </div> */}
       </div>
+
     </div>
   );
 }

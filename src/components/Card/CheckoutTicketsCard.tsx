@@ -16,7 +16,7 @@ const CheckoutTicketsCard = () => {
     let total = 0;
     for (let index in checkout) {
       const ticket = checkout[index];
-      total = total + (ticket.ticket_price ?? 0);
+      total = total + (ticket.ticket?.price ?? 0);
     }
     return total + admin_fee;
   };
@@ -25,7 +25,7 @@ const CheckoutTicketsCard = () => {
     <div className="grid space-y-2">
       <div className="gap-y-1 font-normal"></div>
       <div>
-        <h1 className="font-semibold text-lg text-black mb-2">
+        <h1 className="font-semibold text-xl text-black mb-2">
           Rincian Pembayaran
         </h1>
         <div className="mb-4 rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">
@@ -37,29 +37,29 @@ const CheckoutTicketsCard = () => {
               return (
                 <div
                   key={index}
-                  className="grid grid-cols-2 items-center gap-4"
+                  className="grid grid-cols-3 items-center gap-4"
                 >
-                  <p className="text-lg text-black">
+                  <p className="col-span-2 text-lg text-black">
                     <span>{filteredTickets.length}</span>
                     <span className="mx-1">x</span>
-                    {filteredTickets[0].ticket_name}
+                    {filteredTickets[0].ticket?.name ?? ""}
                   </p>
-                  <p className="text-right text-lg text-black">
-                    Rp{" "}
-                    {filteredTickets.length *
-                      (filteredTickets[0].ticket_price ?? 0)}
+                  <p className="col-span-1 text-right text-lg text-black">
+                    {(
+                      filteredTickets.length * (filteredTickets[0].ticket?.price ?? 0)
+                    ).toLocaleString("id-ID")}
                   </p>
                 </div>
               );
             })}
             {payment_method != null && admin_fee != 0 ? (
-              <div className="grid grid-cols-2 items-center gap-4">
-                <p className="text-lg text-black">
+              <div className="grid grid-cols-3 items-center gap-4">
+                <p className="col-span-2 text-lg text-black">
                   {payment_method?.type === "BANK"
                     ? "Kode Unik"
                     : "Biaya Payment Gateway"}
                 </p>
-                <p className="text-right text-lg text-black">
+                <p className="col-span-1 text-right text-lg text-black">
                   {admin_fee.toLocaleString("id-ID")}
                 </p>
               </div>

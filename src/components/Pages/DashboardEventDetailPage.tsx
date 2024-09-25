@@ -3,13 +3,17 @@ import BreadcrumbEvent from "@/components/Breadcrumbs/BreadcrumbEvent";
 import Image from "next/image";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import TablePresence from "@/components/Tables/TablePresence";
 import CardDataStats from "../CardDataStats";
 import ExcelExportButton from "../Export/ExportPresence";
 import { getPresences } from "@/redux/slices/presenceSlice";
 import { formatStrToDateTime } from "@/utils/convert";
+import TableTickets from "../Tables/TableTickets";
+import Dialog from "../Common/Dialog/Dialog";
+import FormTicket from "../Form/FormTicket";
+import { setTicket } from "@/redux/slices/ticketSlice";
 
 export default function DashboardEventDetailPage({
   params,
@@ -39,10 +43,25 @@ export default function DashboardEventDetailPage({
 
   useEffect(() => {
     if (presences == null && event != null && !isLoadingPresence) {
-        console.log("RUN GET PRESENCE")
+      console.log("RUN GET PRESENCE");
       dispatch(getPresences(event!.id!));
     }
   }, []);
+
+  const [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  function toggleOnDialog() {
+    if (!dialogRef.current) {
+      return;
+    }
+    if (dialogRef.current.hasAttribute("open")) {
+      dialogRef.current.close();
+      setDialogContent(null);
+    } else {
+      dialogRef.current.showModal();
+    }
+  }
 
   if (isLoading) {
     return <h1>Loading...</h1>;
@@ -53,13 +72,14 @@ export default function DashboardEventDetailPage({
   if (event == null) {
     return <div></div>;
   }
+
   return (
     <>
       <BreadcrumbEvent pageName={event?.title!} />
       <div className="mb-5 flex flex-col md:flex-row justify-between md:items-center">
         <Image
           className="mx-auto md:mx-0"
-          style={{boxShadow: '10px 10px 0px 0px #000000'}}
+          style={{ boxShadow: "10px 10px 0px 0px #000000" }}
           width={150}
           height={150}
           alt={`Gambar event ${event?.title}`}
@@ -68,18 +88,18 @@ export default function DashboardEventDetailPage({
         />
         <div className="flex flex-col items-center md:items-end">
           <div className="my-5">
-          <h1 className="truncate max-w-50 line-clamp-2 text-center text-xl font-extrabold text-primary dark:text-white">
-            {event?.speaker}
-          </h1>
-          <h1 className="text-center text-md font-light  text-black dark:text-white">
-            {formatStrToDateTime(event!.start_at!, "dd MMM yyyy")} -{" "}
-            {formatStrToDateTime(event!.end_at!, "dd MMM yyyy")}
-          </h1>
+            <h1 className="truncate max-w-50 line-clamp-2 text-center text-xl font-extrabold text-primary dark:text-white">
+              {event?.speaker}
+            </h1>
+            <h1 className="text-center text-md font-light  text-black dark:text-white">
+              {formatStrToDateTime(event!.start_at!, "dd MMM yyyy")} -{" "}
+              {formatStrToDateTime(event!.end_at!, "dd MMM yyyy")}
+            </h1>
           </div>
           <div className="flex flex-col xsm:flex-row">
             <a
               className="w-40 sm:w-60 inline-flex items-center justify-center gap-2.5 rounded-md bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10 border-2 border-black"
-              style={{boxShadow: '5px 5px 0px 0px #000000'}}
+              style={{ boxShadow: "5px 5px 0px 0px #000000" }}
               href={`/live/${event!.slug}`}
             >
               <span>
@@ -246,9 +266,36 @@ export default function DashboardEventDetailPage({
           </svg>
         </CardDataStats>
       </div>
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col my-10 gap-3">
+        <div className="flex flex-row justify-between">
+          <p className="text-3xl text-black font-semibold">Daftar Tiket</p>
+          <button
+            onClick={() => {
+              dispatch(setTicket(null));
+              setDialogContent(<FormTicket toggleDialog={toggleOnDialog} />);
+              toggleOnDialog();
+            }}
+            className="w-full ml-auto mb-3 sm:w-50 inline-flex items-center justify-center gap-2.5 rounded-lg bg-meta-3 py-2 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-3 border-2 border-black"
+            style={{ boxShadow: "5px 5px 0px 0px #000000" }}
+          >
+            Tambah Tiket
+          </button>
+        </div>
+
+        <TableTickets
+          toggleDialog={toggleOnDialog}
+          setDialogContent={() => {
+            setDialogContent(<FormTicket toggleDialog={toggleOnDialog} />);
+          }}
+        />
+      </div>
+      <div className="flex flex-col gap-3">
+        <p className="text-3xl text-black font-semibold">Daftar Absensi</p>
         <TablePresence />
       </div>
+      <Dialog toggleDialog={toggleOnDialog} ref={dialogRef}>
+        {dialogContent}
+      </Dialog>
     </>
   );
 }

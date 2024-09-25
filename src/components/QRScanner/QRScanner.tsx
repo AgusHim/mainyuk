@@ -9,11 +9,7 @@ import { QrReader } from "react-qr-reader";
 import { toast } from "react-toastify";
 import { formatStrToDateTime } from "@/utils/convert";
 
-const QRScanner = ({
-  params,
-}: {
-  params: { id: string };
-}) =>{
+const QRScanner = ({ params }: { params: { id: string } }) => {
   const modalRef = useRef<HTMLDialogElement>(null);
 
   const dispatch = useAppDispatch();
@@ -47,15 +43,13 @@ const QRScanner = ({
   const closeModal = () => {
     if (modalRef.current) {
       modalRef.current.close();
-      dispatch(resetRanger(null))
+      dispatch(resetRanger(null));
     }
   };
 
-  const handleSubmit = (event:any) => {
-
-    
+  const handleSubmit = (event: any) => {
     closeModal();
-    
+
     if (agenda == null) {
       toast.error("Agenda tidak ditemukan", {
         className: "toast bottom-center",
@@ -85,8 +79,8 @@ const QRScanner = ({
     }
   };
 
-  if(agenda == null){
-    return <div></div>
+  if (agenda == null) {
+    return <div></div>;
   }
 
   return (
@@ -95,20 +89,20 @@ const QRScanner = ({
         Absensi Rangers
       </h1>
       <div className="flex flex-col items-start justify-start my-5">
-      <h1 className="truncate line-clamp-2 text-center text-xl font-light text-black dark:text-white">
+        <h1 className="truncate line-clamp-2 text-center text-xl font-light text-black dark:text-white">
           {agenda?.name}
-        </h1> 
+        </h1>
         <h1 className="truncate line-clamp-2 text-center text-xl font-extrabold text-meta-7">
           {agenda?.type.toLocaleUpperCase()}
-        </h1> 
+        </h1>
         <h1 className="truncate line-clamp-2 text-center text-xl font-light text-black dark:text-white">
           {agenda?.location}
         </h1>
         <h1 className="text-center text-xl font-light text-black dark:text-white">
-          {formatStrToDateTime(agenda!.start_at!,"dd MMM yyyy HH:mm")}
+          {formatStrToDateTime(agenda!.start_at!, "dd MMM yyyy HH:mm")}
         </h1>
       </div>
-      
+
       <QrReader
         onResult={(result, error) => {
           if (!!result) {
@@ -164,10 +158,10 @@ const QRScanner = ({
               >
                 Absensi
               </button>
-              <button 
-              type="reset"
-            
-              className="btn bg-danger hover:bg-opacity-80 hover:bg-danger shadow-bottom-right text-white">
+              <button
+                type="reset"
+                className="btn bg-danger hover:bg-opacity-80 hover:bg-danger shadow-bottom-right text-white"
+              >
                 Tutup
               </button>
             </form>

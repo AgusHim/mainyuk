@@ -1,6 +1,7 @@
 import { BottomNavBar } from "@/components/BottomNavBar/BottomNavBar";
 import GridOrders from "@/components/Grid/GridOrders";
 import { CommonHeader } from "@/components/Header/CommonHeader";
+import { RequiredAuthLayout } from "@/layout/AuthLayout";
 import { MainLayout } from "@/layout/MainLayout";
 import { Metadata } from "next";
 
@@ -14,11 +15,11 @@ export const metadata: Metadata = {
 export default function Orders() {
   return (
     <>
-      <MainLayout>
+    <RequiredAuthLayout><MainLayout>
         <CommonHeader title="Transaksi" />
         <GridOrders />
         <BottomNavBar />
-      </MainLayout>
+      </MainLayout></RequiredAuthLayout>
     </>
   );
 }

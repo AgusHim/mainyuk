@@ -2,38 +2,32 @@
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect, useState } from "react";
-import { getDivisi } from "@/redux/slices/divisiSlice";
-import { Agenda } from "@/types/agenda";
-import { editAgenda, getAgenda, postAgenda, setAgendaStartAt } from "@/redux/slices/agendaSlice";
-import { format } from "date-fns";
+import {
+  getPaymentMethod,
+  postPaymentMethod,
+  putPaymentMethod,
+} from "@/redux/slices/PaymentMethodSlice";
+import { PaymentMethod } from "@/types/PaymentMethod";
 type Props = {
   toggleDialog: () => void;
 };
 
-const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
+const FormPaymentMethod: React.FC<Props> = ({ toggleDialog }) => {
   const dispatch = useAppDispatch();
 
-  const agenda = useAppSelector((state) => state.agenda.agenda);
-  const agendaStartAt = useAppSelector((state) => state.agenda.agendaStartAt);
-  const agendaEndAt = useAppSelector((state) => state.agenda.agendaEndAt);
-  const listDivisi = useAppSelector((state) => state.divisi.data);
-  const isLoadingDivisi = useAppSelector((state) => state.divisi.loading);
-  const isLoadingAgenda = useAppSelector((state) => state.agenda.loading);
+  const paymentMethod = useAppSelector(
+    (state) => state.paymentMethod.paymentMethod
+  );
+  const isLoading = useAppSelector((state) => state.paymentMethod.loading);
 
   const [formData, setFormData] = useState({
-    id: agenda?.id ?? "",
-    name: agenda?.name??"",
-    type: agenda?.type??"meeting",
-    location: agenda?.location??"",
-    divisi_id: agenda?.divisi?.id ?? "1",
-    start_at: agenda?.start_at!.replace("Z", ""),
+    id: paymentMethod?.id ?? "",
+    name: paymentMethod?.name ?? "",
+    type: paymentMethod?.type ?? "bank",
+    code: paymentMethod?.code ?? "",
+    account_name: paymentMethod?.account_name ?? "",
+    account_number: paymentMethod?.account_number ?? "",
   });
-
-  useEffect(() => {
-    if (listDivisi == null && !isLoadingDivisi) {
-      dispatch(getDivisi());
-    }
-  }, []);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
@@ -46,21 +40,18 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
       id: formData.id,
       name: formData.name,
       type: formData.type,
-      location: formData.location,
-      divisi_id: formData.divisi_id,
-      start_at: format(
-        Date.parse(formData.start_at!.replace("Z", "")),
-        "yyyy-MM-dd HH:mm"
-      ).replace(" ", "T"),
+      code: formData.code,
+      account_name: formData.account_name,
+      account_number: formData.account_number,
     };
 
-    if (agenda == null) {
-      dispatch(postAgenda(bodyData as Agenda))
+    if (paymentMethod == null) {
+      dispatch(postPaymentMethod(bodyData as PaymentMethod))
         .unwrap()
         .then((res) => {
           if (res != null) {
             toggleDialog();
-            dispatch(getAgenda({start_at:agendaStartAt,end_at:agendaEndAt}));
+            dispatch(getPaymentMethod());
           }
         })
         .catch((error) => {
@@ -68,12 +59,12 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
           console.error("Error fetching data:", error);
         });
     } else {
-      dispatch(editAgenda(bodyData as Agenda))
+      dispatch(putPaymentMethod(bodyData as PaymentMethod))
         .unwrap()
         .then((res) => {
           if (res != null) {
             toggleDialog();
-            dispatch(getAgenda({start_at:agendaStartAt,end_at:agendaEndAt}));
+            dispatch(getPaymentMethod());
           }
         })
         .catch((error) => {
@@ -86,7 +77,9 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
   return (
     <>
       <h3 className="font-bold text-2xl text-black dark:text-white">
-        {agenda != null ? "Edit Agenda" : "Tambah Agenda"}
+        {paymentMethod != null
+          ? "Edit Metode Pembayaran"
+          : "Tambah Metode Pembayaran"}
       </h3>
       <div className="divider"></div>
       <form onSubmit={handleSubmit}>
@@ -94,7 +87,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
         <div className="form-control my-2">
           <label className="label font-bold" htmlFor="name">
             <span className="label-text text-black dark:text-white">
-              Nama Agenda <span className="text-meta-1 text-lg">*</span>
+              Nama <span className="text-meta-1 text-lg">*</span>
             </span>
           </label>
           <input
@@ -102,7 +95,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
             onChange={handleChange}
             type="text"
             name="name"
-            placeholder="Masukan nama agenda"
+            placeholder="Masukan nama metode pembayaran"
             className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
             required
           />
@@ -113,7 +106,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
         <div className="form-control my-2">
           <label className="label font-bold" htmlFor="type">
             <span className="label-text text-black dark:text-white">
-              Kategori <span className="text-meta-1 text-lg">*</span>
+              Tipe <span className="text-meta-1 text-lg">*</span>
             </span>
           </label>
           <select
@@ -123,77 +116,70 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
             className="select select-bordered bg-white dark:bg-boxdark focus:border-primary"
             required
           >
-            <option disabled>Pilih kategori agenda</option>
-            <option value="meeting">Meeting</option>
-            <option value="hangout">Hangout</option>
-            <option value="event">Event</option>
+            <option disabled>Pilih tipe pembayaran</option>
+            <option value="bank">Bank</option>
+            <option value="e-wallet">E-Wallet</option>
+            <option value="qris">QR Code</option>
           </select>
         </div>
         {/* End of Type */}
 
-        {/* Divisi */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="divisi_id">
-            <span className="label-text text-black dark:text-white">
-              Divisi <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <select
-            value={formData["divisi_id"]}
-            onChange={handleChange}
-            name="divisi_id"
-            className="select select-bordered bg-white dark:bg-boxdark focus:border-primary"
-          >
-            <option disabled>Pilih divisi agenda</option>
-            {listDivisi?.map((divisi, key) => (
-              <option key={key} value={divisi.id}>
-                {divisi.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        {/* End of Divisi */}
-
         {/* Location */}
         <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="location">
-            <span className="label-text text-black dark:text-white">
-              Location
-            </span>
+          <label className="label font-bold" htmlFor="code">
+            <span className="label-text text-black dark:text-white">Code</span>
           </label>
           <input
-            value={formData["location"]}
+            value={formData["code"]}
             onChange={handleChange}
             type="text"
-            name="location"
-            placeholder="Masukan lokasi agenda"
+            name="code"
+            placeholder="Masukan code pembayaran"
             className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
           />
         </div>
         {/* End of Location */}
 
-        {/* Start At */}
+        {/* Account Name */}
         <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="start_at">
+          <label className="label font-bold" htmlFor="account_name">
             <span className="label-text text-black dark:text-white">
-              Waktu Pelaksanaan <span className="text-meta-1 text-lg">*</span>
+              Nama Akun<span className="text-meta-1 text-lg">*</span>
             </span>
           </label>
           <input
-            value={formData["start_at"]}
+            value={formData["account_name"]}
             onChange={handleChange}
-            type="datetime-local"
-            name="start_at"
-            placeholder="Waktu Pelaksanaan Agenda"
+            type="text"
+            name="account_name"
+            placeholder="Masukan nama akun"
             className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
-            min="2024-01-01T00:00"
             required
           />
         </div>
-        {/* End of Start At */}
+        {/* End of Account Number */}
+
+        {/* Account Number */}
+        <div className="form-control my-2">
+          <label className="label font-bold" htmlFor="account_number">
+            <span className="label-text text-black dark:text-white">
+              Nomor Akun<span className="text-meta-1 text-lg">*</span>
+            </span>
+          </label>
+          <input
+            value={formData["account_number"]}
+            onChange={handleChange}
+            type="text"
+            name="account_number"
+            placeholder="Masukan nomor akun"
+            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            required
+          />
+        </div>
+        {/* End of Account Name */}
 
         <div className="form-control my-2 mt-10">
-          {isLoadingAgenda ? (
+          {isLoading ? (
             <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
           ) : (
             <button
@@ -201,7 +187,9 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
               className="btn btn-primary text-white border-2 border-black"
               style={{ boxShadow: "0px 5px 0px 0px #000000" }}
             >
-              {agenda == null ? "Tambah Agenda Baru" : "Simpan Perubahan"}
+              {paymentMethod == null
+                ? "Tambah Metode Pembayaran"
+                : "Simpan Perubahan"}
             </button>
           )}
         </div>
@@ -210,4 +198,4 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
   );
 };
 
-export default FormAgenda;
+export default FormPaymentMethod;

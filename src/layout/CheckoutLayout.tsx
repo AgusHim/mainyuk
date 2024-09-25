@@ -1,13 +1,11 @@
 "use client";
-import CheckoutPaymentMethodCard from "@/components/Card/CheckoutPaymentMethodCard";
-import CheckoutTicketsCard from "@/components/Card/CheckoutTicketsCard";
 import Loader from "@/components/Common/Loader";
+
 import { FormCheckoutTickets } from "@/components/Form/FormCheckoutTickets";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import { formatStrToDateTime } from "@/utils/convert";
 import { useRouter } from "next/navigation";
-import { Router } from "next/router";
 import { useEffect } from "react";
 
 export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
@@ -34,9 +32,7 @@ export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
     <>
       <div className="grid gap-4 bg-yellow-400 py-4">
         <div className="grid gap-2 px-8">
-          <h1 className="font-sans font-semibold text-lg text-black">
-            Informasi Event
-          </h1>
+          <h1 className="font-semibold text-lg text-black">Informasi Event</h1>
           <div className="grid gap-2 rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">
             <div className="flex w-full gap-4 px-0 -mb-0">
               <div className="relative w-2/5">
@@ -88,49 +84,20 @@ export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
         </div>
         <div className="px-8">
           <div>
-            <h1 className="font-sans font-semibold text-lg text-black mb-2">
+            <h1 className="font-semibold text-xl text-black mb-2">
               Data Pemesan
             </h1>
           </div>
           <div>
             <div className="rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">
-              <h1 className="font-sans font-semibold text-lg text-black">
+              <h1 className="font-semibold text-lg text-black">
                 {auth?.name ?? "name"}
               </h1>
-              <p className="font-sans text-lg text-black">
-                {auth?.email ?? "email"}
-              </p>
+              <p className="text-lg text-black">{auth?.email ?? "email"}</p>
             </div>
           </div>
         </div>
-        <div className="px-8">
-          <form className="grid gap-4">
-            <div className="grid space-y-2">
-              <div className="gap-y-1 font-normal"></div>
-              <div className="mb-5">
-                <h1 className="font-sans font-semibold text-lg text-black">
-                  Detail Pemilik Tiket
-                </h1>
-                <p className="font-sans text-md text-black">
-                  Data diri untuk setiap pemilik tiket
-                </p>
-              </div>
-              <FormCheckoutTickets />
-            </div>
-            <CheckoutPaymentMethodCard />
-            <CheckoutTicketsCard />
-            <div className="grid space-y-2">
-              <div className="gap-y-1 font-normal"></div>
-              <button
-                type="submit"
-                className="grid w-full place-items-center rounded-lg border-2 border-black shadow-custom p-3 text-lg font-bold bg-primary text-white"
-              >
-                Konfirmasi Pembelian
-              </button>
-              <div className="mt-2"></div>
-            </div>
-          </form>
-        </div>
+        <FormCheckoutTickets />
       </div>
     </>
   );

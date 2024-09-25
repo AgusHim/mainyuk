@@ -7,8 +7,11 @@ export type Ticket = {
   event_id: string;
   start_at: string;
   end_at: string;
-  pax_multiplier: number;
+  pax_multiplier: number |null;
   min_order_pax: number|null;
   max_order_pax: number|null;
+  max_pax: number|null;
+  gender_allowed:string;
+  isFull: boolean;
   created_at: string;
 };

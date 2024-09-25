@@ -1,29 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { user_api } from "../api";
+import { admin_api, user_api } from "../api";
 import { UserTicket } from "@/types/user_ticket";
 import { CreateOrder, Order } from "@/types/order";
 import { PaymentMethod } from "@/types/PaymentMethod";
 
 interface OrderState {
   orders: Order[] | null;
+  order: Order | null;
   checkout: UserTicket[];
   payment_method: PaymentMethod | null;
-  admin_fee:number;
+  admin_fee: number;
   loading: boolean;
+  isLoadingOrder: boolean;
   error: string | null;
 }
 
 const initialState: OrderState = {
   orders: null,
-  checkout: [
-    {
-      ticket_id: "ticket_id_1",
-      ticket_name: "Tiket Name 1",
-    },
-  ],
+  order: null,
+  checkout: [],
   payment_method: null,
-  admin_fee:0,
+  admin_fee: 0,
   loading: false,
+  isLoadingOrder: false,
   error: null,
 };
 
@@ -31,6 +30,20 @@ export const getOrders = createAsyncThunk("orders", async (_, thunk) => {
   const res = await user_api.get("/orders");
   return res.data;
 });
+
+export const getAdminOrders = createAsyncThunk("orders.admin.get", async (_, thunk) => {
+  const res = await admin_api.get("/orders");
+  return res.data;
+});
+
+export const getOrderByPublicID = createAsyncThunk(
+  "orders.getPublic",
+  async (public_id: string, thunk) => {
+    const res = await user_api.get(`/orders/${public_id}`);
+    console.log(`GetOrder = ${res.data}`);
+    return res.data;
+  }
+);
 
 export const postOrder = createAsyncThunk(
   "order.post",
@@ -42,14 +55,13 @@ export const postOrder = createAsyncThunk(
 
 const generateRandomNumber = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 
 export const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
     setCheckout: (state, action) => {
-      console.log(`ActionPayload = ${action.payload}`);
       state.checkout = action.payload as UserTicket[];
     },
     setUserTicket: (state, action) => {
@@ -72,9 +84,11 @@ export const orderSlice = createSlice({
     },
     setPaymentMethod: (state, action) => {
       state.payment_method = action.payload as PaymentMethod;
-      if(state.payment_method.type == "BANK" && state.admin_fee ==0){
-        const randomCode = generateRandomNumber(10,200);
+      if (state.payment_method.type == "bank" && state.admin_fee == 0) {
+        const randomCode = generateRandomNumber(10, 200);
         state.admin_fee = randomCode;
+      } else {
+        state.admin_fee = 0;
       }
     },
   },
@@ -84,20 +98,41 @@ export const orderSlice = createSlice({
       state.orders = action.payload as Order[];
       state.loading = false;
     });
-    builder.addCase(getOrders.pending || postOrder.pending, (state, _) => {
-      state.loading = true;
+    builder.addCase(getOrderByPublicID.fulfilled, (state, action) => {
+      console.log(`Fulfilled = ${action.payload}`);
+      state.order = action.payload as Order;
+      state.isLoadingOrder = false;
+    });
+    builder.addCase(postOrder.fulfilled, (state, action) => {
+      state.order = action.payload as Order;
+      state.isLoadingOrder = false;
+    });
+    builder.addCase(
+      getOrders.pending || getOrderByPublicID.pending,
+      (state, _) => {
+        state.loading = true;
+        state.error = null;
+      }
+    );
+    builder.addCase(postOrder.pending, (state, _) => {
+      state.isLoadingOrder = true;
       state.error = null;
     });
     builder.addCase(
       getOrders.rejected || postOrder.rejected,
       (state, action) => {
         state.loading = false;
+        state.isLoadingOrder = false;
         state.error = action.error.message || "Failed to fetch data";
       }
     );
   },
 });
 
-export const { setCheckout, setUserTicket, setAuthToUserTicket,setPaymentMethod } =
-  orderSlice.actions;
+export const {
+  setCheckout,
+  setUserTicket,
+  setAuthToUserTicket,
+  setPaymentMethod,
+} = orderSlice.actions;
 export default orderSlice.reducer;

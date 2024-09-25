@@ -42,7 +42,7 @@ export const editAccount = createAsyncThunk(
   "auth.edit",
   async (user: User) => {
     const response = await user_api.put(`/auth`, user);
-    var result = encryptData(response.data.user);
+    var result = encryptData(response.data);
     localStorage.setItem("user", result);
     return response.data.user as User;
   }

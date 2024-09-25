@@ -1,6 +1,8 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { setCheckout } from "@/redux/slices/orderSlice";
+import { getPublicTickets } from "@/redux/slices/ticketSlice";
+import { Ticket } from "@/types/ticket";
 import { UserTicket } from "@/types/user_ticket";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,44 +14,62 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
   const route = useRouter();
   const dispatch = useAppDispatch();
   const auth = useAppSelector((state) => state.auth.user);
-  const checkout = useAppSelector((state) => state.order.checkout);
+  const event = useAppSelector((state) => state.event.event);
   const error = useAppSelector((state) => state.event.error);
-  const tickets = [
-    { id: "ticket1", name: "Geratis", price: 0 },
-    { id: "ticket2", name: "Reguler", price: 5000 },
-    { id: "ticket3", name: "VIP", price: 10000 },
-  ];
+  const isLoading = useAppSelector((state) => state.ticket.loading);
 
   const [formData, setFormData] = useState<{ [key: string]: number }>({});
+  const [tickets, setTickets] = useState<Ticket[] | null>();
 
   useEffect(() => {
-    let form: { [key: string]: number } = {};
-    for (let index in tickets) {
-      const ticket = tickets[index];
-      form[`${ticket.id}_qty`] = 0;
-      form[`${ticket.id}_price`] = ticket.price;
+    if (tickets == null || tickets?.[0].event_id != event?.id) {
+      dispatch(getPublicTickets(event?.id ?? "")).then((e) => {
+        if (e.payload != null) {
+          setTickets(e.payload as Ticket[]);
+          let form: { [key: string]: number } = {};
+          for (let index in e.payload) {
+            const ticket = e.payload[index];
+            console.log(`index %s , ticket = %s`, index, ticket);
+            form[`${ticket.id}_qty`] = 0;
+            form[`${ticket.id}_price`] = ticket.price;
+          }
+          setFormData(form);
+        }
+      });
+      console.log("Ticket=", tickets);
     }
-    setFormData(form);
-  }, [setFormData]);
+  }, []);
 
-  const totalPayment = ()=>{
+  const totalPayment = () => {
     let total = 0;
-    for (let index in tickets){
+    for (let index in tickets!) {
       const ticket = tickets[index];
       const qty = formData[`${ticket.id}_qty`];
       const price = formData[`${ticket.id}_price`];
-      total = total + (qty *price);
+      total = total + qty * price;
     }
     return total;
-  }
-  const increaseQty = (name: string) => {
+  };
+  const increaseQty = (ticket: Ticket) => {
+    const name = `${ticket.id}_qty`;
     const current = formData[name];
-    setFormData({ ...formData, [name]: current + 1 });
+    const pax_multiplier = ticket.pax_multiplier ?? 1;
+    const max_order_pax = ticket.max_order_pax??1;
+    const update = current + pax_multiplier;
+    if (update <= max_order_pax) {
+      setFormData({ ...formData, [name]: update });
+    }
   };
 
-  const decreaseQty = (name: string) => {
+  const decreaseQty = (ticket: Ticket) => {
+    const name = `${ticket.id}_qty`;
     const current = formData[name];
-    setFormData({ ...formData, [name]: current - 1 });
+    const pax_multiplier = ticket.pax_multiplier ?? 1;
+    const min_order_pax = ticket.min_order_pax??1;
+    const update = current - pax_multiplier;
+    if (update >= 0) {
+      setFormData({ ...formData, [name]: update });
+    }
   };
   const checkAllValuesAreZero = () => {
     return Object.values(formData).every((value) => value === 0);
@@ -62,16 +82,16 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
       return;
     }
     let orderTickets: UserTicket[] = [];
-    for (let index in tickets) {
+    for (let index in tickets!) {
       const ticket = tickets[index];
       const qty = formData[`${ticket.id}_qty`];
       if (qty > 0) {
         for (let i = 0; i < qty; i++) {
           orderTickets.push({
             ticket_id: ticket.id,
-            ticket_name: ticket.name,
-            ticket_price: ticket.price,
+            ticket: ticket,
             user_id: auth?.id,
+            event_id: event?.id,
           });
         }
       }
@@ -79,7 +99,9 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
     dispatch(setCheckout(orderTickets));
     route.push(`/events/${slug}/checkout`);
   };
-
+  if (isLoading) {
+    return <></>;
+  }
   return (
     <>
       <section id="tickets" className="mb-4">
@@ -94,18 +116,21 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
                   </p>
                 </div>
                 <div className="flex flex-col gap-4">
-                  {tickets.map((e) => (
+                  {tickets?.map((e) => (
                     <div
                       key={e.id}
                       className="flex flex-col overflow-hidden rounded-xl border border-black bg-yellow-200"
                     >
                       <div className="px-4 py-3">
-                        <h1 className="font-sans font-semibold text-base text-black">
+                        <h1 className="font-semibold text-base text-black">
                           {e.name}
+                        </h1>
+                        <h1 className="font-light text-sm text-black">
+                          {e.description}
                         </h1>
                       </div>
                       <div className="flex items-center justify-between gap-4 rounded-b-xl border-t-2 border-dashed border-black  px-4 py-3">
-                        <h1 className="font-sans font-semibold text-sm text-black">
+                        <h1 className="font-semibold text-sm text-black">
                           {e.price == 0
                             ? "Gratis"
                             : `Rp${e.price.toLocaleString("id-ID")}`}
@@ -115,7 +140,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
                             type="button"
                             className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 px-4 py-1.5 text-sm hover:opacity-80 active:opacity-70 rounded-full font-bold border border-black shadow-custom2"
                             onClick={() => {
-                              increaseQty(`${e.id}_qty`);
+                              increaseQty(e);
                             }}
                           >
                             <div className="flex items-center justify-center gap-x-2">
@@ -127,7 +152,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
                             <button
                               type="button"
                               onClick={() => {
-                                decreaseQty(`${e.id}_qty`);
+                                decreaseQty(e);
                               }}
                               className="rounded-lg text-black border-2 border-black bg-yellow-300 p-2"
                             >
@@ -155,7 +180,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
                             <button
                               type="button"
                               onClick={() => {
-                                increaseQty(`${e.id}_qty`);
+                                increaseQty(e);
                               }}
                               className="rounded-lg text-black border-2 border-black bg-yellow-300 p-2"
                             >
@@ -185,7 +210,9 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
               <div className="gap-y-1 font-normal"></div>
               <div className="mt-8 flex items-center justify-between gap-x-4 text-black">
                 <p className="font-medium text-lg">Total harga</p>
-                <p className="font-bold text-xl">Rp. {totalPayment().toLocaleString("id-ID")}</p>
+                <p className="font-bold text-xl">
+                  Rp. {totalPayment().toLocaleString("id-ID")}
+                </p>
               </div>
             </div>
             <div className="grid space-y-2">

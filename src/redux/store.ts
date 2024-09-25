@@ -15,6 +15,7 @@ import rangerPresenceSlice from "./slices/rangerPresenceSlice";
 import orderSlice from "./slices/orderSlice";
 import ticketSlice from "./slices/ticketSlice";
 import paymentMethodSlice from "./slices/PaymentMethodSlice";
+import regionSlice from "./slices/RegionSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -34,6 +35,7 @@ export const makeStore = () => {
       order: orderSlice,
       ticket: ticketSlice,
       paymentMethod: paymentMethodSlice,
+      region: regionSlice,
     },
   });
 };

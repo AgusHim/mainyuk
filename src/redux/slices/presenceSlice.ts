@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { api, user_api } from "../api";
+import { admin_api, api, user_api } from "../api";
 import { Presence } from "@/types/presence";
 import { config } from "process";
 
@@ -26,7 +26,7 @@ export const getPresencesByAuth = createAsyncThunk(
 export const getPresences = createAsyncThunk(
   "presences.get",
   async (event_id: string, thunk) => {
-    const res = await api.get("/presence", {
+    const res = await admin_api.get("/presence", {
       params: {
         event_id: event_id,
       },

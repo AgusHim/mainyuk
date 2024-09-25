@@ -8,13 +8,13 @@ export function BottomNavBar() {
   const isActive = (path: string) => pathname === path;
 
   const linkStyle = (path: string) =>
-    isActive(path) ? "text-black" : "text-gray-500";
+    isActive(path) ? "text-black" : "text-slate-400";
   const menus = [
     {
       name: "Home",
       icon: (
         <svg
-          fill="none"
+          fill="currentColor"
           height="24"
           width="24"
           version="1.1"
@@ -78,6 +78,7 @@ export function BottomNavBar() {
           height="24"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
         >
           <path
             fillRule="evenodd"

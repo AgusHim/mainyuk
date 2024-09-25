@@ -190,3 +190,23 @@ span.flatpickr-weekday,
 .ranger-card {
   box-shadow: 10px 10px 0px #000000
 }
+
+input[type="date"] {
+  position: relative;
+  padding-right: 20px; /* Tambahkan ruang di kanan agar teks tidak tertutup ikon */
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 5px;
+  opacity: 0;/* Warna hitam untuk ikon di WebKit browser */
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  cursor: pointer;
+  opacity: 0;
+}
+
+input[type="date"]::-moz-calendar-picker-indicator {
+  opacity: 0;
+}

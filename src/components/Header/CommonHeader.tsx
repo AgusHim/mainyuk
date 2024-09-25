@@ -1,4 +1,5 @@
-"use client"
+"use client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -6,12 +7,14 @@ interface HeaderProps {
   title: string;
   children?: ReactNode;
   isShowBack?: boolean;
+  isShowTrailing?: boolean;
 }
 
 export const CommonHeader: React.FC<HeaderProps> = ({
   title,
   children,
   isShowBack,
+  isShowTrailing = true,
 }) => {
   const router = useRouter();
 
@@ -52,26 +55,34 @@ export const CommonHeader: React.FC<HeaderProps> = ({
               {title}
             </h1>
           </div> */}
-          <div className="ml-auto flex items-center justify-center">
-            <button
-              className="border border-black"
-              style={{ boxShadow: "3px 3px 0px 0px #000000" }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-                className="size-6 text-black"
+          {isShowTrailing ? (
+            <div className="ml-auto flex items-center justify-center">
+              <Link href="/profile">
+              <button
+                className="border border-black"
+                style={{ boxShadow: "3px 3px 0px 0px #000000" }}
               >
-                <path
-                  fillRule="evenodd"
-                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-            </button>
-          </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  className="size-6 text-black"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+              </Link>
+              
+            </div>
+          ) : (
+            <></>
+          )}
+
           {children}
           {/* <div className="flex w-full items-center justify-between gap-2">
             <div className="w-full">
