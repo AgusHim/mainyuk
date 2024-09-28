@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import QnaList from "../QnaList";
 import { useRouter } from "next/navigation";
-import Loader from "../Common/Loader";
+import Loader from "../Common/Loader/Loader";
 import { postPrecence } from "@/redux/slices/eventRegisterSlice";
 import { CreatePresence } from "@/types/presence";
 import { getSessionUser } from "@/redux/slices/authSlice";

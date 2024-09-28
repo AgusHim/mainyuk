@@ -5,7 +5,7 @@ import { getOrders } from "@/redux/slices/orderSlice";
 import { formatStrToDateTime } from "@/utils/convert";
 import Link from "next/link";
 import { useEffect } from "react";
-import Loader from "../Common/Loader";
+import Loader from "../Common/Loader/Loader";
 
 export default function GridOrders() {
   const dispatch = useAppDispatch();

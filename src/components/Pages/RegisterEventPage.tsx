@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandsPraying } from "@fortawesome/free-solid-svg-icons";
 import { formatStrToDateTime } from "@/utils/convert";
 import ReadMoreParagraph from "../ReadMoreParagraph/ReadMoreParagraph";
-import Loader from "../Common/Loader";
+import Loader from "../Common/Loader/Loader";
 
 
 const RegisterEventPage = ({ params }: { params: { slug: string } }) => {
