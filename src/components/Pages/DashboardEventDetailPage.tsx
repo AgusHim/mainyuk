@@ -43,7 +43,6 @@ export default function DashboardEventDetailPage({
 
   useEffect(() => {
     if (presences == null && event != null && !isLoadingPresence) {
-      console.log("RUN GET PRESENCE");
       dispatch(getPresences(event!.id!));
     }
   }, []);

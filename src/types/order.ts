@@ -3,9 +3,9 @@ import { User } from "./user";
 import { UserTicket } from "./user_ticket";
 import { Event } from "./event";
 
-export type Order = {
+export type Order ={
   id?: string;
-  public_id: string;
+  public_id?: string;
   amount?: number;
   donation?: number;
   admin_fee?: number;
@@ -20,11 +20,16 @@ export type Order = {
   expired_at?: string | null;
   created_at?: string;
   updated_at?: string;
-};
+}
 
 export type CreateOrder = {
   event_id: string;
   user_tickets: UserTicket[];
   donation: number;
   admin_fee: number;
+};
+
+export type VerifyOrder = {
+  order_id: string;
+  status: string;
 };

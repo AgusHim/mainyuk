@@ -10,10 +10,13 @@ import {
 import { User } from "@/types/user";
 import { ValidateField } from "@/utils/Validation/Validation";
 import { format } from "date-fns/format";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const FormProfileUpdate: React.FC = () => {
+  const router = useRouter();
+  const query = useSearchParams();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const province = useAppSelector((state) => state.region.province);
@@ -25,11 +28,11 @@ const FormProfileUpdate: React.FC = () => {
     id: user?.id ?? "",
     name: user?.name ?? "",
     username: user?.username ?? "",
-    gender: user?.gender ?? "male",
+    gender: user?.gender != null && user?.gender != "" ? user?.gender : "male",
     age: user?.age != null ? user?.age.toString() : "0",
     address: user?.address ?? "",
     phone: user?.phone ?? "",
-    activity: user?.activity ?? "kerja",
+    activity: user?.activity != null && user?.activity != "" ? user?.activity : "umm wa rabbatul bayt",
     email: user?.email ?? "",
     instagram: user?.instagram ?? "",
     birth_date: user?.birth_date ?? "",
@@ -88,7 +91,6 @@ const FormProfileUpdate: React.FC = () => {
       });
       return;
     }
-    console.log("FormData", formData);
   };
 
   const handleSubmit = async (e: any) => {
@@ -109,7 +111,7 @@ const FormProfileUpdate: React.FC = () => {
       province_code: formData.province_code,
       district_code: formData.district_code,
       sub_district_code: formData.sub_district_code,
-      birth_date:format(
+      birth_date: format(
         Date.parse(formData.birth_date!.replace("Z", "")),
         "yyyy-MM-dd HH:mm"
       ).replace(" ", "T"),
@@ -119,6 +121,9 @@ const FormProfileUpdate: React.FC = () => {
       .unwrap()
       .then((_) => {
         toast.info("Berhasil update profile");
+        if (query.get("isFromGoogle") === "true") {
+          router.replace("/events");
+        }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -166,7 +171,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="name"
                 className="text-lg font-semibold text-black"
               >
-                Nama Lengkap
+                Nama Lengkap<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -179,6 +184,7 @@ const FormProfileUpdate: React.FC = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
+              required
             />
             {formErrors.name && (
               <p className="mt-1 text-danger text-sm font-semibold">
@@ -195,7 +201,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="phone"
                 className="text-lg font-semibold text-black"
               >
-                No Handphone
+                No Handphone<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -208,6 +214,7 @@ const FormProfileUpdate: React.FC = () => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
+              required
             />
             {formErrors.phone && (
               <p className="mt-1 text-danger text-sm font-semibold">
@@ -224,7 +231,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="email"
                 className="text-lg font-semibold text-black"
               >
-                Email
+                Email<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -254,7 +261,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="instagram"
                 className="text-lg font-semibold text-black"
               >
-                Instagram
+                Instagram<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -267,6 +274,7 @@ const FormProfileUpdate: React.FC = () => {
               name="instagram"
               value={formData.instagram}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="mt-2"></div>
@@ -278,7 +286,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="brith_date"
                 className="text-lg font-semibold text-black"
               >
-                Tanggal Lahir
+                Tanggal Lahir<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -290,6 +298,7 @@ const FormProfileUpdate: React.FC = () => {
               onChange={handleChange}
               type="date"
               className="select select-bordered py-3 px-4 pr-auto w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              required
             />
             {formErrors.birth_date && (
               <p className="mt-1 text-danger text-sm font-semibold">
@@ -330,7 +339,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="gender"
                 className="text-lg font-semibold text-black"
               >
-                Gender
+                Gender<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -355,7 +364,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="province_code"
                 className="text-lg font-semibold text-black"
               >
-                Provinsi
+                Provinsi<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -389,7 +398,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="district_code"
                 className="text-lg font-semibold text-black"
               >
-                Kota / Kabupaten
+                Kota / Kabupaten<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -423,7 +432,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="sub_district_code"
                 className="text-lg font-semibold text-black"
               >
-                Kecamatan
+                Kecamatan<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -457,7 +466,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="address"
                 className="text-lg font-semibold text-black"
               >
-                Alamat
+                Alamat<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -470,6 +479,7 @@ const FormProfileUpdate: React.FC = () => {
               name="address"
               value={formData.address}
               onChange={handleChange}
+              required
             />
             {formErrors.address && (
               <p className="mt-1 text-danger text-sm font-semibold">
@@ -486,7 +496,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="activity"
                 className="text-lg font-semibold text-black"
               >
-                Aktifitas
+                Aktifitas<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>

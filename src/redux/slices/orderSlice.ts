@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { admin_api, user_api } from "../api";
 import { UserTicket } from "@/types/user_ticket";
-import { CreateOrder, Order } from "@/types/order";
+import { CreateOrder, Order, VerifyOrder } from "@/types/order";
 import { PaymentMethod } from "@/types/PaymentMethod";
 
 interface OrderState {
@@ -31,16 +31,18 @@ export const getOrders = createAsyncThunk("orders", async (_, thunk) => {
   return res.data;
 });
 
-export const getAdminOrders = createAsyncThunk("orders.admin.get", async (_, thunk) => {
-  const res = await admin_api.get("/orders");
-  return res.data;
-});
+export const getAdminOrders = createAsyncThunk(
+  "orders.admin.get",
+  async (_, thunk) => {
+    const res = await admin_api.get("/orders");
+    return res.data;
+  }
+);
 
 export const getOrderByPublicID = createAsyncThunk(
   "orders.getPublic",
   async (public_id: string, thunk) => {
     const res = await user_api.get(`/orders/${public_id}`);
-    console.log(`GetOrder = ${res.data}`);
     return res.data;
   }
 );
@@ -49,6 +51,16 @@ export const postOrder = createAsyncThunk(
   "order.post",
   async (order: CreateOrder) => {
     const res = await user_api.post("/orders", order);
+    return res.data;
+  }
+);
+
+export const putOrderVerify = createAsyncThunk(
+  "orders.verify",
+  async (data: VerifyOrder, thunk) => {
+    const res = await admin_api.put(`/orders/${data.order_id}/verify`, {
+      status: data.status,
+    });
     return res.data;
   }
 );
@@ -98,8 +110,11 @@ export const orderSlice = createSlice({
       state.orders = action.payload as Order[];
       state.loading = false;
     });
+    builder.addCase(getAdminOrders.fulfilled, (state, action) => {
+      state.orders = action.payload as Order[];
+      state.loading = false;
+    });
     builder.addCase(getOrderByPublicID.fulfilled, (state, action) => {
-      console.log(`Fulfilled = ${action.payload}`);
       state.order = action.payload as Order;
       state.isLoadingOrder = false;
     });

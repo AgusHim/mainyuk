@@ -5,7 +5,7 @@ import { MainLayout } from "@/layout/MainLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pembelian Tiket | YukNgaji Solo",
+  title: "Pembelian Tiket - YukNgaji Solo",
   description: "Pembelian tiket event YukNgaji Solo",
   // other metadata
 };

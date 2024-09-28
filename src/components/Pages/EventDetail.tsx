@@ -86,7 +86,6 @@ export default function EventDetailPage({
       ? new Date(event?.end_at!.replace("Z", ""))
       : new Date(event?.close_at!.replace("Z", ""));
   const startAt = new Date(event?.start_at!.replace("Z", ""));
-  console.log(`now At ${now} close At ${closeAt} Start At ${startAt}`);
   if (event?.close_at != null && presence.isRegistered == false) {
     if (closeAt < startAt && now < startAt) {
       return (

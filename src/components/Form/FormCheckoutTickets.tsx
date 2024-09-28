@@ -95,19 +95,7 @@ export const FormCheckoutTickets: React.FC = () => {
     const type = id.split("_")[1];
     const ticket = checkout[index].ticket;
     const gender_allowed = ticket?.gender_allowed.toLowerCase();
-    // if (type == "gender") {
-    //   const gender_allowed = ticket?.gender_allowed.toLowerCase();
-    //   const value_lower = value.toLowerCase();
-    //   if (value_lower != gender_allowed && gender_allowed != "both") {
-    //     toast.info(
-    //       `Tiket khusus untuk ${
-    //         gender_allowed == "male" ? "Laki-laki" : "Perempuan"
-    //       }`
-    //     );
-    //     return;
-    //   }
-    // }
-    console.log("Name %s Value %s", name, value);
+   
     setFormData({ ...formData, [name]: value });
 
     // Validate the field dynamically

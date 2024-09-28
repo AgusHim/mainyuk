@@ -28,7 +28,7 @@ export default function GridEvents() {
     <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
       <div className="grid gap-4">
         {eventsData?.map((event) => (
-          <Link href={`/events/${event.slug}`}>
+          <Link key={event.id} href={`/events/${event.slug}`}>
             <div className="flex w-full rounded-xl border-2 border-black bg-yellow-300 shadow-custom hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1">
               <div className="relative w-2/5">
                 <div className="block overflow-hidden rounded-xl m-2">

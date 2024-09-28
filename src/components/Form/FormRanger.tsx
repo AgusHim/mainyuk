@@ -35,7 +35,6 @@ const FormRanger: React.FC<FormProps> = ({ ranger, toggleDialog }) => {
   });
 
   useEffect(() => {
-   console.log(`Show FORM = ${ranger?.user?.name}`);
     if (listDivisi == null && !isLoadingDivisi) {
       dispatch(getDivisi());
     }

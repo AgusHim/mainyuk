@@ -12,6 +12,7 @@ import ButtonLoginGoogle from "../Common/Button/ButtonLoginGoogle";
 const SignInPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.auth.loading);
+  const loadingGoogle = useAppSelector((state) => state.auth.loadingGoogle);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -36,7 +37,7 @@ const SignInPage: React.FC = () => {
       .then((res) => {
         if (res != null) {
           if (redirectTo != null) {
-            const route = redirectTo.replace('/register','');
+            const route = redirectTo.replace("/register", "");
             router.replace(route);
             return;
           }
@@ -173,12 +174,15 @@ const SignInPage: React.FC = () => {
                       <input
                         type="submit"
                         value="Login Akun"
-                        
                         className="w-full cursor-pointer rounded-lg bg-primary px-4 py-2 space-x-2 text-black hover:bg-opacity-90 border-2 border-black shadow-custom hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1"
                       />
                     )}
                   </div>
-                  <ButtonLoginGoogle/>
+                  {loadingGoogle ? (
+                    <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
+                  ) : (
+                    <ButtonLoginGoogle />
+                  )}
                 </form>
               </div>
             </div>

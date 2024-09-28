@@ -4,7 +4,7 @@ import TablePaymentMethods from "@/components/Tables/TablePaymentMethods";
 
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Metode Pembayaran | YukNgaji Solo",
+  title: "Metode Pembayaran - YukNgaji Solo",
   description: "Halaman daftar methode pembayaran tiket event YukNgaji Solo",
   // other metadata
 };

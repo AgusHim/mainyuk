@@ -1,8 +1,8 @@
-"use client"
+"use client";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getAuthGoogleCallback } from "@/redux/slices/authSlice";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Loader from "../Common/Loader";
 
 export const OAuthGoogleCallback: React.FC = () => {
@@ -10,22 +10,32 @@ export const OAuthGoogleCallback: React.FC = () => {
   const authUser = useAppSelector((state) => state.auth.user);
   const isLoading = useAppSelector((state) => state.auth.loading);
   const router = useRouter();
-  
+  const hasFetched = useRef(false);
+
   useEffect(() => {
+    if (hasFetched.current) return;
     const handleOAuthResponse = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has("code") && urlParams.has("state")) {
-        try {
-          dispatch(getAuthGoogleCallback(urlParams))
-        } catch (error) {
-          console.error("Error handling OAuth response:", error);
-        }
-      }else{
-        router.replace('/');
+        dispatch(getAuthGoogleCallback(urlParams))
+          .unwrap()
+          .then((value) => {
+            if (value != null && value?.province == null) {
+              router.replace(`/profile/update?isFromGoogle=true`);
+            } else {
+              router.replace("/");
+            }
+          })
+          .catch((_) => {
+            router.replace("/signin");
+          });
+      } else {
+        router.replace("/");
       }
     };
     handleOAuthResponse();
-  }, [authUser,isLoading]);
+    hasFetched.current = true;
+  }, []);
 
-  return <Loader></Loader>
+  return <Loader></Loader>;
 };

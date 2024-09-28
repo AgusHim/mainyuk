@@ -18,7 +18,6 @@ export const getPresencesByAuth = createAsyncThunk(
   "presences.getByAuth",
   async (_, thunk) => {
     const res = await user_api.get("/presence");
-    console.log("getPresencesByAuth = ", res);
     return res.data;
   }
 );
@@ -42,13 +41,11 @@ export const presenceSlice = createSlice({
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getPresences.fulfilled, (state, action) => {
-      console.log("action payload = ", action.payload);
       state.data = action.payload as Presence[];
       state.loading = false;
       state.error = null;
     });
     builder.addCase(getPresencesByAuth.fulfilled, (state, action) => {
-      console.log("action payload = ", action.payload);
       state.data = action.payload as Presence[];
       state.loading = false;
       state.error = null;

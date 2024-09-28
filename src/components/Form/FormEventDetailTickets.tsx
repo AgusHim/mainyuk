@@ -29,14 +29,12 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
           let form: { [key: string]: number } = {};
           for (let index in e.payload) {
             const ticket = e.payload[index];
-            console.log(`index %s , ticket = %s`, index, ticket);
             form[`${ticket.id}_qty`] = 0;
             form[`${ticket.id}_price`] = ticket.price;
           }
           setFormData(form);
         }
       });
-      console.log("Ticket=", tickets);
     }
   }, []);
 

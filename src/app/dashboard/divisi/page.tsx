@@ -3,7 +3,7 @@ import TableDivisi from "@/components/Tables/TableDivisi";
 
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Divisi | YukNgaji Solo",
+  title: "Divisi - YukNgaji Solo",
   description: "Halaman daftar divisi YukNgaji Solo",
   // other metadata
 };

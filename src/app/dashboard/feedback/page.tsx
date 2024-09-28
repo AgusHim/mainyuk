@@ -3,7 +3,7 @@ import TableFeedback from "@/components/Tables/TableFeedback";
 
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Feedback | YukNgaji Solo",
+  title: "Feedback - YukNgaji Solo",
   description: "Halaman feedback YukNgaji Solo",
   // other metadata
 };

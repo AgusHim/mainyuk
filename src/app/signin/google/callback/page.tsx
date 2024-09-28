@@ -3,8 +3,8 @@ import { MainLayout } from "@/layout/MainLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Masuk Dashboard",
-  description: "Halaman signin dashboard",
+  title: "Masuk - YukNgaji Solo",
+  description: "Masuk YukNgaji Solo",
   // other metadata
 };
 

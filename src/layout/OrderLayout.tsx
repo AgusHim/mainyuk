@@ -183,7 +183,7 @@ export default function OrderLayout({
                 <div className="flex w-full items-center justify-between gap-4 py-2">
                   <p className="text-md text-black">Order ID</p>
                   <h1 className="font-semibold text-md text-black">
-                    #{order.public_id.toUpperCase()}
+                    #{order?.public_id?.toUpperCase()}
                   </h1>
                 </div>
                 <div className="border-b border-b-black"></div>
@@ -262,7 +262,7 @@ export default function OrderLayout({
             </div>
             <div className="mt-5 grid gap-4">
               {order.status == "paid" ? (
-                <Link href={`/order/${params.public_id}/tickets`}>
+                <Link href={`/orders/${params.public_id}/tickets`}>
                   <button
                     type="button"
                     className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"

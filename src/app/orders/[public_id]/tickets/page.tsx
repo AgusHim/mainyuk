@@ -3,7 +3,7 @@ import OrderTicketsLayout from "@/layout/OrderTicketsLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Detail Transaksi| YukNgaji Solo",
+  title: "Detail Transaksi- YukNgaji Solo",
   description: "Detail transaksi tiket event YukNgaji Solo",
 };
 
