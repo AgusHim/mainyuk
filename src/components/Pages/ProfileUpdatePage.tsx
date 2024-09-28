@@ -1,8 +1,8 @@
 "use client"
 import FormProfileUpdate from "@/components/Form/FormProfileUpdate";
 import { CommonHeader } from "@/components/Header/CommonHeader";
-import { RequiredAuthLayout } from "@/components/layout/AuthLayout";
-import { MainLayout } from "@/components/layout/MainLayout";
+import { RequiredAuthLayout } from "@/layout/AuthLayout";
+import { MainLayout } from "@/layout/MainLayout";
 
 export default function UpdateProfilePage() {
   return (

@@ -1,5 +1,5 @@
 import IndexPage from "@/components/Pages/IndexPage";
-import { MainLayout } from "@/components/layout/MainLayout";
+import { MainLayout } from "@/layout/MainLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

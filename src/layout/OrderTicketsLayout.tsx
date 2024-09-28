@@ -1,6 +1,6 @@
 "use client";
 import { CommonHeader } from "@/components/Header/CommonHeader";
-import { MainLayout } from "@/components/layout/MainLayout";
+import { MainLayout } from "@/layout/MainLayout";
 import { faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";

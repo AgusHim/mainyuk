@@ -1,6 +1,6 @@
 "use client"
-import { RequiredAuthLayout } from "@/components/layout/AuthLayout";
-import OrderTicketsLayout from "@/components/layout/OrderTicketsLayout";
+import { RequiredAuthLayout } from "@/layout/AuthLayout";
+import OrderTicketsLayout from "@/layout/OrderTicketsLayout";
 
 export default function OrderTicketsPage({
   params,
