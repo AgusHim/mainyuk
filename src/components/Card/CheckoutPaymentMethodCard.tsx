@@ -71,7 +71,6 @@ const CheckoutPaymentMethodCard = () => {
                   onClick={()=>setSelectedMethod(e)}
                 >
                   <img src={e.image_url ?? ""} alt="logo payment" className="w-full h-full object-scale-down"/>
-                  <p className="text-black text-xs">0.7%</p>
                 </div>
                 // <div
                 //   data-state="closed"
@@ -206,5 +205,5 @@ function getPaymentColor(pm: PaymentMethod): string {
   if (pm.name.toLocaleLowerCase().includes("bca")) {
     return "bg-[#E12528]";
   }
-  return "bg-[#8BD3DD]";
+  return "bg-white";
 }
