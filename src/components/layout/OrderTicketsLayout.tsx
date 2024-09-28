@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect, useRef, useState } from "react";
-import Loader from "@/components/Common/Loader";
+import Loader from "@/components/Common/Loader/Loader";
 import { getOrderByPublicID } from "@/redux/slices/orderSlice";
 import { UserTicket } from "@/types/user_ticket";
 import { Order } from "@/types/order";

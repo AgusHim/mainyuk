@@ -1,5 +1,5 @@
 "use client";
-import Loader from "@/components/Common/Loader";
+import Loader from "@/components/Common/Loader/Loader";
 
 import { FormCheckoutTickets } from "@/components/Form/FormCheckoutTickets";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";

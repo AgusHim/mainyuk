@@ -4,7 +4,6 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import {
   faCartShopping,
   faComment,
-  faMoneyBill,
   faReceipt,
   faTicket,
 } from "@fortawesome/free-solid-svg-icons";
@@ -12,11 +11,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { formatStrToDateTime } from "@/utils/convert";
-import { useEffect, useState } from "react";
-import Loader from "@/components/Common/Loader";
+import { useEffect } from "react";
+import Loader from "@/components/Common/Loader/Loader";
 import { getOrderByPublicID } from "@/redux/slices/orderSlice";
-import { UserTicket } from "@/types/user_ticket";
-import { Event } from "@/types/event";
 import OrderPaymentMethodCard from "@/components/Card/OrderPaymentMethodCard";
 import Link from "next/link";
 import { Order } from "@/types/order";
