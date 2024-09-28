@@ -1,9 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { getEventsHome } from "@/redux/slices/eventSlice";
 import { getOrders } from "@/redux/slices/orderSlice";
-import { Event } from "@/types/event";
 import { formatStrToDateTime } from "@/utils/convert";
 import Link from "next/link";
 import { useEffect } from "react";
