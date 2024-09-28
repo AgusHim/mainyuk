@@ -40,11 +40,13 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
 
   const totalPayment = () => {
     let total = 0;
-    for (let index in tickets!) {
-      const ticket = tickets[index];
-      const qty = formData[`${ticket.id}_qty`];
-      const price = formData[`${ticket.id}_price`];
-      total = total + qty * price;
+    if (tickets != null) {
+      for (let index in tickets!) {
+        const ticket = tickets[index];
+        const qty = formData[`${ticket.id}_qty`];
+        const price = formData[`${ticket.id}_price`];
+        total = total + qty * price;
+      }
     }
     return total;
   };
@@ -52,7 +54,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
     const name = `${ticket.id}_qty`;
     const current = formData[name];
     const pax_multiplier = ticket.pax_multiplier ?? 1;
-    const max_order_pax = ticket.max_order_pax??1;
+    const max_order_pax = ticket.max_order_pax ?? 1;
     const update = current + pax_multiplier;
     if (update <= max_order_pax) {
       setFormData({ ...formData, [name]: update });
@@ -63,7 +65,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
     const name = `${ticket.id}_qty`;
     const current = formData[name];
     const pax_multiplier = ticket.pax_multiplier ?? 1;
-    const min_order_pax = ticket.min_order_pax??1;
+    const min_order_pax = ticket.min_order_pax ?? 1;
     const update = current - pax_multiplier;
     if (update >= 0) {
       setFormData({ ...formData, [name]: update });
@@ -100,6 +102,11 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
   if (isLoading) {
     return <></>;
   }
+
+  if (tickets == null) {
+    return <></>;
+  }
+
   return (
     <>
       <section id="tickets" className="mb-4">

@@ -3,6 +3,7 @@ import Loader from "@/components/common/Loader/Loader";
 import { FormEventDetailTickets } from "@/components/Form/FormEventDetailTickets";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getEventDetail } from "@/redux/slices/eventSlice";
+import { Event } from "@/types/event";
 import { formatStrToDateTime } from "@/utils/convert";
 import { useRouter } from "next/navigation";
 import { Router } from "next/router";
@@ -74,9 +75,7 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
       <section id="summary">
         <div className="m-10">
           <div className="mb-1">
-            <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-1 text-sm tag-secondary border-black text-black border bg-meta-7">
-              Akhwat Only
-            </button>
+            <AllowedGender event={eventData} />
           </div>
           <div className="py-4 text-xl font-semibold text-neutral-900">
             {eventData?.title ?? ""}
@@ -184,4 +183,22 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
       <FormEventDetailTickets slug={slug} />
     </>
   );
+};
+
+const AllowedGender: React.FC<{ event: Event }> = ({ event }) => {
+  if (event.allowed_gender == "FEMALE") {
+    return (
+      <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-1 text-sm tag-secondary border-black text-black border bg-meta-7">
+        Akhwat Only
+      </button>
+    );
+  }
+  if (event.allowed_gender == "MALE") {
+    return (
+      <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-1 text-sm tag-secondary border-black text-black border bg-primary">
+        Akhwat Only
+      </button>
+    );
+  }
+  return <></>;
 };
