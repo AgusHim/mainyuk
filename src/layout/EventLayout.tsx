@@ -160,7 +160,7 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
               Tempat
             </div>
             <div className="flex flex-row">
-              {eventData.location_types!.map((e, index) => (
+              {eventData.location_types?.map((e, index) => (
                 <button
                   key={index}
                   className="mr-2 h-full whitespace-nowrap rounded-full font-medium px-2 py-1 text-sm tag-secondary bg-success text-black border border-black"
@@ -169,7 +169,7 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
                 </button>
               ))}
             </div>
-            {eventData.location_desc!.map((e, index) => (
+            {eventData.location_desc?.map((e, index) => (
               <div
                 key={index}
                 className="mt-2 whitespace-pre-line text-md text-black"

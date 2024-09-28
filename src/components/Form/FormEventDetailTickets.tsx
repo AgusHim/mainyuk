@@ -103,7 +103,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
     return <></>;
   }
 
-  if (tickets == null) {
+  if (tickets == null || tickets.length == 0) {
     return <></>;
   }
 

@@ -40,7 +40,7 @@ export default function LiveEventPage({
   }, []);
 
   const hostUrl = process.env.BASE_URL;
-  const qrValue = `https://${hostUrl}/events/${params.slug}`;
+  const qrValue = `https://${hostUrl}/events/${params.slug}/qna`;
 
   if (isLoading) {
     return <h1>Loading...</h1>;
