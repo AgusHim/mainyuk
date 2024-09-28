@@ -1,5 +1,5 @@
 "use client";
-import Loader from "@/components/Common/Loader/Loader";
+import Loader from "@/components/common/Loader/Loader";
 import { FormEventDetailTickets } from "@/components/Form/FormEventDetailTickets";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getEventDetail } from "@/redux/slices/eventSlice";

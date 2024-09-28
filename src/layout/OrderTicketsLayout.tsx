@@ -6,12 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect, useRef, useState } from "react";
-import Loader from "@/components/Common/Loader/Loader";
+import Loader from "@/components/common/Loader/Loader";
 import { getOrderByPublicID } from "@/redux/slices/orderSlice";
 import { UserTicket } from "@/types/user_ticket";
 import { Order } from "@/types/order";
 import QRCode from "qrcode.react";
-import DialogTicketQR from "@/components/Common/Dialog/DialogTicketQR";
+import DialogTicketQR from "@/components/common/Dialog/DialogTicketQR";
 
 export default function OrderTicketsLayout({
   params,

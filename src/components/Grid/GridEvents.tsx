@@ -6,7 +6,7 @@ import { Event } from "@/types/event";
 import { formatStrToDateTime } from "@/utils/convert";
 import Link from "next/link";
 import { useEffect } from "react";
-import Loader from "../Common/Loader/Loader";
+import Loader from "../common/Loader/Loader";
 
 export default function GridEvents() {
   const dispatch = useAppDispatch();

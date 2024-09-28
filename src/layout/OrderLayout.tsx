@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { formatStrToDateTime } from "@/utils/convert";
 import { useEffect } from "react";
-import Loader from "@/components/Common/Loader/Loader";
+import Loader from "@/components/common/Loader/Loader";
 import { getOrderByPublicID } from "@/redux/slices/orderSlice";
 import OrderPaymentMethodCard from "@/components/Card/OrderPaymentMethodCard";
 import Link from "next/link";

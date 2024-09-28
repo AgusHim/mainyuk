@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons/faEdit";
 import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
-import Dialog from "../Common/Dialog/Dialog";
+import Dialog from "../common/Dialog/Dialog";
 import { Ticket } from "@/types/ticket";
 import { formatStrToDateTime } from "@/utils/convert";
 

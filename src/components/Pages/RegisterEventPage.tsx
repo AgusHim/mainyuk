@@ -8,12 +8,12 @@ import { User } from "@/types/user";
 import { CreatePresence } from "@/types/presence";
 import { useRouter } from "next/navigation";
 import { setAuthUser } from "@/redux/slices/authSlice";
-import DashboardLoader from "../Common/Loader/DashboardLoader";
+import DashboardLoader from "../common/Loader/DashboardLoader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandsPraying } from "@fortawesome/free-solid-svg-icons";
 import { formatStrToDateTime } from "@/utils/convert";
 import ReadMoreParagraph from "../ReadMoreParagraph/ReadMoreParagraph";
-import Loader from "../Common/Loader/Loader";
+import Loader from "../common/Loader/Loader";
 
 
 const RegisterEventPage = ({ params }: { params: { slug: string } }) => {

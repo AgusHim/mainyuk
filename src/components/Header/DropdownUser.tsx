@@ -3,7 +3,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { logOutUser } from "@/redux/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import Dialog from "../Common/Dialog/Dialog";
+import Dialog from "../common/Dialog/Dialog";
 import FormAccount from "../Form/FormAccount";
 
 const DropdownUser = () => {

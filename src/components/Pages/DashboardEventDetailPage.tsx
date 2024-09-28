@@ -11,7 +11,7 @@ import ExcelExportButton from "../Export/ExportPresence";
 import { getPresences } from "@/redux/slices/presenceSlice";
 import { formatStrToDateTime } from "@/utils/convert";
 import TableTickets from "../Tables/TableTickets";
-import Dialog from "../Common/Dialog/Dialog";
+import Dialog from "../common/Dialog/Dialog";
 import FormTicket from "../Form/FormTicket";
 import { setTicket } from "@/redux/slices/ticketSlice";
 

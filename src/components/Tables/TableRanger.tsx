@@ -5,7 +5,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormRanger from "../Form/FormRanger";
 import { useState, useRef } from "react";
-import Dialog from "../Common/Dialog/Dialog";
+import Dialog from "../common/Dialog/Dialog";
 import { Ranger } from "@/types/ranger";
 import { deleteFromListRanger, deleteRanger } from "@/redux/slices/rangerSlice";
 import { toast } from "react-toastify";

@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getAuthGoogleCallback } from "@/redux/slices/authSlice";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import Loader from "../Common/Loader/Loader";
+import Loader from "../common/Loader/Loader";
 
 export const OAuthGoogleCallback: React.FC = () => {
   const dispatch = useAppDispatch();

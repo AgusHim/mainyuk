@@ -4,7 +4,7 @@ import { getAdminOrders, putOrderVerify } from "@/redux/slices/orderSlice";
 import { Order, VerifyOrder } from "@/types/order";
 import { formatStrToDateTime } from "@/utils/convert";
 import { useEffect, useRef, useState } from "react";
-import Dialog from "../Common/Dialog/Dialog";
+import Dialog from "../common/Dialog/Dialog";
 
 const TableOrders = () => {
   const dispatch = useAppDispatch();

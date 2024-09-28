@@ -7,7 +7,7 @@ import {
   setPaymentMethod,
 } from "@/redux/slices/PaymentMethodSlice";
 import { useEffect, useRef, useState } from "react";
-import Dialog from "../Common/Dialog/Dialog";
+import Dialog from "../common/Dialog/Dialog";
 import FormPaymentMethod from "../Form/FormPaymentMethod";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PaymentMethod } from "@/types/PaymentMethod";

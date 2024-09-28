@@ -9,7 +9,7 @@ import HeaderDashboard from "@/components/Header/HeaderDashboard";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getSessionUser } from "@/redux/slices/authSlice";
-import Loader from "@/components/Common/Loader/Loader";
+import Loader from "@/components/common/Loader/Loader";
 
 export default function DashboardLayout({
   children,

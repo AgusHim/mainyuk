@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getComments } from "@/redux/slices/qnaSlice";
 import { formatStrToDateTime } from "@/utils/convert";
-import DialogShowQnA from "../Common/Dialog/DialogShowQnA";
+import DialogShowQnA from "../common/Dialog/DialogShowQnA";
 
 const LiveQna = () => {
   const [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
