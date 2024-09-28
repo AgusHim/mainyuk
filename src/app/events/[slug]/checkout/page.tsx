@@ -1,7 +1,7 @@
 import { CommonHeader } from "@/components/Header/CommonHeader";
-import { RequiredAuthLayout } from "@/layout/AuthLayout";
-import { CheckoutLayout } from "@/layout/CheckoutLayout";
-import { MainLayout } from "@/layout/MainLayout";
+import { RequiredAuthLayout } from "@/components/layout/AuthLayout";
+import { CheckoutLayout } from "@/components/layout/CheckoutLayout";
+import { MainLayout } from "@/components/layout/MainLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

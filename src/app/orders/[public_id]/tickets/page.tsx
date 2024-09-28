@@ -1,5 +1,8 @@
-import { RequiredAuthLayout } from "@/layout/AuthLayout";
-import OrderTicketsLayout from "@/layout/OrderTicketsLayout";
+import dynamic from 'next/dynamic'
+const OrderTicketsPage = dynamic(
+  () => import("@/components/Pages/OrderTicketsPage"),
+  { ssr: false }
+)
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,14 +10,12 @@ export const metadata: Metadata = {
   description: "Detail transaksi tiket event YukNgaji Solo",
 };
 
-export default function OrderTicketsPage({
+export default function OrderTickets({
   params,
 }: {
   params: { public_id: string };
 }) {
   return (
-    <RequiredAuthLayout>
-      <OrderTicketsLayout params={params} />
-    </RequiredAuthLayout>
+    <OrderTicketsPage params={params} />
   );
 }

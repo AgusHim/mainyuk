@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { EventLayout } from "@/layout/EventLayout";
-import { MainLayout } from "@/layout/MainLayout";
+import { EventLayout } from "@/components/layout/EventLayout";
+import { MainLayout } from "@/components/layout/MainLayout";
 
 export const metadata: Metadata = {
   title: "Detail Event",

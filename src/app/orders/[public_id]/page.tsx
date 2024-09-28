@@ -1,5 +1,8 @@
-import { RequiredAuthLayout } from "@/layout/AuthLayout";
-import OrderLayout from "@/layout/OrderLayout";
+import dynamic from 'next/dynamic'
+const OrderPage = dynamic(
+  () => import("@/components/Pages/OrderPage"),
+  { ssr: false }
+)
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,14 +10,10 @@ export const metadata: Metadata = {
   description: "Detail transaksi tiket event YukNgaji Solo",
 };
 
-export default function OrderPage({
+export default function Order({
   params,
 }: {
   params: { public_id: string };
 }) {
-  return (
-    <RequiredAuthLayout>
-      <OrderLayout params={params} />
-    </RequiredAuthLayout>
-  );
+  return <OrderPage params={params}/>
 }

@@ -1,7 +1,7 @@
 import { BottomNavBar } from "@/components/BottomNavBar/BottomNavBar";
 import GridEvents from "@/components/Grid/GridEvents";
 import { CommonHeader } from "@/components/Header/CommonHeader";
-import { MainLayout } from "@/layout/MainLayout";
+import { MainLayout } from "@/components/layout/MainLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

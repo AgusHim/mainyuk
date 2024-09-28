@@ -1,7 +1,8 @@
-import FormProfileUpdate from "@/components/Form/FormProfileUpdate";
-import { CommonHeader } from "@/components/Header/CommonHeader";
-import { RequiredAuthLayout } from "@/layout/AuthLayout";
-import { MainLayout } from "@/layout/MainLayout";
+import dynamic from 'next/dynamic'
+const UpdateProfilePage = dynamic(
+  () => import("@/components/Pages/ProfileUpdatePage"),
+  { ssr: false }
+)
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,17 +11,10 @@ export const metadata: Metadata = {
   // other metadata
 };
 
-export default function UpdateProfilePage() {
+export default function UpdateProfile() {
   return (
     <>
-      <RequiredAuthLayout>
-        <MainLayout>
-          <CommonHeader title="Update Profile" isShowBack={true} isShowTrailing={false} />
-          <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
-            <FormProfileUpdate/>
-          </div>
-        </MainLayout>
-      </RequiredAuthLayout>
+      <UpdateProfilePage />
     </>
   );
 }

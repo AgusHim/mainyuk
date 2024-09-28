@@ -1,5 +1,5 @@
 import { OAuthGoogleCallback } from "@/components/Callback/OAuthGoogleCallback";
-import { MainLayout } from "@/layout/MainLayout";
+import { MainLayout } from "@/components/layout/MainLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
