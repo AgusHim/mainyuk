@@ -43,7 +43,7 @@ export default function OrderLayout({
       </MainLayout>
     );
   }
-  
+
   const totalPayment = () => {
     const amount = order?.amount ?? 0;
     const donation = order?.donation ?? 0;
@@ -270,23 +270,21 @@ export default function OrderLayout({
                   </button>
                 </Link>
               ) : (
-                <Link href={`/order/${params.public_id}/tickets`}>
-                  <button
-                  onClick={()=>getWhatsAppUrl(order,totalPayment())}
-                    type="button"
-                    className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
-                  >
-                    <div className="flex items-center justify-center gap-x-2">
-                      <FontAwesomeIcon
-                        icon={faComment}
-                        width={25}
-                        height={25}
-                        style={{ fontSize: "20px", color: "white" }}
-                      />
-                      <span>Konfirmasi Pembayaran</span>
-                    </div>
-                  </button>
-                </Link>
+                <button
+                  onClick={() => getWhatsAppUrl(order, totalPayment())}
+                  type="button"
+                  className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
+                >
+                  <div className="flex items-center justify-center gap-x-2">
+                    <FontAwesomeIcon
+                      icon={faComment}
+                      width={25}
+                      height={25}
+                      style={{ fontSize: "20px", color: "white" }}
+                    />
+                    <span>Konfirmasi Pembayaran</span>
+                  </div>
+                </button>
               )}
             </div>
           </div>
@@ -319,17 +317,17 @@ const OrderStatus: React.FC<{ status: string }> = ({ status }) => {
 };
 
 const phoneNumber = "+6281241000056";
- 
-  const getWhatsAppUrl = (order:Order,total:number) => {
-    const message = `Konfirmasi Pembayaran%0A%0A*${order?.event?.title}*%0A%0AOrder ID:${order?.public_id}%0AMetode Pembayaran:${order.payment_method?.name}%0ATotal Transfer:${total}%0ANama Pemesan:${order.user?.name}%0A`;
 
-    const isMobile = /Android/i.test(navigator.userAgent);
+const getWhatsAppUrl = (order: Order, total: number) => {
+  const message = `Konfirmasi Pembayaran%0A%0A*${order?.event?.title}*%0A%0AOrder ID:${order?.public_id}%0AMetode Pembayaran:${order.payment_method?.name}%0ATotal Transfer:${total}%0ANama Pemesan:${order.user?.name}%0A`;
 
-    if (isMobile) {
-      // Use intent for Android
-      return `intent://send/?phone=${phoneNumber}&text=${message}#Intent;scheme=whatsapp;package=com.whatsapp;end;`;
-    } else {
-      // Use wa.me for web and desktop
-      return `https://wa.me/${phoneNumber}?text=${message}`;
-    }
-  };
+  const isMobile = /Android/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // Use intent for Android
+    return `intent://send/?phone=${phoneNumber}&text=${message}#Intent;scheme=whatsapp;package=com.whatsapp;end;`;
+  } else {
+    // Use wa.me for web and desktop
+    return `https://wa.me/${phoneNumber}?text=${message}`;
+  }
+};

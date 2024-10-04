@@ -8,7 +8,6 @@ import { UserTicket } from "@/types/user_ticket";
 import { useRef, useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { toast } from "react-toastify";
-import Dialog from "../common/Dialog/Dialog";
 
 export default function ScanTicketPage() {
   const dispatch = useAppDispatch();
