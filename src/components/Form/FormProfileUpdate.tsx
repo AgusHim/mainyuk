@@ -32,7 +32,10 @@ const FormProfileUpdate: React.FC = () => {
     age: user?.age != null ? user?.age.toString() : "0",
     address: user?.address ?? "",
     phone: user?.phone ?? "",
-    activity: user?.activity != null && user?.activity != "" ? user?.activity : "umm wa rabbatul bayt",
+    activity:
+      user?.activity != null && user?.activity != ""
+        ? user?.activity
+        : "umm wa rabbatul bayt",
     email: user?.email ?? "",
     instagram: user?.instagram ?? "",
     birth_date: user?.birth_date ?? "",
@@ -44,6 +47,7 @@ const FormProfileUpdate: React.FC = () => {
   const [formErrors, setFormErrors] = useState<{
     [key: string]: string | undefined;
   }>({});
+
   const hasErrors = Object.values(formErrors).some(
     (error) => error !== undefined && error !== ""
   );
@@ -93,12 +97,25 @@ const FormProfileUpdate: React.FC = () => {
     }
   };
 
+  const validateErrors = (): boolean => {
+    Object.entries(formData).forEach(([key, value]) => {
+      const error = ValidateField(key, value);
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        [key]: error,
+      }));
+    });
+    return hasErrors;
+  };
+
   const handleSubmit = async (e: any) => {
-    if (hasErrors) {
+    
+    e.preventDefault();
+    const isValidate = validateErrors();
+    if (isValidate == false) {
       toast.info("Pastikan sudah isi data dengan benar");
       return;
     }
-    e.preventDefault();
     var userData = {
       name: formData.name,
       username: formData.username,
@@ -276,6 +293,11 @@ const FormProfileUpdate: React.FC = () => {
               onChange={handleChange}
               required
             />
+            {formErrors.instagram && (
+              <p className="mt-1 text-danger text-sm font-semibold">
+                {formErrors.instagram}
+              </p>
+            )}
           </div>
           <div className="mt-2"></div>
         </div>
@@ -473,7 +495,7 @@ const FormProfileUpdate: React.FC = () => {
           <div className="flex flex-col">
             <input
               id="address"
-              placeholder="Masukkan nama lengkap"
+              placeholder="Masukkan alamat domisili"
               type="text"
               className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
               name="address"

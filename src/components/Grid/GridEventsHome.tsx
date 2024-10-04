@@ -9,14 +9,15 @@ export default function GridEventsHome() {
   const eventData = useAppSelector((state) => state.event.data);
   const isLoading = useAppSelector((state) => state.event.loading);
   const rectangles = Array(6).fill(null);
-const error = useAppSelector((state) => state.event.error);
+  const error = useAppSelector((state) => state.event.error);
 
-    useEffect(() => {
-      if (eventData == null) {
-        dispatch(getEventsHome());
-      }
-    }, []);
+  useEffect(() => {
+    if (eventData == null) {
+      dispatch(getEventsHome());
+    }
+  }, []);
 
+  const events = eventData?.filter(event => event.isPublished);
   return (
     <section id="events">
       <div className="mb-10 py-2 bg-yellow-300 border border-black rounded-full shadow-custom">
@@ -25,11 +26,14 @@ const error = useAppSelector((state) => state.event.error);
         </h1>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        {eventData == null
+        {events == null
           ? rectangles.map((_, index) => (
-              <div key={index} className="bg-gray-300 h-40 rounded-xl md:rounded-3xl"></div>
+              <div
+                key={index}
+                className="bg-gray-300 h-40 rounded-xl md:rounded-3xl"
+              ></div>
             ))
-          : eventData?.map((event, index) => {
+          : events?.map((event, index) => {
               const baseURL = process.env.BASE_URL;
               const link = `https://${baseURL}/events/${event?.slug ?? ""}`;
               const now = new Date();

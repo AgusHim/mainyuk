@@ -20,7 +20,9 @@ const validateDistrictCode = (district_code: string): string | undefined => {
   return "";
 };
 
-const validateSubDistrictCode = (sub_district_code: string): string | undefined => {
+const validateSubDistrictCode = (
+  sub_district_code: string
+): string | undefined => {
   if (!sub_district_code) {
     return "Kecamatan tidak boleh kosong";
   }
@@ -53,11 +55,11 @@ const validateEmail = (email: string): string | undefined => {
 };
 
 const validatePhone = (phone: string): string | undefined => {
-    if (!phone) {
-      return "No Handphone tidak boleh kosong";
-    }
-    return "";
-  };
+  if (!phone) {
+    return "No Handphone tidak boleh kosong";
+  }
+  return "";
+};
 
 const validateGender = (
   gender: string,
@@ -74,6 +76,13 @@ const validateGender = (
   return "";
 };
 
+const validateInstagram = (instagram: string): string | undefined => {
+  if (!instagram) {
+    return "Instagram tidak boleh kosong";
+  }
+  return "";
+};
+
 export const ValidateField = (
   name: string,
   value: string,
@@ -86,18 +95,20 @@ export const ValidateField = (
       return validateGender(value, gender_allowed);
     case "email":
       return validateEmail(value);
-      case "phone":
+    case "phone":
       return validatePhone(value);
-      case "province_code":
+    case "province_code":
       return validateProvinceCode(value);
-      case "district_code":
+    case "district_code":
       return validateDistrictCode(value);
-      case "sub_district_code":
+    case "sub_district_code":
       return validateSubDistrictCode(value);
     case "address":
       return validateAddress(value);
     case "birth_date":
       return validateBirthDate(value);
+    case "instagram":
+      return validateInstagram(value);
     default:
       return "";
   }

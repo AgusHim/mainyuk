@@ -3,7 +3,7 @@ export default function HomeLinktree() {
   const links = [
     {
       color: "bg-red-300",
-      text: "Join Circle 💬",
+      text: "Kepoin Admin 💬",
       link: "https://api.whatsapp.com/send/?phone=%2B6281241000056&text=Assalamu'alaikum, Saya ingin join circle YN Solo",
     },
     {
