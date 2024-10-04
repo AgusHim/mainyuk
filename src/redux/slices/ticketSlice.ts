@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { admin_api, api, user_api } from "../api";
+import { admin_api, api, ranger_api, user_api } from "../api";
 import { Ticket } from "@/types/ticket";
 
 interface TicketState {
@@ -18,7 +18,7 @@ const initialState: TicketState = {
 
 export const getTicketsByEventID = createAsyncThunk(
   "tickets.get",
-  async (event_id:string, thunk) => {
+  async (event_id: string, thunk) => {
     const res = await api.get(`/tickets?event_id=${event_id}`);
     return res.data;
   }
@@ -26,7 +26,7 @@ export const getTicketsByEventID = createAsyncThunk(
 
 export const getPublicTickets = createAsyncThunk(
   "tickets.getPublicTIcket",
-  async (event_id:string, thunk) => {
+  async (event_id: string, thunk) => {
     const res = await api.get(`/tickets?event_id=${event_id}`);
     return res.data;
   }
@@ -43,7 +43,7 @@ export const postTicket = createAsyncThunk(
 export const putTicket = createAsyncThunk(
   "ticket.edit",
   async (ticket: Ticket) => {
-    const res = await admin_api.put("/tickets"+`/${ticket.id}`, ticket);
+    const res = await admin_api.put("/tickets" + `/${ticket.id}`, ticket);
     return res.data;
   }
 );
@@ -51,15 +51,23 @@ export const putTicket = createAsyncThunk(
 export const deleteTicket = createAsyncThunk(
   "ticket.delete",
   async (id: string) => {
-    const res = await admin_api.delete("/tickets"+`/${id}`);
+    const res = await admin_api.delete("/tickets" + `/${id}`);
     return res.data;
   }
 );
 
 export const getUserTicket = createAsyncThunk(
   "tickets.getUserTicket",
-  async (public_id:string, thunk) => {
-    const res = await api.get(`/user_tickets/${public_id}`);
+  async (public_id: string, thunk) => {
+    const res = await ranger_api.get(`/user_tickets/${public_id}`);
+    return res.data;
+  }
+);
+
+export const postVerifyUserTicket = createAsyncThunk(
+  "tickets.getUserTicket",
+  async (public_id: string, thunk) => {
+    const res = await ranger_api.get(`/user_tickets/${public_id}/presence`);
     return res.data;
   }
 );
@@ -72,25 +80,37 @@ export const ticketSlice = createSlice({
       state.ticket = action.payload as Ticket;
     },
     deleteFromTickets: (state, action) => {
-      const updated = state.tickets?.filter(ticket => ticket.id !== action.payload);
+      const updated = state.tickets?.filter(
+        (ticket) => ticket.id !== action.payload
+      );
       state.tickets = updated!;
     },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getTicketsByEventID.fulfilled || getPublicTickets.fulfilled, (state, action) => {
-      state.tickets = action.payload as Ticket[];
-      state.loading = false;
-    });
     builder.addCase(
-      getTicketsByEventID.pending || getPublicTickets.pending || postTicket.pending || putTicket.pending || deleteTicket.pending,
+      getTicketsByEventID.fulfilled || getPublicTickets.fulfilled,
+      (state, action) => {
+        state.tickets = action.payload as Ticket[];
+        state.loading = false;
+      }
+    );
+    builder.addCase(
+      getTicketsByEventID.pending ||
+        getPublicTickets.pending ||
+        postTicket.pending ||
+        putTicket.pending ||
+        deleteTicket.pending,
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
     builder.addCase(
-      getTicketsByEventID.rejected || postTicket.rejected || putTicket.rejected || deleteTicket.rejected,
+      getTicketsByEventID.rejected ||
+        postTicket.rejected ||
+        putTicket.rejected ||
+        deleteTicket.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

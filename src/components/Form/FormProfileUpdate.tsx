@@ -38,7 +38,7 @@ const FormProfileUpdate: React.FC = () => {
         : "umm wa rabbatul bayt",
     email: user?.email ?? "",
     instagram: user?.instagram ?? "",
-    birth_date: user?.birth_date ?? "",
+    birth_date: user?.birth_date!= null?user?.birth_date.replace("Z", ""): "",
     province_code: user?.province?.code ?? "",
     district_code: user?.district?.code ?? "",
     sub_district_code: user?.sub_district?.code ?? "",
@@ -113,7 +113,6 @@ const FormProfileUpdate: React.FC = () => {
     e.preventDefault();
     const isValidate = validateErrors();
     if (isValidate == false) {
-      toast.info("Pastikan sudah isi data dengan benar");
       return;
     }
     var userData = {
