@@ -4,7 +4,7 @@ export default function HomeLinktree() {
     {
       color: "bg-red-300",
       text: "Kepoin Admin 💬",
-      link: "https://api.whatsapp.com/send/?phone=%2B6281241000056&text=Assalamu'alaikum, Saya ingin join circle YN Solo",
+      link: "https://api.whatsapp.com/send/?phone=%2B6281241000056&text=Assalamu'alaikum, min",
     },
     {
       color: "bg-[#7DD3FC]",

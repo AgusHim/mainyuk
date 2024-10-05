@@ -270,8 +270,8 @@ export default function OrderLayout({
                   </button>
                 </Link>
               ) : (
+                <Link href={getWhatsAppUrl(order, totalPayment())}>
                 <button
-                  onClick={() => getWhatsAppUrl(order, totalPayment())}
                   type="button"
                   className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
                 >
@@ -285,6 +285,7 @@ export default function OrderLayout({
                     <span>Konfirmasi Pembayaran</span>
                   </div>
                 </button>
+                </Link>
               )}
             </div>
           </div>
