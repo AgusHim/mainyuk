@@ -1,7 +1,15 @@
+import { BottomNavBar } from "@/components/BottomNavBar/BottomNavBar";
+import { CommonHeader } from "@/components/Header/CommonHeader";
+import { MainLayout } from "@/layout/MainLayout";
+
 export default function Custom404() {
   return (
-    <div className="w-screen h-screen flex items-center justify-center">
-      <h1 className="text-3xl">404 - Page Not Found</h1>
-    </div>
+    <MainLayout>
+      <CommonHeader title="Halaman Tidak Ditemukan" />
+      <div className="flex items-center justify-center">
+        <h1 className="text-3xl text-black">Halaman tidak ditemukan 😭</h1>
+      </div>
+      <BottomNavBar />
+    </MainLayout>
   );
 }

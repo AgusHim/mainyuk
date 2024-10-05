@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function OrderDetail({ params }: { params: { slug: string } }) {
   return (
     <>
-      <RequiredAuthLayout>
+      <RequiredAuthLayout redirectTo={`/events/${params.slug}`}>
         <MainLayout>
           <CommonHeader title="Pembelian Tiket" isShowBack={true} />
           <CheckoutLayout slug={params.slug} />

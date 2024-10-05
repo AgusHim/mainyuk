@@ -137,6 +137,10 @@ const FormProfileUpdate: React.FC = () => {
       .unwrap()
       .then((_) => {
         toast.info("Berhasil update profile");
+        var redirectTo = query.get("redirectTo");
+        if (redirectTo != null && redirectTo != undefined) {
+          router.replace(redirectTo!);
+        }
         if (query.get("isFromGoogle") === "true") {
           router.replace("/events");
         }

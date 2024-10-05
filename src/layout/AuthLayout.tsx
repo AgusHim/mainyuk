@@ -26,14 +26,25 @@ export const RequiredAuthLayout: React.FC<LayoutProps> = ({
       .unwrap()
       .then((value) => {
         if (value == null) {
-          router.replace(`/signin`);
+          router.replace(`/signin?redirectTo=${redirectTo}`);
         }
-        
-        if (value != null && value?.province == null) {
-          if (query.get("isFromGoogle") == "true") {
-            router.replace(`/profile/update?isFromGoogle=true`);
-          } else {
-            router.replace(`/profile/update`);
+
+        if (value != null && value?.sub_district == null) {
+          if (currentPath != "/profile/update") {
+            if (query.get("isFromGoogle") == "true") {
+              if (redirectTo != null && redirectTo != undefined) {
+                router.replace(
+                  `/profile/update?isFromGoogle="true"&redirectTo=${redirectTo}`
+                );
+              } else {
+                router.replace(`/profile/update?isFromGoogle="true"`);
+              }
+            }
+            if (redirectTo != null && redirectTo != undefined) {
+              router.replace(`/profile/update?redirectTo=${redirectTo}`);
+            } else {
+              router.replace(`/profile/update`);
+            }
           }
         }
         if (currentPath === "/scan") {

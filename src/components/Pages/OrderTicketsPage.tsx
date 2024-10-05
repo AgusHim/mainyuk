@@ -8,7 +8,7 @@ export default function OrderTicketsPage({
   params: { public_id: string };
 }) {
   return (
-    <RequiredAuthLayout>
+    <RequiredAuthLayout redirectTo={`/orders/${params.public_id}`}>
       <OrderTicketsLayout params={params} />
     </RequiredAuthLayout>
   );
