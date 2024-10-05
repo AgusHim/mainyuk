@@ -203,7 +203,7 @@ function getPaymentColor(pm: PaymentMethod): string {
     return "bg-white";
   }
   if (pm.name.toLocaleLowerCase().includes("bca")) {
-    return "bg-[#E12528]";
+    return "bg-white";
   }
   return "bg-white";
 }
