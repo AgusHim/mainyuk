@@ -98,7 +98,7 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
                 </svg>
                 <span className="text-sm font-normal text-black">
                   {formatStrToDateTime(
-                    eventData!.start_at!.replace("Z", ""),
+                    eventData!.start_at!,
                     "EEEE, dd MMMM yyyy"
                   )}
                 </span>
@@ -119,14 +119,14 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
                 </svg>
                 <span className="text-sm font-normal text-black">
                   {formatStrToDateTime(
-                    eventData!.start_at!.replace("Z", ""),
+                    eventData!.start_at!,
                     "HH:mm"
                   )}
                 </span>
                 &nbsp;-&nbsp;
                 <span className="text-sm font-normal text-black">
                   {formatStrToDateTime(
-                    eventData!.end_at!.replace("Z", ""),
+                    eventData!.end_at!,
                     "HH:mm"
                   )}
                 </span>

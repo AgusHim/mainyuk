@@ -7,8 +7,6 @@ import Loader from "../common/Loader/Loader";
 
 export const OAuthGoogleCallback: React.FC = () => {
   const dispatch = useAppDispatch();
-  const authUser = useAppSelector((state) => state.auth.user);
-  const isLoading = useAppSelector((state) => state.auth.loading);
   const router = useRouter();
   const hasFetched = useRef(false);
 
@@ -23,14 +21,14 @@ export const OAuthGoogleCallback: React.FC = () => {
             if (value != null && value?.province == null) {
               router.replace(`/profile/update?isFromGoogle=true`);
             } else {
-              router.replace("/");
+              router.replace("/events");
             }
           })
           .catch((_) => {
             router.replace("/signin");
           });
       } else {
-        router.replace("/");
+        router.replace("/events");
       }
     };
     handleOAuthResponse();

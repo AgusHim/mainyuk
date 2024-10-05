@@ -48,7 +48,7 @@ const FormProfileUpdate: React.FC = () => {
     [key: string]: string | undefined;
   }>({});
 
-  const hasErrors = Object.values(formErrors).some(
+  const messageError= Object.values(formErrors).find(
     (error) => error !== undefined && error !== ""
   );
 
@@ -105,14 +105,14 @@ const FormProfileUpdate: React.FC = () => {
         [key]: error,
       }));
     });
-    return hasErrors;
+    return messageError == undefined;
   };
 
   const handleSubmit = async (e: any) => {
-    
     e.preventDefault();
-    const isValidate = validateErrors();
-    if (isValidate == false) {
+    validateErrors();
+    if (messageError != undefined) {
+      toast.info(messageError);
       return;
     }
     var userData = {

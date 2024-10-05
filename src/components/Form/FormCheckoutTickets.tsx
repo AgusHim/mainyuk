@@ -11,6 +11,7 @@ import { CreateOrder, Order } from "@/types/order";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { ValidateField } from "@/utils/Validation/Validation";
 
 export const FormCheckoutTickets: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -22,11 +23,21 @@ export const FormCheckoutTickets: React.FC = () => {
   const admin_fee = useAppSelector((state) => state.order.admin_fee);
   const isLoadingOrder = useAppSelector((state) => state.order.isLoadingOrder);
 
+  const totalPayment = () => {
+    let total = 0;
+    for (let index in checkout) {
+      const ticket = checkout[index];
+      total = total + (ticket.ticket?.price ?? 0);
+    }
+    return total + admin_fee;
+  };
+
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
   const [formErrors, setFormErrors] = useState<{
     [key: string]: string | undefined;
   }>({});
-  const hasErrors = Object.values(formErrors).some(
+  
+  const messageError= Object.values(formErrors).find(
     (error) => error !== undefined && error !== ""
   );
 
@@ -99,7 +110,7 @@ export const FormCheckoutTickets: React.FC = () => {
     setFormData({ ...formData, [name]: value });
 
     // Validate the field dynamically
-    const error = validateField(type, value, gender_allowed);
+    const error = ValidateField(type, value, gender_allowed);
     setFormErrors((prevErrors) => ({
       ...prevErrors,
       [name]: error,
@@ -114,10 +125,29 @@ export const FormCheckoutTickets: React.FC = () => {
     );
   };
 
-  const handleSubmit = async (e: any) => {
+  const validateErrors = (): boolean => {
+    Object.entries(formData).forEach(([key, value]) => {
+      const index = parseFloat(key.split("_")[0]);
+      const name = key.split("_")[1];
+      const ticket = checkout[index].ticket;
+      const error = ValidateField(name, value, ticket?.gender_allowed.toLowerCase());
+      let prev = formErrors;
+      prev[key]=error;
+      setFormErrors(prev);
+    });
+    return messageError == undefined;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (hasErrors) {
-      toast.info("Pastikan sudah isi data dengan benar");
+    validateErrors();
+    if (totalPayment() >0 && payment_method ==null) {
+      toast.info("Mohon pilih metode pembayaran");
+      return;
+    }
+  
+    if (messageError != undefined) {
+      toast.info(messageError);
       return;
     }
     var bodyData = {
@@ -420,55 +450,4 @@ export const FormCheckoutTickets: React.FC = () => {
       </form>
     </div>
   );
-};
-
-// Validation functions
-const validateName = (name: string): string | undefined => {
-  if (!name) {
-    return "Nama tidak boleh kosong";
-  }
-  return "";
-};
-
-const validateGender = (
-  gender: string,
-  gender_allowed?: string
-): string | undefined => {
-  if (!gender) {
-    return "Gender tidak boleh kosong";
-  }
-  if (gender != gender_allowed && gender_allowed != "both") {
-    return `Tiket khusus untuk ${
-      gender_allowed == "male" ? "Laki-laki" : "Perempuan"
-    }`;
-  }
-  return "";
-};
-
-const validateEmail = (email: string): string | undefined => {
-  if (!email) {
-    return "Email tidak boleh kosong";
-  }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return "Masukan email yang valid";
-  }
-  return "";
-};
-
-const validateField = (
-  name: string,
-  value: string,
-  gender_allowed?: string
-) => {
-  switch (name) {
-    case "name":
-      return validateName(value);
-    case "gender":
-      return validateGender(value, gender_allowed);
-    case "email":
-      return validateEmail(value);
-    default:
-      return "";
-  }
 };

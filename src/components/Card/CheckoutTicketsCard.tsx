@@ -55,7 +55,7 @@ const CheckoutTicketsCard = () => {
             {payment_method != null && admin_fee != 0 ? (
               <div className="grid grid-cols-3 items-center gap-4">
                 <p className="col-span-2 text-lg text-black">
-                  {payment_method?.type === "BANK"
+                  {payment_method?.type.toLowerCase() === "bank"
                     ? "Kode Unik"
                     : "Biaya Payment Gateway"}
                 </p>
