@@ -4,14 +4,7 @@ import { CommonHeader } from "@/components/Header/CommonHeader";
 import { RequiredAuthLayout } from "@/layout/AuthLayout";
 import { MainLayout } from "@/layout/MainLayout";
 
-export default function UpdateProfilePage({
-  params,
-}: {
-  params: {
-    isFromGoogle: string;
-    redirectTo: string;
-  };
-}) {
+export default function UpdateProfilePage() {
   return (
     <>
       <RequiredAuthLayout>
