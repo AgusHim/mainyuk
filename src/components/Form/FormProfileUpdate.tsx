@@ -27,7 +27,7 @@ const FormProfileUpdate: React.FC = () => {
   const [formData, setFormData] = useState({
     id: user?.id ?? "",
     name: user?.name ?? "",
-    username: user?.username ?? "",
+    username: user?.username ?? "anonim",
     gender: user?.gender != null && user?.gender != "" ? user?.gender : "male",
     age: user?.age != null ? user?.age.toString() : "0",
     address: user?.address ?? "",
@@ -118,7 +118,7 @@ const FormProfileUpdate: React.FC = () => {
     }
     var userData = {
       name: formData.name,
-      username: formData.username,
+      username: formData.username.length != 0 ? formData.username : "anonim",
       gender: formData.gender,
       age: formData.age,
       address: formData.address,
