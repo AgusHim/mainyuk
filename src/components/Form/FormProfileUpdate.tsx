@@ -205,6 +205,7 @@ const FormProfileUpdate: React.FC = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
+              required
             />
             {formErrors.name && (
               <p className="mt-1 text-danger text-sm font-semibold">
@@ -233,7 +234,7 @@ const FormProfileUpdate: React.FC = () => {
               className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
               name="phone"
               value={formData.phone}
-              onChange={handleChange}
+              required
             />
             {formErrors.phone && (
               <p className="mt-1 text-danger text-sm font-semibold">
@@ -264,6 +265,7 @@ const FormProfileUpdate: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               readOnly
+              required
             />
             {formErrors.email && (
               <p className="mt-1 text-danger text-sm font-semibold">
@@ -293,6 +295,7 @@ const FormProfileUpdate: React.FC = () => {
               name="instagram"
               value={formData.instagram}
               onChange={handleChange}
+              required
             />
             {formErrors.instagram && (
               <p className="mt-1 text-danger text-sm font-semibold">
@@ -321,6 +324,7 @@ const FormProfileUpdate: React.FC = () => {
               onChange={handleChange}
               type="date"
               className="select select-bordered py-3 px-4 pr-auto w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              required
             />
             {formErrors.birth_date && (
               <p className="mt-1 text-danger text-sm font-semibold">
@@ -371,6 +375,7 @@ const FormProfileUpdate: React.FC = () => {
               onChange={handleChange}
               name="gender"
               className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              required
             >
               <option value="male">Laki-laki</option>
               <option value="female">Perempuan</option>
@@ -395,6 +400,7 @@ const FormProfileUpdate: React.FC = () => {
               onChange={handleChange}
               name="province_code"
               className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              required
             >
               <option value="">Pilih Provinsi</option>
               {province.map((e) => (
@@ -428,6 +434,7 @@ const FormProfileUpdate: React.FC = () => {
               onChange={handleChange}
               name="district_code"
               className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              required
             >
               <option value="">Pilih Kabupaten</option>
               {district.map((e) => (
@@ -461,6 +468,7 @@ const FormProfileUpdate: React.FC = () => {
               onChange={handleChange}
               name="sub_district_code"
               className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              required
             >
               <option value="">Pilih Kecamatan</option>
               {sub_district.map((e) => (
@@ -497,6 +505,7 @@ const FormProfileUpdate: React.FC = () => {
               name="address"
               value={formData.address}
               onChange={handleChange}
+              required
             />
             {formErrors.address && (
               <p className="mt-1 text-danger text-sm font-semibold">
