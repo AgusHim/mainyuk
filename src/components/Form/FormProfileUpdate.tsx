@@ -234,6 +234,7 @@ const FormProfileUpdate: React.FC = () => {
               className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
               name="phone"
               value={formData.phone}
+              onChange={handleChange}
               required
             />
             {formErrors.phone && (
