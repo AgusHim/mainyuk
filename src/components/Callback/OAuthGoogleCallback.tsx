@@ -19,7 +19,8 @@ export const OAuthGoogleCallback: React.FC = () => {
           .unwrap()
           .then((value) => {
             if (value != null && value?.province == null) {
-              router.replace(`/profile/update?isFromGoogle=true`);
+              //router.replace(`/profile/update?isFromGoogle=true`);
+              router.replace("/events");
             } else {
               router.replace("/events");
             }
