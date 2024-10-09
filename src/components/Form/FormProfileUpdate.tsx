@@ -63,6 +63,7 @@ const FormProfileUpdate: React.FC = () => {
     if (user?.district?.code != null) {
       dispatch(getSubDistrict(user?.district?.code ?? ""));
     }
+    validateErrors();
   }, []);
 
   const handleChange = (event: any) => {

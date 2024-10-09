@@ -63,12 +63,12 @@ const validatePhone = (phone: string): string | undefined => {
 
 const validateGender = (
   gender: string,
-  gender_allowed?: string
+  gender_allowed?: string| null
 ): string | undefined => {
   if (!gender) {
     return "Gender tidak boleh kosong";
   }
-  if (gender != gender_allowed && gender_allowed != "both") {
+  if (gender != gender_allowed && gender_allowed != null && gender_allowed != "both") {
     return `Tiket khusus untuk ${
       gender_allowed == "male" ? "Laki-laki" : "Perempuan"
     }`;
@@ -86,7 +86,7 @@ const validateInstagram = (instagram: string): string | undefined => {
 export const ValidateField = (
   name: string,
   value: string,
-  gender_allowed?: string
+  gender_allowed?: string|null
 ) => {
   switch (name) {
     case "name":
