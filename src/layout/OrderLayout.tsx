@@ -271,20 +271,20 @@ export default function OrderLayout({
                 </Link>
               ) : (
                 <Link href={getWhatsAppUrl(order, totalPayment())}>
-                <button
-                  type="button"
-                  className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
-                >
-                  <div className="flex items-center justify-center gap-x-2">
-                    <FontAwesomeIcon
-                      icon={faComment}
-                      width={25}
-                      height={25}
-                      style={{ fontSize: "20px", color: "white" }}
-                    />
-                    <span>Konfirmasi Pembayaran</span>
-                  </div>
-                </button>
+                  <button
+                    type="button"
+                    className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
+                  >
+                    <div className="flex items-center justify-center gap-x-2">
+                      <FontAwesomeIcon
+                        icon={faComment}
+                        width={25}
+                        height={25}
+                        style={{ fontSize: "20px", color: "white" }}
+                      />
+                      <span>Konfirmasi Pembayaran</span>
+                    </div>
+                  </button>
                 </Link>
               )}
             </div>
@@ -318,17 +318,21 @@ const OrderStatus: React.FC<{ status: string }> = ({ status }) => {
 };
 
 const phoneNumber = "+6281241000056";
+const phoneKey = "+6285642555555";
 
 const getWhatsAppUrl = (order: Order, total: number) => {
   const message = `Konfirmasi Pembayaran%0A%0A*${order?.event?.title}*%0A%0AOrder ID:${order?.public_id}%0AMetode Pembayaran:${order.payment_method?.name}%0ATotal Transfer:${total}%0ANama Pemesan:${order.user?.name}%0A`;
 
   const isMobile = /Android/i.test(navigator.userAgent);
-
+  let phone = phoneNumber;
+  if (order.event?.divisi?.name == "KEY") {
+    phone = phoneKey;
+  }
   if (isMobile) {
     // Use intent for Android
-    return `intent://send/?phone=${phoneNumber}&text=${message}#Intent;scheme=whatsapp;package=com.whatsapp;end;`;
+    return `intent://send/?phone=${phone}&text=${message}#Intent;scheme=whatsapp;package=com.whatsapp;end;`;
   } else {
     // Use wa.me for web and desktop
-    return `https://wa.me/${phoneNumber}?text=${message}`;
+    return `https://wa.me/${phone}?text=${message}`;
   }
 };
