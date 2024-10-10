@@ -47,7 +47,7 @@ export default function EventDetailPage({
           .unwrap()
           .then((user) => {
             if (user == null) {
-              router.replace(`/events/${params.slug}/register`);
+              router.replace(`/signin`);
             }
             if (user != null && presence.event_id != params.slug) {
               const presence: CreatePresence = {

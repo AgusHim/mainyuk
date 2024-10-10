@@ -4,7 +4,10 @@ import Image from "next/image";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect, useRef, useState } from "react";
-import { getEventDetail } from "@/redux/slices/eventSlice";
+import {
+  getEventDetail,
+  getEventParticipants,
+} from "@/redux/slices/eventSlice";
 import TablePresence from "@/components/Tables/TablePresence";
 import CardDataStats from "../CardDataStats";
 import ExcelExportButton from "../Export/ExportPresence";
@@ -14,6 +17,7 @@ import TableTickets from "../Tables/TableTickets";
 import Dialog from "../common/Dialog/Dialog";
 import FormTicket from "../Form/FormTicket";
 import { setTicket } from "@/redux/slices/ticketSlice";
+import TableParticipants from "../Tables/TableParticipants";
 
 export default function DashboardEventDetailPage({
   params,
@@ -22,6 +26,7 @@ export default function DashboardEventDetailPage({
 }) {
   const dispatch = useAppDispatch();
   const event = useAppSelector((state) => state.event.event);
+  const participants = useAppSelector((state) => state.event.participants);
   const isLoading = useAppSelector((state) => state.event.loading);
   const error = useAppSelector((state) => state.event.error);
 
@@ -35,15 +40,6 @@ export default function DashboardEventDetailPage({
   useEffect(() => {
     if (!isLoading) {
       dispatch(getEventDetail(params.slug));
-    }
-  }, []);
-
-  const presences = useAppSelector((state) => state.presences.data);
-  const isLoadingPresence = useAppSelector((state) => state.presences.loading);
-
-  useEffect(() => {
-    if (presences == null && event != null && !isLoadingPresence) {
-      dispatch(getPresences(event!.id!));
     }
   }, []);
 
@@ -287,6 +283,10 @@ export default function DashboardEventDetailPage({
             setDialogContent(<FormTicket toggleDialog={toggleOnDialog} />);
           }}
         />
+      </div>
+      <div className="flex flex-col gap-3 mb-10">
+        <p className="text-3xl text-black font-semibold">Peserta Terdaftar</p>
+        <TableParticipants />
       </div>
       <div className="flex flex-col gap-3">
         <p className="text-3xl text-black font-semibold">Daftar Absensi</p>

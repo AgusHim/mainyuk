@@ -3,12 +3,17 @@
 import React from "react";
 import { loginGoogle } from "@/redux/slices/authSlice";
 import { useAppDispatch } from "@/hooks/hooks";
+import { toast } from "react-toastify";
 
 
 const ButtonLoginGoogle: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const login = async (event:any) => {
+    if(isWebView()){
+      toast.info("Maaf, hanya bisa dibrowser external");
+      return;
+    }
     event.preventDefault();
     dispatch(loginGoogle())
       .unwrap()
@@ -56,3 +61,15 @@ const ButtonLoginGoogle: React.FC = () => {
 };
 
 export default ButtonLoginGoogle;
+
+const isWebView = () => {
+  const userAgent = window.navigator.userAgent || '';
+  
+  // Detect iOS WebView
+  const isIOSWebView = /iPhone|iPod|iPad.*AppleWebKit(?!.*Safari)/i.test(userAgent);
+  
+  // Detect Android WebView
+  const isAndroidWebView = /Android.*Version\/[\d.]+.*(wv|SamsungBrowser)/i.test(userAgent);
+  
+  return isIOSWebView || isAndroidWebView;
+};

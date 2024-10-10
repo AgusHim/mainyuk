@@ -1,16 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { api } from "../api";
+import { admin_api, api } from "../api";
 import { Event } from "@/types/event";
+import { Order } from "@/types/order";
 
 interface EventState {
   data: Event[] | null;
   event: Event | null;
+  participants: Order[] | null;
   loading: boolean;
   error: string | null;
 }
 const initialState: EventState = {
   data: null,
   event: null,
+  participants: null,
   loading: false,
   error: null,
 };
@@ -50,6 +53,14 @@ export const postEvent = createAsyncThunk("event.post", async (data: Event) => {
   return res.data as Event;
 });
 
+export const getEventParticipants = createAsyncThunk(
+  "events.participants",
+  async (id: string) => {
+    const res = await admin_api.get(`/events/${id}/participants`);
+    return res.data;
+  }
+);
+
 export const eventSlice = createSlice({
   name: "event",
   initialState,
@@ -63,6 +74,10 @@ export const eventSlice = createSlice({
         state.loading = false;
       }
     );
+    builder.addCase(getEventParticipants.fulfilled, (state, action) => {
+      state.participants = action.payload as Order[];
+      state.loading = false;
+    });
     builder.addCase(getEventsHome.fulfilled, (state, action) => {
       state.data = action.payload as Event[];
       state.loading = false;
@@ -72,7 +87,8 @@ export const eventSlice = createSlice({
         getEventsHome.pending ||
         getEventDetail.pending ||
         getEventByCode.pending ||
-        postEvent.pending,
+        postEvent.pending ||
+        getEventParticipants.pending,
       (state, _) => {
         state.loading = true;
         state.error = null;
@@ -83,7 +99,8 @@ export const eventSlice = createSlice({
         getEventsHome.rejected ||
         getEventDetail.rejected ||
         getEventByCode.rejected ||
-        postEvent.rejected,
+        postEvent.rejected ||
+        getEventParticipants.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";
