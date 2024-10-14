@@ -71,5 +71,5 @@ const isWebView = () => {
   // Detect Android WebView
   const isAndroidWebView = /Android.*Version\/[\d.]+.*(wv|SamsungBrowser)/i.test(userAgent);
   
-  return isIOSWebView || isAndroidWebView;
+  return isAndroidWebView;
 };
