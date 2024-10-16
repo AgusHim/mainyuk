@@ -41,10 +41,10 @@ const CommentField = () => {
         onChange={handleChange}
         name="comment"
         value={formData["comment"]}
-        className="w-full max-h-14 focus:max-h-40 rounded-lg border-2 focus:border-4 border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-black dark:bg-boxdark dark:focus:border-primary resize-none"
+        className="w-full max-h-14 focus:max-h-40 rounded-lg border-2 focus:border-4 border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-black dark:bg-boxdark dark:focus:border-primary resize-none placeholder-black"
         rows={5}
         cols={50}
-        maxLength={300}
+        maxLength={500}
         placeholder="Tulis Pertanyaan ..."
       />
       {isLoading ? (

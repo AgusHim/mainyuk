@@ -75,28 +75,20 @@ const QnaList = () => {
           style={{ boxShadow: "0px 5px 0px 0px #000000" }}
           key={key}
         >
-          <div
-            className={`sm:flex items-center text-center justify-center w-10 h-10 md:h-14 md:w-14 rounded-full hidden ${
-              comment.user?.gender == "female" ? "bg-meta-7" : "bg-primary"
-            }`}
-            style={{ boxShadow: "0px 5px 0px 0px #000000" }}
-          >
-            <h1 className="text-white text-lg md:text-xl">
-              {comment.user.username?.substring(0, 2)}
-            </h1>
-          </div>
           <div className="flex flex-1 items-center justify-between">
             <div>
-              <h5 className="font-medium text-black dark:text-white text-sm md:text-lg">
+              <h5 className="font-bold text-black dark:text-white text-md">
                 {comment.user.username}
               </h5>
               <p>
-                <span className="text-black dark:text-white text-xs md:text-sm">
-                  {comment.comment}
-                </span>
+                <span className="text-black text-sm">{comment.comment}</span>
               </p>
-              <p className="text-xs mt-2">
-                {formatStrToDateTime(comment.created_at!, "dd-MM-yyyy HH:mm", true)}
+              <p className="text-xs text-black mt-2">
+                {formatStrToDateTime(
+                  comment.created_at!,
+                  "dd-MM-yyyy HH:mm",
+                  true
+                )}
               </p>
             </div>
           </div>
@@ -117,7 +109,7 @@ const QnaList = () => {
                 d="M20.808,11.079C19.829,16.132,12,20.5,12,20.5s-7.829-4.368-8.808-9.421C2.227,6.1,5.066,3.5,8,3.5a4.444,4.444,0,0,1,4,2,4.444,4.444,0,0,1,4-2C18.934,3.5,21.773,6.1,20.808,11.079Z"
               />
             </svg>
-            <span className="mt-1 text-xs md:text-md">{comment.like}</span>
+            <span className=" text-black text-sm">{comment.like}</span>
           </div>
         </div>
       ))}

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { admin_api, api, ranger_api, user_api } from "../api";
-import { Ticket } from "@/types/ticket";
+import { PresenceTicket, Ticket } from "@/types/ticket";
 
 interface TicketState {
   tickets: Ticket[] | null;
@@ -64,10 +64,10 @@ export const getUserTicket = createAsyncThunk(
   }
 );
 
-export const postVerifyUserTicket = createAsyncThunk(
-  "tickets.getUserTicket",
-  async (public_id: string, thunk) => {
-    const res = await ranger_api.get(`/user_tickets/${public_id}/presence`);
+export const postPresenceTicket = createAsyncThunk(
+  "tickets.postPresenceTicket",
+  async (data:PresenceTicket, thunk) => {
+    const res = await ranger_api.post(`/event/${data.slug}/presence`,data);
     return res.data;
   }
 );

@@ -48,7 +48,7 @@ export const RequiredAuthLayout: React.FC<LayoutProps> = ({
           }
         }
         
-        if (currentPath === "/scan") {
+        if (currentPath.includes("/scan/presence")) {
           if (
             value !== null &&
             value?.role != "ranger" &&

@@ -54,18 +54,6 @@ const ProfileMenuCard = () => {
       href: "/dashboard/rangers/card",
       role: "ranger,admin,pj",
     },
-    {
-      name: "Scan Ticket",
-      icon: (
-        <FontAwesomeIcon
-          icon={faQrcode}
-          width={25}
-          style={{ fontSize: "20px", color: "black" }}
-        />
-      ),
-      href: "/events/history",
-      role: "ranger,admin,pj",
-    }
   ];
 
   const filtermenu =() =>{

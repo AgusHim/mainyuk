@@ -3,19 +3,26 @@ import { CommonHeader } from "@/components/Header/CommonHeader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { RequiredAuthLayout } from "@/layout/AuthLayout";
 import { MainLayout } from "@/layout/MainLayout";
-import {
-  getUserTicket,
-  postVerifyUserTicket,
-} from "@/redux/slices/ticketSlice";
-import { UserTicket } from "@/types/user_ticket";
+import { postPresenceTicket } from "@/redux/slices/ticketSlice";
+import { ResScanTicket } from "@/types/presence";
+import { PresenceTicket } from "@/types/ticket";
 import { useEffect, useRef, useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { toast } from "react-toastify";
+import { CSSProperties } from "react";
+import { formatStrToDateTime } from "@/utils/convert";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import QRCode from "qrcode.react";
 
-export default function ScanTicketPage() {
+export default function ScanTicketPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const dispatch = useAppDispatch();
-  const [user_ticket, setUserTicket] = useState<UserTicket | null>(null);
-  const isLoading = useAppSelector((state) => state.ticket.loading);
+  const [presence, setPresence] = useState<ResScanTicket | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [camera, setCamera] = useState("environment"); // Default to rear camera
   const [hasPermission, setHasPermission] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,9 +33,11 @@ export default function ScanTicketPage() {
     const getDevices = async () => {
       try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+        const videoInputDevices = devices.filter(
+          (device) => device.kind === "videoinput"
+        );
         setVideoDevices(videoInputDevices);
-        
+
         if (videoInputDevices.length === 0) {
           setError("No camera devices found.");
         }
@@ -39,9 +48,10 @@ export default function ScanTicketPage() {
     };
 
     getDevices();
+    toggleDialog();
   }, []);
-  
-  const requestCameraPermission = async (deviceId:string) => {
+
+  const requestCameraPermission = async (deviceId: string) => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       setHasPermission(true);
@@ -66,31 +76,30 @@ export default function ScanTicketPage() {
     }
     if (dialogRef.current.hasAttribute("open")) {
       dialogRef.current.close();
-      setUserTicket(null);
+      setPresence(null);
     } else {
       dialogRef.current.showModal();
     }
   }
 
   const handleResultScan = (result: string) => {
-    if (user_ticket == null && !isLoading) {
-      dispatch(getUserTicket(result)).then((value) => {
-        if (value != null) {
+    if (isLoading) {
+      return;
+    }
+    setIsLoading(true);
+    if (presence == null) {
+      const data = {
+        slug: params.slug,
+        public_id: result,
+      } as PresenceTicket;
+      dispatch(postPresenceTicket(data)).then((value) => {
+        if (value.payload != null) {
+          setPresence(value.payload);
           toggleDialog();
         }
+        setIsLoading(false);
       });
     }
-  };
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    dispatch(postVerifyUserTicket(user_ticket?.public_id ?? "")).then(
-      (value) => {
-        if (value != null) {
-          toggleDialog();
-        }
-      }
-    );
   };
 
   return (
@@ -103,65 +112,66 @@ export default function ScanTicketPage() {
             isShowTrailing={false}
           />
           <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
-            <h1 className="text-xl text-black">Scan kehadiran peserta event</h1>
-            {!error && videoDevices.length > 0 && (
-        <div>
-          <p>Select a camera to grant access:</p>
-          {videoDevices.map((device, index) => (
-            <button key={device.deviceId} onClick={() => requestCameraPermission(device.deviceId)}>
-              {device.label || `Camera ${index + 1}`}
-            </button>
-          ))}
-        </div>
-      )}
+            <h1 className="text-4xl text-black font-bold mb-5">
+              Scan kehadiran peserta event
+            </h1>
             {!hasPermission ? (
-              <div>
-                
-              </div>
+              <div className="w-full max-w-150 relative"></div>
             ) : (
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  maxWidth: "400px",
-                  margin: "0 auto",
-                }}
-              >
-                <button onClick={toggleCamera}>
+              <div style={containerStyle}>
+                {/* QR Reader Component */}
+                <div>
+                  <QrReader
+                    scanDelay={1500}
+                    videoContainerStyle={{
+                      width: "100%",
+                      height: "500px",
+                    }}
+                    videoStyle={videoStyle}
+                    onResult={(result, error) => {
+                      if (!!result && isLoading == false && presence == null) {
+                        handleResultScan(result.getText());
+                      }
+                      if (!!error) {
+                        toast.error(error.message, {
+                          className: "toast",
+                        });
+                      }
+                    }}
+                    constraints={{ facingMode: camera }}
+                  />
+                </div>
+                <div className="absolute bg-black bg-opacity-70 w-full h-30 top-0"></div>
+                <div className="absolute bg-black bg-opacity-70 w-19 h-[250px] top-30 left-0"></div>
+                <div style={focusAreaStyle}></div>
+                <div className="absolute bg-black bg-opacity-70 w-full h-30 bottom-0"></div>
+                <div className="absolute bg-black bg-opacity-70 w-19 h-[250px] top-30 right-0"></div>
+              </div>
+            )}
+            {isLoading ? (
+              <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
+            ) : (
+              hasPermission && (
+                <button
+                  onClick={toggleCamera}
+                  className="w-full mt-5 btn bg-black text-white"
+                >
                   Switch to {camera === "environment" ? "Front" : "Rear"} Camera
                 </button>
-                {/* QR Reader Component */}
-                <QrReader
-                  scanDelay={300}
-                  containerStyle={{ width: "100%", height: "500px" }}
-                  videoStyle={{ width: "100%", height: "100%" }}
-                  onResult={(result, error) => {
-                    if (!!result) {
-                      handleResultScan(result.getText());
-                    }
-                    if (!!error) {
-                      toast.error(error.message, {
-                        className: "toast",
-                      });
-                    }
-                  }}
-                  constraints={{ facingMode: camera }}
-                />
+              )
+            )}
 
-                {/* Focus Rectangle (Overlay) */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    width: "200px", // Adjust size as needed
-                    height: "200px", // Adjust size as needed
-                    border: "3px solid red", // Color of the focus rectangle
-                    transform: "translate(-50%, -50%)", // Center it in the middle of the container
-                    zIndex: 2, // Make sure it appears above the QR Reader
-                    pointerEvents: "none", // Allow clicks to pass through the rectangle
-                  }}
-                />
+            {!error && videoDevices.length > 0 && !hasPermission && (
+              <div>
+                {videoDevices.map((device, index) => (
+                  <button
+                    key={device.deviceId}
+                    onClick={() => requestCameraPermission(device.deviceId)}
+                    className="mt-5 w-full btn bg-black text-white"
+                  >
+                    {device.label || `Request Camera Permission`}
+                  </button>
+                ))}
               </div>
             )}
             {error && <p style={{ color: "red" }}>{error}</p>}
@@ -169,51 +179,89 @@ export default function ScanTicketPage() {
             <dialog
               ref={dialogRef}
               id="confirm"
-              className="modal modal-bottom sm:modal-middle"
+              className="modal modal-bottom max-w-layout mx-auto h-full"
             >
-              <div className="modal-box bg-[#F3F3F3] dark:bg-boxdark shadow-bottom-right border-2 border-black">
-                <div className="flex flex-row py-2">
-                  <p className="min-w-[80px] text-lg text-black dark:text-white">
-                    Nama
-                  </p>
-                  <p className="font-bold text-lg text-black dark:text-white">
-                    {user_ticket?.user?.name}
-                  </p>
-                </div>
-                <div className="flex flex-row py-2">
-                  <p className="min-w-[80px] text-lg text-black dark:text-white">
-                    Event
-                  </p>
-                  <p className="font-bold text-lg text-black dark:text-white">
-                    {user_ticket?.event?.title}
-                  </p>
-                </div>
-                <div className="flex flex-row py-2">
-                  <p className="min-w-[80px] text-lg text-black dark:text-white">
-                    Jenis Tiket
-                  </p>
-                  <p className="font-bold text-lg text-black dark:text-white">
-                    {user_ticket?.ticket?.name}
-                  </p>
-                </div>
-                <div className="modal-action">
+              <div className="modal-box bg-yellow-400 min-h-full p-5">
+                <div className="flex flex-col w-full bg-yellow-300 justify-center items-center rounded-xl px-5 py-10">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    size="5x"
+                    style={{ color: "green" }}
+                  />
+                  <h1 className="font-bold text-black text-2xl my-5">
+                    Scan QR Berhasil
+                  </h1>
+                  <div className="w-full bg-yellow-200 rounded-lg p-4">
+                    <div className="flex flex-row items-center">
+                      <div className="flex flex-col mr-3 items-center">
+                        <QRCode
+                          value={presence?.user_ticket?.public_id ?? ""}
+                          size={100}
+                          bgColor="#FCE969"
+                        />
+                        <h1 className="text-black">
+                          {presence?.user_ticket?.public_id}
+                        </h1>
+                      </div>
+                      <div className="flex flex-col">
+                        <div className="flex flex-col">
+                          <p className="min-w-[80px] text-md text-black dark:text-white">
+                            Nama
+                          </p>
+                          <p className="font-bold text-md text-black dark:text-white">
+                            {presence?.user_ticket?.user_name}
+                          </p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="min-w-[80px] text-md text-black dark:text-white">
+                            Email
+                          </p>
+                          <p className="font-bold text-md text-black dark:text-white">
+                            {presence?.user_ticket?.user_email}
+                          </p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="min-w-[80px] text-md text-black dark:text-white">
+                            Jenis Tiket
+                          </p>
+                          <p className="font-bold text-md text-black dark:text-white">
+                            {presence?.user_ticket?.ticket?.name ?? ""}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <details className="collapse collapse-arrow p-0" open={true}>
+                    <summary className="collapse-title text-lg font-medium text-black">
+                      Riwayat Check-in
+                    </summary>
+                    <div className="collapse-content px-5">
+                      {presence?.presences?.map((e, i) => (
+                        <div className="w-full flex flex-row justify-between">
+                          <p className="font-medium text-sm text-black ">
+                            Scan ke {i + 1}{" "}
+                          </p>
+                          <p className="font-medium text-sm text-black ">
+                            {formatStrToDateTime(
+                              e,
+                              "dd-MM-yyyy (HH:mm:ss)",
+                              true
+                            )}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
                   <form
                     method="dialog"
-                    onSubmit={handleSubmit}
                     onReset={toggleDialog}
+                    className="w-full"
                   >
-                    {/* if there is a button in form, it will close the modal */}
-                    <button
-                      type="submit"
-                      className="btn mr-4 bg-success hover:bg-success hover:bg-opacity-80 shadow-bottom-right text-white"
-                    >
-                      Verifikasi
-                    </button>
                     <button
                       type="reset"
-                      className="btn bg-danger hover:bg-opacity-80 hover:bg-danger shadow-bottom-right text-white"
+                      className="mt-10 w-full btn bg-primary hover:bg-opacity-80 hover:bg-primary shadow-bottom-right text-white text-lg"
                     >
-                      Tutup
+                      Scan Lainnya
                     </button>
                   </form>
                 </div>
@@ -225,3 +273,29 @@ export default function ScanTicketPage() {
     </>
   );
 }
+
+const videoStyle: CSSProperties = {
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+};
+
+const containerStyle: CSSProperties = {
+  position: "relative",
+  width: "100%",
+  maxWidth: "500px",
+  margin: "0 auto",
+  height: "500px",
+};
+
+const focusAreaStyle: CSSProperties = {
+  position: "absolute", // Correctly typed position property
+  top: "50%",
+  left: "50%",
+  width: "250px", // Transparent focus area dimensions
+  height: "250px",
+  transform: "translate(-50%, -50%)", // Centering the focus area
+  border: "2px solid #fff", // White border around the focus area
+  boxSizing: "border-box", // Ensure border is included in size
+  background: "transparent",
+};

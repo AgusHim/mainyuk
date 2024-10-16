@@ -38,16 +38,16 @@ const FeedbackField = () => {
   };
 
   return (
-    <div className="w-full md:w-1/4 h-1/2 p-10 rounded-xl border-2 border-black bg-white dark:bg-boxdark shadow-bottom dark:border-black">
+    <div className="w-full p-5 rounded-xl border-2 border-black bg-yellow-300 shadow-bottom ">
       <h1 className="mb-2 text-2xl font-bold text-black dark:text-white">
         Kritik & Saran
       </h1>
-      <p>Evaluasi kegiatan taklim agar lebih baik kedepan</p>
+      <p className="text-black">Evaluasi kegiatan taklim agar lebih baik kedepan</p>
         <textarea
           onChange={handleChange}
           name="message"
           value={formData["message"]}
-          className="w-full max-h-14 my-5 rounded-lg border-2 focus:border-4 border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-black dark:bg-boxdark dark:focus:border-primary resize-none"
+          className="w-full max-h-14 my-5 rounded-lg border-2 focus:border-4 border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-black dark:bg-boxdark dark:focus:border-primary resize-none placeholder-black"
           rows={5}
           cols={50}
           maxLength={300}
