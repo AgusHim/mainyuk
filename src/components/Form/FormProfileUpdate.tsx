@@ -39,7 +39,10 @@ const FormProfileUpdate: React.FC = () => {
     email: user?.email ?? "",
     instagram: user?.instagram ?? "",
     birth_date:
-      user?.birth_date != null ? user?.birth_date.replace("Z", "") : "",
+      user?.birth_date != null ? format(
+        Date.parse(user?.birth_date?.replace("Z", "")),
+        "yyyy-MM-dd"
+      ).replace(" ", "T") : "",
     province_code: user?.province?.code ?? "",
     district_code: user?.district?.code ?? "",
     sub_district_code: user?.sub_district?.code ?? "",
