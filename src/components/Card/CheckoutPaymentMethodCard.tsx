@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 const CheckoutPaymentMethodCard = () => {
   const dispatch = useAppDispatch();
+  const event = useAppSelector((state) => state.event.event);
   const paymentMethods = useAppSelector((state) => state.paymentMethod.data);
   const selectedMethod = useAppSelector((state) => state.order.payment_method);
   const checkout = useAppSelector((state) => state.order.checkout);
@@ -21,14 +22,31 @@ const CheckoutPaymentMethodCard = () => {
     if (paymentMethods.length === 0) {
       dispatch(getPaymentMethod());
     }
-
   }, [paymentMethods]);
-  const setSelectedMethod = async (pm:PaymentMethod) =>{
+  const setSelectedMethod = async (pm: PaymentMethod) => {
     dispatch(setPaymentMethod(pm));
-  }
-  if (paymentMethods.length === 0 || checkout.filter((e)=>e.ticket!.price! > 0).length === 0) {
+  };
+
+  if (
+    paymentMethods.length === 0 ||
+    checkout.filter((e) => e.ticket!.price! > 0).length === 0
+  ) {
     return <></>;
   }
+
+  const filterPaymentMethod = (): PaymentMethod[] => {
+    if (event?.divisi?.name == "KEY") {
+      return paymentMethods.filter((method) =>
+        method.account_name.toLowerCase().includes("ani riyani")
+      );
+    } else {
+      return paymentMethods.filter(
+        (method) =>
+          method.account_name.toLowerCase().includes("ani riyani") == false
+      );
+    }
+  };
+
   return (
     <div className="grid space-y-2">
       <div className="gap-y-1 font-normal"></div>
@@ -57,7 +75,7 @@ const CheckoutPaymentMethodCard = () => {
         </div>
         <div className="grid gap-4 rounded-lg border-2 border-black bg-yellow-300 px-2 py-4 shadow-custom">
           <div className="grid grid-cols-3 gap-2">
-            {paymentMethods.map((e, index) => {
+            {filterPaymentMethod().map((e, index) => {
               return (
                 <div
                   key={index}
@@ -68,9 +86,13 @@ const CheckoutPaymentMethodCard = () => {
                       ? "border-4 border-success"
                       : "border-2 border-black shadow-custom2"
                   }`}
-                  onClick={()=>setSelectedMethod(e)}
+                  onClick={() => setSelectedMethod(e)}
                 >
-                  <img src={e.image_url ?? ""} alt="logo payment" className="w-full h-full object-scale-down"/>
+                  <img
+                    src={e.image_url ?? ""}
+                    alt="logo payment"
+                    className="w-full h-full object-scale-down"
+                  />
                 </div>
                 // <div
                 //   data-state="closed"

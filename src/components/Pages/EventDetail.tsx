@@ -49,7 +49,7 @@ export default function EventDetailPage({
           .unwrap()
           .then((user) => {
             if (user == null) {
-              router.replace(`/signin`);
+              router.replace(`/signin?redirectTo=/events/${params.slug}/qna`);
             }
             if (user != null && presence.event_id != params.slug) {
               const presence: CreatePresence = {
