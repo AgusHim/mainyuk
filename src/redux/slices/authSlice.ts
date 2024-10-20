@@ -26,8 +26,8 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const loginGoogle = createAsyncThunk("auth.loginGoogle", async () => {
-  const response = await api.get("/auth/google/login");
+export const loginGoogle = createAsyncThunk("auth.loginGoogle", async (redirectTo:string) => {
+  const response = await api.get(`/auth/google/login?redirectTo=${redirectTo}`);
   return response.data.authUrl as string;
 });
 
@@ -58,7 +58,7 @@ export const getAuthGoogleCallback = createAsyncThunk(
     const response = await api.get(`/auth/google/callback`, { params: param });
     var result = encryptData(response.data.user);
     localStorage.setItem("user", result);
-    return response.data.user as User;
+    return response.data;
   }
 );
 
@@ -80,9 +80,16 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(
-      loginUser.fulfilled || getAuthGoogleCallback.fulfilled,
+      loginUser.fulfilled,
       (state, action) => {
         state.user = action.payload;
+        state.loading = false;
+      }
+    );
+    builder.addCase(
+      getAuthGoogleCallback.fulfilled,
+      (state, action) => {
+        state.user = action.payload.user;
         state.loading = false;
       }
     );

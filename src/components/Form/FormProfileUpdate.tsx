@@ -145,9 +145,10 @@ const FormProfileUpdate: React.FC = () => {
         var redirectTo = query.get("redirectTo");
         if (redirectTo != null && redirectTo != undefined) {
           router.replace(redirectTo!);
-        }
-        if (query.get("isFromGoogle") === "true") {
+          return;
+        } if (query.get("isFromGoogle") === "true") {
           router.replace("/events");
+          return;
         }
       })
       .catch((error) => {

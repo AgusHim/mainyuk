@@ -18,8 +18,16 @@ export const OAuthGoogleCallback: React.FC = () => {
         dispatch(getAuthGoogleCallback(urlParams))
           .unwrap()
           .then((value) => {
-            if (value != null && value?.province == null) {
-              router.replace(`/profile/update?isFromGoogle=true`);
+            if (value != null && value.user?.province == null) {
+              router.replace(
+                `/profile/update?redirectTo=${value.redirectTo}`
+              );
+            } else if (
+              value != null &&
+              value.redirectTo != null &&
+              value.redirectTo != ""
+            ) {
+              router.replace(value.redirectTo);
             } else {
               router.replace("/events");
             }

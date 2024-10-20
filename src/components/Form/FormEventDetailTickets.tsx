@@ -4,6 +4,7 @@ import { setCheckout } from "@/redux/slices/orderSlice";
 import { getPublicTickets } from "@/redux/slices/ticketSlice";
 import { Ticket } from "@/types/ticket";
 import { UserTicket } from "@/types/user_ticket";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -106,7 +107,17 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
   if (tickets == null || tickets.length == 0) {
     return <></>;
   }
-
+  const today = new Date();
+  const startAt = new Date(event!.start_at!.replace("Z", ""));
+  if(today > startAt){
+    return (
+      <div className="px-10">
+        <div className="grid gap-4">
+          <Link href={`/events/${event?.slug}/qna`} className="btn mb-10 w-full rounded-lg border-2 border-black p-3 text-lg font-bold bg-primary text-white shadow-custom hover:bg-meta-7">Masuk QnA</Link>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <section id="tickets" className="mb-4">

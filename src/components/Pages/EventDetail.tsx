@@ -38,6 +38,7 @@ export default function EventDetailPage({
 
   const isLoading = useAppSelector((state) => state.event.loading);
   const error = useAppSelector((state) => state.event.error);
+  const errorPresence = useAppSelector((state) => state.presences.error);
 
   const [isInit, setIsInit] = useState(true);
 
@@ -73,8 +74,8 @@ export default function EventDetailPage({
   if (isLoading || presence.loading) {
     return <Loader></Loader>;
   }
-  if (error != null) {
-    return <h1>{error}</h1>;
+  if (error != null || errorPresence != null) {
+    return <h1>{error ?? errorPresence}</h1>;
   }
   if (
     event == null ||
@@ -155,9 +156,9 @@ export default function EventDetailPage({
             </div>
           </div>
         </div>
-        <div className="w-full md:mx-4 flex flex-col mb-5 p-5 rounded-xl border-2 bg-yellow-300 shadow-bottom border-black">
+        <div className="w-full flex flex-col mb-5 p-5 rounded-xl border-2 bg-yellow-300 shadow-bottom border-black">
           <h1 className="mb-2 text-2xl font-bold text-black dark:text-white">
-            Tanya Ustadz
+            Live QnA
           </h1>
           <p className="mb-5 text-black">
             Masukan pertanyaan atau keresahan kamu
