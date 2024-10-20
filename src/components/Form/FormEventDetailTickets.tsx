@@ -104,9 +104,6 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
     return <></>;
   }
 
-  if (tickets == null || tickets.length == 0) {
-    return <></>;
-  }
   const today = new Date();
   const startAt = new Date(event!.start_at!.replace("Z", ""));
   if(today > startAt){
@@ -118,6 +115,11 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
       </div>
     );
   }
+
+  if (tickets == null || tickets.length == 0) {
+    return <></>;
+  }
+
   return (
     <>
       <section id="tickets" className="mb-4">
