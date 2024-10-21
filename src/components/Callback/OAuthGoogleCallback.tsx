@@ -19,24 +19,27 @@ export const OAuthGoogleCallback: React.FC = () => {
           .unwrap()
           .then((value) => {
             if (value != null && value.user?.province == null) {
-              router.replace(
-                `/profile/update?redirectTo=${value.redirectTo}`
-              );
+              router.replace(`/profile/update?redirectTo=${value.redirectTo}`);
+              return;
             } else if (
               value != null &&
               value.redirectTo != null &&
               value.redirectTo != ""
             ) {
               router.replace(value.redirectTo);
+              return;
             } else {
               router.replace("/events");
+              return;
             }
           })
           .catch((_) => {
             router.replace("/signin");
+            return;
           });
       } else {
         router.replace("/events");
+        return;
       }
     };
     handleOAuthResponse();

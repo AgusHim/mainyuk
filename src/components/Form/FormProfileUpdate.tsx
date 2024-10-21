@@ -30,14 +30,14 @@ const FormProfileUpdate: React.FC = () => {
     username: user?.username ?? "anonim",
     gender: user?.gender != null && user?.gender != "" ? user?.gender : "male",
     age: user?.age != null ? user?.age.toString() : "0",
-    address: user?.address ?? "",
+    //address: user?.address ?? "",
     phone: user?.phone ?? "",
     activity:
       user?.activity != null && user?.activity != ""
         ? user?.activity
         : "umm wa rabbatul bayt",
     email: user?.email ?? "",
-    instagram: user?.instagram ?? "",
+    //instagram: user?.instagram ?? "",
     birth_date:
       user?.birth_date != null ? format(
         Date.parse(user?.birth_date?.replace("Z", "")),
@@ -125,9 +125,7 @@ const FormProfileUpdate: React.FC = () => {
       username: formData.username.length != 0 ? formData.username : "anonim",
       gender: formData.gender,
       age: formData.age,
-      address: formData.address,
       phone: formData.phone,
-      instagram: formData.instagram,
       activity: formData.activity,
       province_code: formData.province_code,
       district_code: formData.district_code,
@@ -281,7 +279,7 @@ const FormProfileUpdate: React.FC = () => {
           </div>
           <div className="mt-2"></div>
         </div>
-        <div className="grid space-y-2">
+        {/* <div className="grid space-y-2">
           <div className="gap-y-1 font-normal">
             <span className="flex items-center font-semibold">
               <label
@@ -310,7 +308,7 @@ const FormProfileUpdate: React.FC = () => {
             )}
           </div>
           <div className="mt-2"></div>
-        </div>
+        </div> */}
         <div className="grid space-y-2">
           <div className="gap-y-1 font-normal">
             <span className="flex items-center font-semibold">
@@ -491,7 +489,7 @@ const FormProfileUpdate: React.FC = () => {
           </div>
           <div className="mt-2"></div>
         </div>
-        <div className="grid space-y-2">
+        {/* <div className="grid space-y-2">
           <div className="gap-y-1 font-normal">
             <span className="flex items-center font-semibold">
               <label
@@ -520,7 +518,7 @@ const FormProfileUpdate: React.FC = () => {
             )}
           </div>
           <div className="mt-2"></div>
-        </div>
+        </div> */}
         <div className="grid space-y-2">
           <div className="gap-y-1 font-normal">
             <span className="flex items-center font-semibold">
