@@ -174,14 +174,14 @@ const Ticket: React.FC<TicketProps> = ({
         <div>
           <p className="font-sans text-sm text-black">Nama Event</p>
           <h1 className="font-sans font-semibold text-sm text-black">
-            (MALANG) Bagaimana Anak-Anak Gaza Tumbuh Menjadi Pejuang
+          {ticket?.event?.title}
           </h1>
         </div>
         <div className="flex justify-between items-center mt-2">
           <div>
             <p className="font-sans text-sm text-black">Nama Tiket</p>
             <h1 className="font-sans font-semibold text-sm text-black">
-              Infaq Terbaik
+              {ticket?.ticket?.name}
             </h1>
           </div>
           <QRCode
