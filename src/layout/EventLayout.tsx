@@ -73,7 +73,7 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
         />
       </div>
       <section id="summary">
-        <div className="m-10">
+        <div className="p-5 md:p-10">
           <div className="mb-1">
             <AllowedGender event={eventData} />
           </div>

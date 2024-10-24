@@ -108,7 +108,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
   const startAt = new Date(event!.start_at!.replace("Z", ""));
   if(today > startAt){
     return (
-      <div className="px-10">
+      <div className="px-5 md:px-10">
         <div className="grid gap-4">
           <Link href={`/events/${event?.slug}/qna`} className="btn mb-10 w-full rounded-lg border-2 border-black p-3 text-lg font-bold bg-primary text-white shadow-custom hover:bg-meta-7">Masuk QnA</Link>
         </div>
@@ -123,7 +123,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
   return (
     <>
       <section id="tickets" className="mb-4">
-        <div className="px-10">
+        <div className="px-5 md:px-10">
           <form className="grid gap-4" onSubmit={handleSubmit}>
             <div className="grid space-y-2">
               <div className="gap-y-1 font-normal"></div>
