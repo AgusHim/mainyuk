@@ -25,3 +25,8 @@ export type User = {
   sub_district?:Region |null;
   password?:string |null;
 };
+
+export type VerifyOTP = {
+  email?: string;
+  code?: string;
+};

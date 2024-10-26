@@ -30,7 +30,7 @@ const ButtonLoginGoogle: React.FC = () => {
 
   return (
     <button
-      className="mb-5 flex items-center justify-center w-full px-4 py-2 space-x-2 text-black rounded-lg bg-yellow-300 hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-black shadow-custom"
+      className="mb-5 flex items-center justify-center w-full px-4 py-3 space-x-2 text-black rounded-lg bg-white hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-black shadow-custom"
       onClick={login}
     >
       <svg

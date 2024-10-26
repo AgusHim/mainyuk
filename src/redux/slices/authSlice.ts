@@ -1,16 +1,18 @@
-import { User } from "@/types/user";
+import { User, VerifyOTP } from "@/types/user";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api, user_api } from "../api";
 import { decryptData, encryptData } from "@/utils/crypto";
 
 interface AuthState {
   user: User | null;
+  email: string | null;
   loading: boolean;
   loadingGoogle: boolean;
   error: string | null;
 }
 const initialState: AuthState = {
   user: null,
+  email: null,
   loading: false,
   loadingGoogle: false,
   error: null,
@@ -26,10 +28,15 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const loginGoogle = createAsyncThunk("auth.loginGoogle", async (redirectTo:string) => {
-  const response = await api.get(`/auth/google/login?redirectTo=${redirectTo}`);
-  return response.data.authUrl as string;
-});
+export const loginGoogle = createAsyncThunk(
+  "auth.loginGoogle",
+  async (redirectTo: string) => {
+    const response = await api.get(
+      `/auth/google/login?redirectTo=${redirectTo}`
+    );
+    return response.data.authUrl as string;
+  }
+);
 
 export const getSessionUser = createAsyncThunk(
   "auth.getSessionUser",
@@ -62,6 +69,24 @@ export const getAuthGoogleCallback = createAsyncThunk(
   }
 );
 
+export const postRequestOTP = createAsyncThunk(
+  "auth.otp.request",
+  async (data: VerifyOTP) => {
+    const response = await api.post(`/auth/otp/request`, data);
+    return response.data;
+  }
+);
+
+export const postVerifyOTP = createAsyncThunk(
+  "auth.otp.verify",
+  async (data: VerifyOTP) => {
+    const response = await api.post(`/auth/otp/verify`, data);
+    var result = encryptData(response.data.user);
+    localStorage.setItem("user", result);
+    return response.data.user as User;
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -76,30 +101,33 @@ export const authSlice = createSlice({
       localStorage.removeItem("user");
       state.user = null;
     },
+    setEmail: (state, action) => {
+      const email = action.payload as string;
+      state.email = email;
+    },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(
-      loginUser.fulfilled,
+      loginUser.fulfilled || postVerifyOTP.fulfilled,
       (state, action) => {
         state.user = action.payload;
         state.loading = false;
       }
     );
-    builder.addCase(
-      getAuthGoogleCallback.fulfilled,
-      (state, action) => {
-        state.user = action.payload.user;
-        state.loading = false;
-      }
-    );
+    builder.addCase(getAuthGoogleCallback.fulfilled, (state, action) => {
+      state.user = action.payload.user;
+      state.loading = false;
+    });
     builder.addCase(loginGoogle.fulfilled, (state, action) => {
       state.loadingGoogle = false;
     });
     builder.addCase(
       loginUser.pending ||
         getSessionUser.pending ||
-        getAuthGoogleCallback.pending,
+        getAuthGoogleCallback.pending ||
+        postRequestOTP.pending||
+        postVerifyOTP.pending,
       (state, _) => {
         state.loading = true;
         state.error = null;
@@ -123,5 +151,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logOutUser, setAuthUser } = authSlice.actions;
+export const { logOutUser, setAuthUser, setEmail } = authSlice.actions;
 export default authSlice.reducer;

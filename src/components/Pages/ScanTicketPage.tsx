@@ -120,7 +120,6 @@ export default function ScanTicketPage({
             ) : (
               <div style={containerStyle}>
                 {/* QR Reader Component */}
-                <div>
                   <QrReader
                     scanDelay={1500}
                     videoContainerStyle={{
@@ -140,7 +139,6 @@ export default function ScanTicketPage({
                     }}
                     constraints={{ facingMode: camera }}
                   />
-                </div>
                 <div className="absolute bg-black bg-opacity-70 w-full h-30 top-0"></div>
                 <div className="absolute bg-black bg-opacity-70 w-19 h-[250px] top-30 left-0"></div>
                 <div style={focusAreaStyle}></div>

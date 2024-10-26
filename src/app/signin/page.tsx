@@ -1,5 +1,5 @@
 
-import SignInPage from "@/components/Pages/SignInPage";
+import SignOTPPage from "@/components/Pages/SignOTPPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const SignIn: React.FC = () => {
   return <>
-  <SignInPage/>
+  <SignOTPPage/>
   </>
 };
 
