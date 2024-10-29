@@ -4,6 +4,7 @@ import { setCheckout } from "@/redux/slices/orderSlice";
 import { getPublicTickets } from "@/redux/slices/ticketSlice";
 import { Ticket } from "@/types/ticket";
 import { UserTicket } from "@/types/user_ticket";
+import { sendGAEvent } from "@next/third-parties/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -82,6 +83,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
       toast.info("Kamu belum memilih tiket 😭");
       return;
     }
+    sendGAEvent('event', 'event.tickets.buy', { 'event_id': event?.id, 'event_name':event?.title });
     let orderTickets: UserTicket[] = [];
     for (let index in tickets!) {
       const ticket = tickets[index];
