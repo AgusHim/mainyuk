@@ -1,8 +1,4 @@
-import dynamic from 'next/dynamic'
-const ScanTicketPage = dynamic(
-  () => import("@/components/Pages/ScanTicketPage"),
-  { ssr: false }
-)
+import ScanTicketPage from "@/components/Pages/ScanTicketPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

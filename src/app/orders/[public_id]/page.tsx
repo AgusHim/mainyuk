@@ -1,8 +1,4 @@
-import dynamic from 'next/dynamic'
-const OrderPage = dynamic(
-  () => import("@/components/Pages/OrderPage"),
-  { ssr: false }
-)
+import OrderPage from "@/components/Pages/OrderPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
