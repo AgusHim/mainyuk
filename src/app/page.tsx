@@ -3,8 +3,8 @@ import { MainLayout } from "@/layout/MainLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "YukNgaji Solo",
-  description: "YukNgaji regional Solo",
+  title: "YukNgaji Solo - Komunitas Pemuda Hijrah",
+  description: "YukNgaji Solo merupakan komunitas dakwah untuk pemuda di kota Surakarta / Solo dan sekitarnya.",
   // other metadata
 };
 
