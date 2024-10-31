@@ -7,6 +7,12 @@ export const metadata: Metadata = {
   // other metadata
 };
 
-export default function Page({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function Page({ params }: PageProps) {
   return <AgendaDetailPage params={params} />;
 }
