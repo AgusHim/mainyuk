@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   description: "Live event YukNgaji regional Solo",
 };
 
-export default function LiveEvent({ params }: { params: { slug: string } }) {
-  return <LiveEventPage params={params} />;
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params;
+  return <LiveEventPage params={resolvedParams} />;
 }

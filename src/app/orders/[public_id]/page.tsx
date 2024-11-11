@@ -1,4 +1,7 @@
-import OrderPage from "@/components/Pages/OrderPage";
+import dynamic from "next/dynamic";
+const OrderPage = dynamic(() => import("@/components/Pages/OrderPage"), {
+  loading: () => <p>Loading...</p>,
+});
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,10 +9,11 @@ export const metadata: Metadata = {
   description: "Detail transaksi tiket event YukNgaji Solo",
 };
 
-export default function Order({
-  params,
-}: {
-  params: { public_id: string };
-}) {
-  return <OrderPage params={params}/>
+interface PageProps {
+  params: Promise<{ public_id: string }>;
+}
+
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params;
+  return <OrderPage params={resolvedParams} />;
 }

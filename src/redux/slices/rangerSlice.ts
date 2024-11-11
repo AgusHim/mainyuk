@@ -30,6 +30,7 @@ const initialState: RangerState = {
 };
 
 interface getRengerParams {
+  divisi_id?:string|null;
   start_at?: string|null;
   end_at?:string|null;
 }

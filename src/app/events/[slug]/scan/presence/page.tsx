@@ -7,14 +7,15 @@ export const metadata: Metadata = {
   // other metadata
 }; 
 
-export default function ScanTicket({
-  params,
-}: {
-  params: { slug: string };
-}) {
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params;
   return (
     <>
-      <ScanTicketPage params={params}/>
+      <ScanTicketPage params={resolvedParams}/>
     </>
   );
 }

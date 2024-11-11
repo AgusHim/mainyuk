@@ -7,10 +7,15 @@ export const metadata: Metadata = {
   // other metadata
 };
 
-export default function AgendaScanPage ({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function AgendaScanPage({ params }: PageProps) {
+  const resolvedParams = await params;
   return (
     <>
-      <QRScanner params={params}/>
+      <QRScanner params={resolvedParams}/>
     </>
   );
 };

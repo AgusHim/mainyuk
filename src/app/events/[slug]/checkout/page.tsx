@@ -10,13 +10,18 @@ export const metadata: Metadata = {
   // other metadata
 };
 
-export default function OrderDetail({ params }: { params: { slug: string } }) {
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params;
   return (
     <>
-      <RequiredAuthLayout redirectTo={`/events/${params.slug}`}>
+      <RequiredAuthLayout redirectTo={`/events/${resolvedParams.slug}`}>
         <MainLayout>
           <CommonHeader title="Pembelian Tiket" isShowBack={true} />
-          <CheckoutLayout slug={params.slug} />
+          <CheckoutLayout slug={resolvedParams.slug} />
         </MainLayout>
       </RequiredAuthLayout>
     </>

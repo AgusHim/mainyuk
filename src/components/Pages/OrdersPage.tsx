@@ -1,3 +1,5 @@
+"use client"
+import React from "react";
 import { BottomNavBar } from "@/components/BottomNavBar/BottomNavBar";
 import GridOrders from "@/components/Grid/GridOrders";
 import { CommonHeader } from "@/components/Header/CommonHeader";

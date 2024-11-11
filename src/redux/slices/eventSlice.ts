@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { admin_api, api } from "../api";
 import { Event } from "@/types/event";
-import { Order } from "@/types/order";
+import { UserTicket } from "@/types/user_ticket";
 
 interface EventState {
   data: Event[] | null;
   event: Event | null;
-  participants: Order[] | null;
+  participants: UserTicket[] | null;
   loading: boolean;
   error: string | null;
 }
@@ -75,7 +75,7 @@ export const eventSlice = createSlice({
       }
     );
     builder.addCase(getEventParticipants.fulfilled, (state, action) => {
-      state.participants = action.payload as Order[];
+      state.participants = action.payload as UserTicket[];
       state.loading = false;
     });
     builder.addCase(getEventsHome.fulfilled, (state, action) => {

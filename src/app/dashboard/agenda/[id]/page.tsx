@@ -8,11 +8,10 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
-export default function Page({ params }: PageProps) {
-  return <AgendaDetailPage params={params} />;
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params;
+  return <AgendaDetailPage params={resolvedParams} />;
 }

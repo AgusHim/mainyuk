@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-const SignOTPPage = dynamic(() => import("@/components/Pages/SignOTPPage"), {
+const SignInPage = dynamic(() => import("@/components/Pages/SignInPage"), {
   loading: () => <p>Loading...</p>,
 });
 import { Metadata } from "next";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const SignIn: React.FC = () => {
   return (
     <>
-      <SignOTPPage />
+      <SignInPage />
     </>
   );
 };

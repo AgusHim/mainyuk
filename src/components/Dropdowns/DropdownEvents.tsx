@@ -2,36 +2,40 @@
 
 import { useAppDispatch } from "@/hooks/hooks";
 import { useEffect, useState } from "react";
-import { getDivisi } from "@/redux/slices/divisiSlice";
-import { Divisi } from "@/types/divisi";
+import { getEvents } from "@/redux/slices/eventSlice";
+import { Event } from "@/types/event";
 
 interface DropdownProps {
   className?: string;
   onChange: (value: string) => void;
 }
 
-const DropdownDivisi: React.FC<DropdownProps> = ({ onChange, className }) => {
+const DropdownEvents: React.FC<DropdownProps> = ({ onChange, className }) => {
   const dispatch = useAppDispatch();
-  const [divisi, setDivisi] = useState<Divisi[] | null>(null);
-  const [selectedDivisi, setSelectedDivisi] = useState<string>("Semua Divisi");
+  const [events, setEvents] = useState<Event[] | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<string>("Semua");
 
   useEffect(() => {
-    if (divisi == null) {
-      dispatch(getDivisi()).then((res) => {
-        setDivisi(res.payload as Divisi[]);
+    if (events == null) {
+      dispatch(getEvents()).then((res) => {
+        setEvents(res.payload as Event[]);
       });
     }
   }, []);
 
+  if (events == null) {
+    return <></>;
+  }
+
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDivisi(event.target.value);
+    setSelectedEvent(event.target.value);
     const newValue = event.target.value;
     onChange(newValue); // Call the parent function when an option is selected
   };
 
   return (
     <select
-      value={selectedDivisi}
+      value={selectedEvent}
       onChange={handleSelectChange}
       name="event_id"
       className={
@@ -40,14 +44,14 @@ const DropdownDivisi: React.FC<DropdownProps> = ({ onChange, className }) => {
           : className
       }
     >
-      <option value={"all"}>Semua Divisi</option>
-      {divisi?.map((data, key) => (
-        <option key={key} value={data.id}>
-          {data.name}
+      <option value={"all"}>Semua Event</option>
+      {events?.map((event, key) => (
+        <option key={key} value={event.id}>
+          {event.title}
         </option>
       ))}
     </select>
   );
 };
 
-export default DropdownDivisi;
+export default DropdownEvents;

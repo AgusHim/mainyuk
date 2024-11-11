@@ -22,6 +22,7 @@ export default function DashboardRangersPage() {
   const error = useAppSelector((state) => state.ranger.error);
   const startAt = useAppSelector((state) => state.ranger.startAt);
   const endAt = useAppSelector((state) => state.ranger.endAt);
+  const [divisi, setDivisiID] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLoading) {
@@ -30,6 +31,17 @@ export default function DashboardRangersPage() {
       dispatch(getRangers({ start_at: start, end_at: end }));
     }
   }, []);
+
+  const handleFilterDivisi = (newValue: string) => {
+    if (newValue == "all") {
+      setDivisiID(null);
+    } else {
+      setDivisiID(newValue);
+    }
+    const start = formatStrToDateTime(startAt, "dd-MM-yyyy", false);
+    const end = formatStrToDateTime(endAt, "dd-MM-yyyy", false);
+    dispatch(getRangers({ divisi_id: newValue, start_at: start, end_at: end })); // This is where you can call additional logic
+  };
 
   let [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
 
@@ -84,7 +96,7 @@ export default function DashboardRangersPage() {
       </div>
 
       <div className="flex items-center justify-between my-5">
-        <DropdownDivisi label={"Dropdown"} onClick={()=>{}}/>
+        <DropdownDivisi onChange={handleFilterDivisi} />
         <div className="flex items-center">
           <DatePicker
             theme={rightPopupTheme}

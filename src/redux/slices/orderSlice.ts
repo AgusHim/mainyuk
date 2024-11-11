@@ -26,6 +26,11 @@ const initialState: OrderState = {
   error: null,
 };
 
+interface getOrdersParams {
+  status?: string|null;
+  event_id?:string|null;
+}
+
 export const getOrders = createAsyncThunk("orders", async (_, thunk) => {
   const res = await user_api.get("/orders");
   return res.data;
@@ -33,8 +38,10 @@ export const getOrders = createAsyncThunk("orders", async (_, thunk) => {
 
 export const getAdminOrders = createAsyncThunk(
   "orders.admin.get",
-  async (_, thunk) => {
-    const res = await admin_api.get("/orders");
+  async (params:getOrdersParams, thunk) => {
+    const res = await admin_api.get("/orders",{
+      params:params,
+    });
     return res.data;
   }
 );

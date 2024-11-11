@@ -6,7 +6,11 @@ export const metadata: Metadata = {
   description: "Halaman detail event",
   // other metadata
 };
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-export default function Page({ params }: { params: { slug: string } }) {
-  return <DashboardEventDetailPage params={params} />;
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params;
+  return <DashboardEventDetailPage params={resolvedParams} />;
 }

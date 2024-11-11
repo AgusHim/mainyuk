@@ -7,11 +7,15 @@ export const metadata: Metadata = {
   description: "Detail event YukNgaji Solo",
   // other metadata
 };
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-export default function Page({ params }: { params: { slug: string } }) {
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params;
   return (
     <MainLayout>
-      <EventLayout slug={params.slug} />
+      <EventLayout slug={resolvedParams.slug} />
     </MainLayout>
   );
 }

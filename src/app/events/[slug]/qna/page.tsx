@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   // other metadata
 };
 
-export default function Page({ params }: { params: { slug: string } }) {
-  return <EventDetailPage params={params}/>;
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params;
+  return <EventDetailPage params={resolvedParams}/>;
 }

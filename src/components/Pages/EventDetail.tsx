@@ -43,26 +43,26 @@ export default function EventDetailPage({
   const [isInit, setIsInit] = useState(true);
 
   const getInitState = useCallback(() => {
+    dispatch(getSessionUser())
+      .unwrap()
+      .then((user) => {
+        if (user == null) {
+          router.replace(`/signin?redirectTo=/events/${params.slug}/qna`);
+        }
+        if (user != null && presence.event_id != params.slug) {
+          const presence: CreatePresence = {
+            event_id: params.slug,
+            user_id: user.id,
+          };
+          dispatch(postPrecence(presence));
+        }
+      });
     if (event == null || event?.slug != params.slug) {
       dispatch(getEventDetail(params.slug)).then((res) => {
         const event = res.payload as Event;
-        dispatch(getSessionUser())
-          .unwrap()
-          .then((user) => {
-            if (user == null) {
-              router.replace(`/signin?redirectTo=/events/${params.slug}/qna`);
-            }
-            if (user != null && presence.event_id != params.slug) {
-              const presence: CreatePresence = {
-                event_id: params.slug,
-                user_id: user.id,
-              };
-              dispatch(postPrecence(presence));
-            }
-          });
-        setIsInit(false);
       });
     }
+    setIsInit(false);
   }, [isInit]);
 
   useEffect(() => {

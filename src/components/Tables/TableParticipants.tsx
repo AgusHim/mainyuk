@@ -22,11 +22,14 @@ const TableParticipants: React.FC = () => {
           <table className="w-full table-auto mb-3">
             <thead className="border border-black">
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[220px] py-3 px-2 font-medium text-black dark:text-white xl:pl-11 text-center">
-                  Order ID
+                <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white xl:pl-11 text-center">
+                  Tiket ID
                 </th>
                 <th className="min-w-[220px] py-3 px-2 font-medium text-black dark:text-white xl:pl-11 text-center">
-                  Nama Lengkap
+                  Detail Tiket
+                </th>
+                <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white xl:pl-11 text-center">
+                  Nama Pemesan
                 </th>
                 <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
                   Gender
@@ -52,67 +55,83 @@ const TableParticipants: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {participants?.map((order, key) => {
+              {participants?.map((ticket, key) => {
                 return (
                   <tr key={key}>
                     <td className="border-b border-black py-3 px-2 pl-9 dark:border-strokedark xl:pl-11">
                       <h5 className="font-medium text-black dark:text-white">
-                        {order?.public_id ?? ""}
+                        {ticket?.public_id ?? ""}
                       </h5>
+                    </td>
+                    <td className="border-b border-black py-3 px-2 dark:border-strokedark">
+                      <div className="flex flex-col justify-center items-start">
+                        <p className="text-black text-sm font-bold dark:text-white text-center">
+                          {ticket?.ticket?.name ?? ""}
+                        </p>
+                        <p className="text-black text-sm dark:text-white text-center">
+                          {ticket?.user_name?? ""}
+                        </p>
+                        <p className="text-black text-sm dark:text-white text-center">
+                          {ticket?.user_gender?? ""}
+                        </p>
+                        <p className="text-black text-sm dark:text-white text-center">
+                          {ticket?.user_email?? ""}
+                        </p>
+                      </div>
                     </td>
                     <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                       <div className="flex flex-col justify-center items-center">
                         <p className="text-black dark:text-white text-center">
-                          {order?.user?.name ?? ""}
+                          {ticket?.user?.name ?? ""}
                         </p>
                       </div>
                     </td>
                     <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                       <div className="flex justify-center items-center">
                         <p className="text-black dark:text-white">
-                          {order?.user?.gender == "male" ? "Ikhwan" : "Akhwat"}
+                          {ticket?.user?.gender == "male" ? "Ikhwan" : "Akhwat"}
                         </p>
                       </div>
                     </td>
                     <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                       <div className="flex justify-center items-center">
                         <p className="text-black dark:text-white">
-                          {order?.user?.phone ?? ""}
+                          {ticket?.user?.phone ?? ""}
                         </p>
                       </div>
                     </td>
                     <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                       <div className="flex justify-center items-center">
                         <p className="text-black dark:text-white">
-                          {order?.user?.instagram ?? ""}
+                          {ticket?.user?.instagram ?? ""}
                         </p>
                       </div>
                     </td>
                     <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                       <div className="flex justify-center items-center">
                         <p className="text-black dark:text-white">
-                          {order?.user?.activity ?? ""}
+                          {ticket?.user?.activity ?? ""}
                         </p>
                       </div>
                     </td>
                     <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                       <div className="flex justify-center items-center">
                         <p className="text-black dark:text-white">
-                          {order?.user?.province?.name ?? ""}
+                          {ticket?.user?.province?.name ?? ""}
                         </p>
                       </div>
                     </td>
                     <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                       <div className="flex justify-center items-center">
                         <p className="text-black dark:text-white">
-                          {order?.user?.district?.name ?? ""}
+                          {ticket?.user?.district?.name ?? ""}
                         </p>
                       </div>
                     </td>
                     <td className="border-b border-black py-3 px-2 dark:border-strokedark">
                       <div className="flex justify-center items-center">
                         <p className="text-black dark:text-white">
-                          {order?.user?.sub_district?.name ?? ""}
+                          {ticket?.user?.sub_district?.name ?? ""}
                         </p>
                       </div>
                     </td>
