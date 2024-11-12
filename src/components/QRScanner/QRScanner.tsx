@@ -5,7 +5,7 @@ import { getAgendaDetail } from "@/redux/slices/agendaSlice";
 import { getRangerDetail, resetRanger } from "@/redux/slices/rangerSlice";
 import { RangerPresence } from "@/types/rengerPresence";
 import React, { useEffect, useRef, useState } from "react";
-import { QrReader } from "react-qr-reader";
+import { Scanner } from '@yudiel/react-qr-scanner';
 import { toast } from "react-toastify";
 import { formatStrToDateTime } from "@/utils/convert";
 
@@ -102,23 +102,18 @@ const QRScanner = ({ params }: { params: { id: string } }) => {
           {formatStrToDateTime(agenda!.start_at!, "dd MMM yyyy HH:mm")}
         </h1>
       </div>
-
-      <QrReader
-        onResult={(result, error) => {
-          if (!!result) {
-            handleResultScan(result.getText());
-          }
-          if (!!error) {
-            toast.error(error.message, {
-              className: "toast",
-            });
+      <Scanner
+        onScan={(result) => {
+          if(result.length > 0){
+          handleResultScan(result[0].rawValue);
           }
         }}
-        containerStyle={{ width: "100%", height: "500px" }}
-        videoStyle={{ width: "100%", height: "100%" }}
+        onError={(error) => {
+          console.log(error);
+        }}
+        
         constraints={{ facingMode: "environment" }}
       />
-
       <dialog
         ref={modalRef}
         id="confirm"

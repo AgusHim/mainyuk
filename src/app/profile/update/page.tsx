@@ -2,7 +2,6 @@
 import dynamic from "next/dynamic";
 const UpdateProfilePage = dynamic(() => import("@/components/Pages/ProfileUpdatePage"), {
   ssr:false,
-  loading: () => <p>Loading...</p>,
 });
 
 // import { Metadata } from "next";

@@ -56,7 +56,7 @@ export const postEvent = createAsyncThunk("event.post", async (data: Event) => {
 export const getEventParticipants = createAsyncThunk(
   "events.participants",
   async (id: string) => {
-    const res = await admin_api.get(`/events/${id}/participants`);
+    const res = await admin_api.get(`/events/${id}/participants?order[status]=paid`);
     return res.data;
   }
 );

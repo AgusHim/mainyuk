@@ -7,7 +7,7 @@ import { postPresenceTicket } from "@/redux/slices/ticketSlice";
 import { ResScanTicket } from "@/types/presence";
 import { PresenceTicket } from "@/types/ticket";
 import { useEffect, useRef, useState } from "react";
-import { QrReader } from "react-qr-reader";
+import { Scanner } from "@yudiel/react-qr-scanner";
 import { toast } from "react-toastify";
 import { CSSProperties } from "react";
 import { formatStrToDateTime } from "@/utils/convert";
@@ -118,33 +118,26 @@ export default function ScanTicketPage({
             {!hasPermission ? (
               <div className="w-full max-w-150 relative"></div>
             ) : (
-              <div style={containerStyle}>
-                {/* QR Reader Component */}
-                  <QrReader
-                    scanDelay={1500}
-                    videoContainerStyle={{
-                      width: "100%",
-                      height: "500px",
-                    }}
-                    videoStyle={videoStyle}
-                    onResult={(result, error) => {
-                      if (!!result && isLoading == false && presence == null) {
-                        handleResultScan(result.getText());
-                      }
-                      if (!!error) {
-                        toast.error(error.message, {
-                          className: "toast",
-                        });
-                      }
-                    }}
-                    constraints={{ facingMode: camera }}
-                  />
-                <div className="absolute bg-black bg-opacity-70 w-full h-30 top-0"></div>
-                <div className="absolute bg-black bg-opacity-70 w-19 h-[250px] top-30 left-0"></div>
-                <div style={focusAreaStyle}></div>
-                <div className="absolute bg-black bg-opacity-70 w-full h-30 bottom-0"></div>
-                <div className="absolute bg-black bg-opacity-70 w-19 h-[250px] top-30 right-0"></div>
-              </div>
+              <Scanner
+                scanDelay={500}
+                onScan={(result) => {
+                  if (
+                    result.length > 0 &&
+                    isLoading == false &&
+                    presence == null
+                  ) {
+                    handleResultScan(result[0].rawValue);
+                  }
+                }}
+                onError={(error) => {
+                  console.log(error);
+                }}
+                styles={{
+                  container: { width: "100%", height: "100%" },
+                  video: videoStyle,
+                }}
+                constraints={{ facingMode: camera }}
+              />
             )}
             {isLoading ? (
               <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>

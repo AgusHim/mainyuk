@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 const OrderPage = dynamic(() => import("@/components/Pages/OrderPage"), {
-  loading: () => <p>Loading...</p>,
 });
 import { Metadata } from "next";
 
