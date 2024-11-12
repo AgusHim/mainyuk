@@ -1,7 +1,5 @@
 import dynamic from "next/dynamic";
-const SignInPage = dynamic(() => import("@/components/Pages/SignInPage"), {
-  loading: () => <p>Loading...</p>,
-});
+const SignInPage = dynamic(() => import("@/components/Pages/SignInPage"));
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

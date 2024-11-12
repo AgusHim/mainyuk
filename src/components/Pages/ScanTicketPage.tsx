@@ -119,7 +119,8 @@ export default function ScanTicketPage({
               <div className="w-full max-w-150 relative"></div>
             ) : (
               <Scanner
-                scanDelay={500}
+                scanDelay={1500}
+                allowMultiple={true}
                 onScan={(result) => {
                   if (
                     result.length > 0 &&

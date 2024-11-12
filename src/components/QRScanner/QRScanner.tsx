@@ -5,7 +5,7 @@ import { getAgendaDetail } from "@/redux/slices/agendaSlice";
 import { getRangerDetail, resetRanger } from "@/redux/slices/rangerSlice";
 import { RangerPresence } from "@/types/rengerPresence";
 import React, { useEffect, useRef, useState } from "react";
-import { Scanner } from '@yudiel/react-qr-scanner';
+import { Scanner } from "@yudiel/react-qr-scanner";
 import { toast } from "react-toastify";
 import { formatStrToDateTime } from "@/utils/convert";
 
@@ -103,15 +103,16 @@ const QRScanner = ({ params }: { params: { id: string } }) => {
         </h1>
       </div>
       <Scanner
+        scanDelay={1500}
+        allowMultiple={true}
         onScan={(result) => {
-          if(result.length > 0){
-          handleResultScan(result[0].rawValue);
+          if (result.length > 0) {
+            handleResultScan(result[0].rawValue);
           }
         }}
         onError={(error) => {
           console.log(error);
         }}
-        
         constraints={{ facingMode: "environment" }}
       />
       <dialog

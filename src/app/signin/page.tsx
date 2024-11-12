@@ -1,7 +1,5 @@
 import dynamic from "next/dynamic";
-const SignOTPPage = dynamic(() => import("@/components/Pages/SignOTPPage"), {
-  loading: () => <p>Loading...</p>,
-});
+const SignOTPPage = dynamic(() => import("@/components/Pages/SignOTPPage"));
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
