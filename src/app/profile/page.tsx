@@ -1,20 +1,12 @@
-"use client"
-import dynamic from "next/dynamic";
-const ProfilePage = dynamic(() => import("@/components/Pages/ProfilePage"), {
-  ssr: false,
-});
+import ProfilePage from "@/components/Pages/ProfilePage";
 
-// import { Metadata } from "next";
-// export const metadata: Metadata = {
-//   title: "Profile",
-//   description: "Profile akun YukNgaji Solo",
-//   // other metadata
-// };
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Profile",
+  description: "Profile akun YukNgaji Solo",
+  // other metadata
+};
 
-export default function Profile() {
-  return (
-    <div>
-      <ProfilePage />
-    </div>
-  );
+export default async function Profile() {
+  return <ProfilePage />;
 }

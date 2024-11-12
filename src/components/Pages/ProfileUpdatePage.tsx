@@ -1,8 +1,11 @@
 "use client";
 import FormProfileUpdate from "@/components/Form/FormProfileUpdate";
 import { CommonHeader } from "@/components/Header/CommonHeader";
-import { RequiredAuthLayout } from "@/layout/AuthLayout";
+const RequiredAuthLayout = dynamic(() => import("@/layout/AuthLayout"), {
+  ssr: false,
+});
 import { MainLayout } from "@/layout/MainLayout";
+import dynamic from "next/dynamic";
 
 export default function UpdateProfilePage() {
   return (

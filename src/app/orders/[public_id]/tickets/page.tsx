@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
-const OrderTicketsPage = dynamic(() => import("@/components/Pages/OrderTicketsPage"), {
-});
+const OrderTicketsPage = dynamic(() => import("@/components/Pages/OrderTicketsPage"));
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

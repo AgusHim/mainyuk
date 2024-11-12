@@ -11,10 +11,7 @@ interface LayoutProps {
   redirectTo?: string | null;
 }
 
-export const RequiredAuthLayout: React.FC<LayoutProps> = ({
-  children,
-  redirectTo,
-}) => {
+export function RequiredAuthLayout(props: LayoutProps) {
   const currentPath: string = window.location.pathname;
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -26,22 +23,22 @@ export const RequiredAuthLayout: React.FC<LayoutProps> = ({
       .unwrap()
       .then((value) => {
         if (value == null) {
-          router.replace(`/signin?redirectTo=${redirectTo}`);
+          router.replace(`/signin?redirectTo=${props.redirectTo}`);
         }
 
         if (value != null && value?.sub_district == null) {
           if (currentPath != "/profile/update") {
             if (query.get("isFromGoogle") == "true") {
-              if (redirectTo != null && redirectTo != undefined) {
+              if (props.redirectTo != null && props.redirectTo != undefined) {
                 router.replace(
-                  `/profile/update?isFromGoogle="true"&redirectTo=${redirectTo}`
+                  `/profile/update?isFromGoogle="true"&redirectTo=${props.redirectTo}`
                 );
               } else {
                 router.replace(`/profile/update?isFromGoogle="true"`);
               }
             }
-            if (redirectTo != null && redirectTo != undefined) {
-              router.replace(`/profile/update?redirectTo=${redirectTo}`);
+            if (props.redirectTo != null && props.redirectTo != undefined) {
+              router.replace(`/profile/update?redirectTo=${props.redirectTo}`);
             } else {
               router.replace(`/profile/update`);
             }
@@ -68,5 +65,7 @@ export const RequiredAuthLayout: React.FC<LayoutProps> = ({
     return <Loader></Loader>;
   }
 
-  return <div>{children}</div>;
+  return <div>{props.children}</div>;
 };
+
+export default RequiredAuthLayout;

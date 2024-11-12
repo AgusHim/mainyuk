@@ -1,22 +1,15 @@
-"use client"
 import dynamic from "next/dynamic";
 const SignOTPPage = dynamic(() => import("@/components/Pages/SignOTPPage"),{
-  ssr: false,
+  loading: () =>null,
 });
 
-// import { Metadata } from "next";
-// export const metadata: Metadata = {
-//   title: "Masuk - YukNgaji Solo",
-//   description: "Halaman signin YukNgaji Solo",
-//   // other metadata
-// };
-
-const SignIn: React.FC = () => {
-  return (
-    <>
-      <SignOTPPage />
-    </>
-  );
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Masuk - YukNgaji Solo",
+  description: "Halaman signin YukNgaji Solo",
+  // other metadata
 };
 
-export default SignIn;
+export default async function Page() {
+  return<SignOTPPage />;
+};
