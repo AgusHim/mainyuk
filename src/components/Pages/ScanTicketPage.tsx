@@ -134,9 +134,10 @@ export default function ScanTicketPage({
                   console.log(error);
                 }}
                 styles={{
-                  container: { width: "100%", height: "100%" },
+                  container: { width: "100%", height: "100%", maxHeight:"400px" },
                   video: videoStyle,
                 }}
+
                 constraints={{ facingMode: camera }}
               />
             )}
@@ -229,7 +230,7 @@ export default function ScanTicketPage({
                     </summary>
                     <div className="collapse-content px-5">
                       {presence?.presences?.map((e, i) => (
-                        <div className="w-full flex flex-row justify-between">
+                        <div key={i} className="w-full flex flex-row justify-between">
                           <p className="font-medium text-sm text-black ">
                             Scan ke {i + 1}{" "}
                           </p>

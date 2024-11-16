@@ -1,6 +1,7 @@
 import { Ticket } from "./ticket";
 import { User } from "./user";
 import { Event } from "./event";
+import { Order } from "./order";
 
 export type UserTicket = {
   id?: string;
@@ -14,5 +15,6 @@ export type UserTicket = {
   event_id?: string | null;
   event?:Event |null;
   ticket?:Ticket|null;
+  order?:Order|null;
   created_at?: string;
 };

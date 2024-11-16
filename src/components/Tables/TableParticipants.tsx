@@ -80,9 +80,12 @@ const TableParticipants: React.FC = () => {
                       </div>
                     </td>
                     <td className="border-b border-black py-3 px-2 dark:border-strokedark">
-                      <div className="flex flex-col justify-center items-center">
-                        <p className="text-black dark:text-white text-center">
+                      <div className="flex flex-col justify-start items-start">
+                        <p className="text-black font-bold dark:text-white text-center">
                           {ticket?.user?.name ?? ""}
+                        </p>
+                        <p className="text-black text-sm dark:text-white text-center">
+                          {ticket?.order?.public_id ?? ""}
                         </p>
                       </div>
                     </td>

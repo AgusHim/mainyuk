@@ -80,6 +80,7 @@ export default function OrderTicketsLayout({
             <div className="grid gap-4">
               {order?.user_tickets?.map((e) => (
                 <Ticket
+                  key={e.id}
                   ticket={e}
                   toggleDialog={toggleDialog}
                   setDialogContent={setDialogContent}
@@ -174,7 +175,7 @@ const Ticket: React.FC<TicketProps> = ({
         <div>
           <p className="font-sans text-sm text-black">Nama Event</p>
           <h1 className="font-sans font-semibold text-sm text-black">
-          {ticket?.event?.title}
+            {ticket?.event?.title}
           </h1>
         </div>
         <div className="flex justify-between items-center mt-2">
