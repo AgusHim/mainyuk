@@ -55,7 +55,6 @@ export default function IndexPage() {
         <GridEventsHome />
         <HomeFooter />
       </div>
-      <BottomNavBar />
     </>
   );
 }

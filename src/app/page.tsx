@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 
 export default function Index() {
   return (
+    <MainLayout>
       <IndexPage />
+    </MainLayout>
   );
 }
