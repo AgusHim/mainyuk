@@ -2,6 +2,16 @@ export default function HomeLinktree() {
   // change the variable here
   const links = [
     {
+      color: "bg-[#7CE87C]",
+      text: "DAFTAR CONNECT 🚀",
+      link: "https://darisini.com/events/cm3pgu4cc0007l703geacaaad",
+    },
+    {
+      color: "bg-pink-400",
+      text: "Daftar KEY #13 🔑",
+      link: "https://ynsolo.com/events/KEY13",
+    },
+    {
       color: "bg-red-300",
       text: "Kepoin Admin 💬",
       link: "https://api.whatsapp.com/send/?phone=%2B6281241000056&text=Assalamu'alaikum, min",
@@ -10,11 +20,6 @@ export default function HomeLinktree() {
       color: "bg-[#7DD3FC]",
       text: "Fun Sport ⚽",
       link: "https://www.instagram.com/solofunsport/",
-    },
-    {
-      color: "bg-pink-400",
-      text: "Daftar Event 📅",
-      link: "https://ynsolo.com/#events",
     },
     {
       color: "bg-[#86AB89]",
