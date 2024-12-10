@@ -18,7 +18,7 @@ const TableOrders = () => {
 
   useEffect(() => {
     if (orders == null) {
-      dispatch(getAdminOrders({ status: status!, event_id: event_id }));
+      dispatch(getAdminOrders({ status: status??"", event_id: event_id }));
     }
   }, []);
 
@@ -46,7 +46,7 @@ const TableOrders = () => {
       .unwrap()
       .then((res: any) => {
         if (res != null) {
-          dispatch(getAdminOrders({ status: status!, event_id: event_id }));
+          dispatch(getAdminOrders({ status: "", event_id: event_id }));
         }
         toggleDialog();
       })
