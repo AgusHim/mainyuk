@@ -3,7 +3,7 @@ export default function HomeLinktree() {
   const links = [
     {
       color: "bg-[#7CE87C]",
-      text: "Daftar Events",
+      text: "Daftar Events 🍿",
       link: "https://darisini.com/circles/Q2lyY2xlUHJvZmlsZTpjbTNvMnI3em0wMDBvbWkwM3luamVpN3kz",
     },
     {
