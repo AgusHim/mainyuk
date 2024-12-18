@@ -9,7 +9,7 @@ export default function HomeLinktree() {
     {
       color: "bg-pink-400",
       text: "Daftar KEY #13 🔑",
-      link: "https://ynsolo.com/events/KEY13",
+      link: "https://darisini.com/events/cm4jd8hn00010jp034o73501r",
     },
     {
       color: "bg-red-300",
