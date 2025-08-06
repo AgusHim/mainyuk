@@ -13,7 +13,6 @@ import { format } from "date-fns/format";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Select from "react-select";
 
 const FormProfileUpdate: React.FC = () => {
   const router = useRouter();
