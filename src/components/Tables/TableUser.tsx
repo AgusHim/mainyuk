@@ -10,7 +10,7 @@ const eventData: User[] = [
     age: 23,
     gender: "Ikhwan",
     role:'jamaah',
-    createdAt: "10/01/2021",
+    created_at: "10/01/2021",
     event:{
       title: "Kajian Pekanan"
     }
@@ -24,7 +24,7 @@ const eventData: User[] = [
     age: 20,
     gender: "Akhwat",
     role:'jamaah',
-    createdAt: "10/01/2021",
+    created_at: "10/01/2021",
     event:{
       title: "Fun Futsal"
     }
@@ -91,7 +91,7 @@ const TableUser = () => {
                   <p className="text-black dark:text-white">
                     {data.event!.title!}
                   </p>
-                  <p className="text-sm">{data.createdAt}</p>
+                  <p className="text-sm">{data?.created_at??''}</p>
                 </td>
               </tr>
             ))}
