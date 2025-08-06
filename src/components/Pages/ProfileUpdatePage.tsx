@@ -6,11 +6,14 @@ const RequiredAuthLayout = dynamic(() => import("@/layout/AuthLayout"), {
 });
 import { MainLayout } from "@/layout/MainLayout";
 import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
 
 export default function UpdateProfilePage() {
+  const query = useSearchParams();
+  const redirectTo = query.get("redirectTo");
   return (
     <>
-      <RequiredAuthLayout>
+      <RequiredAuthLayout redirectTo={`${redirectTo ?? "/profile"}`}>
         <MainLayout>
           <CommonHeader
             title="Update Profile"

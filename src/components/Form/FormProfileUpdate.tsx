@@ -13,6 +13,7 @@ import { format } from "date-fns/format";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Select from "react-select";
 
 const FormProfileUpdate: React.FC = () => {
   const router = useRouter();
@@ -24,19 +25,33 @@ const FormProfileUpdate: React.FC = () => {
   const sub_district = useAppSelector((state) => state.region.sub_district);
   const isLoading = useAppSelector((state) => state.auth.loading);
 
-  const [formData, setFormData] = useState({
-    id: user?.id ?? "",
-    name: user?.name ?? "",
+  const [districtQuery, setDistrictQuery] = useState(user?.district?.name ?? "");
+  const [filteredDistricts, setFilteredDistricts] = useState(district);
+
+  const [subDistrictQuery, setSubDistrictQuery] = useState(user?.sub_district?.name ?? "");
+  const [filteredSubDistricts, setFilteredSubDistricts] = useState(sub_district);
+
+  useEffect(() => {
+    setFilteredDistricts(
+      district.filter((d) =>
+        d.name.toLowerCase().includes(districtQuery.toLowerCase())
+      )
+    );
+  }, [district, districtQuery]);
+
+  useEffect(() => {
+    setFilteredSubDistricts(
+      sub_district.filter((sd) =>
+        sd.name.toLowerCase().includes(subDistrictQuery.toLowerCase())
+      )
+    );
+  }, [sub_district, subDistrictQuery]);
+
+
+
+  const [formData, setFormData] = useState<User>({
+    ...user,
     username: user?.username ?? "anonim",
-    gender: user?.gender != null && user?.gender != "" ? user?.gender : "male",
-    age: user?.age != null ? user?.age.toString() : "0",
-    //address: user?.address ?? "",
-    phone: user?.phone ?? "",
-    activity:
-      user?.activity != null && user?.activity != ""
-        ? user?.activity
-        : "umm wa rabbatul bayt",
-    email: user?.email ?? "",
     //instagram: user?.instagram ?? "",
     birth_date:
       user?.birth_date != null ? format(
@@ -87,6 +102,8 @@ const FormProfileUpdate: React.FC = () => {
           ["district_code"]: "",
           ["sub_district_code"]: "",
         });
+        setDistrictQuery("");
+        setSubDistrictQuery("");
       });
       return;
     }
@@ -104,7 +121,7 @@ const FormProfileUpdate: React.FC = () => {
 
   const validateErrors = (): boolean => {
     Object.entries(formData).forEach(([key, value]) => {
-      const error = ValidateField(key, value);
+      const error = ValidateField(key, value as string);
       setFormErrors((prevErrors) => ({
         ...prevErrors,
         [key]: error,
@@ -121,15 +138,8 @@ const FormProfileUpdate: React.FC = () => {
       return;
     }
     var userData = {
-      name: formData.name,
-      username: formData.username.length != 0 ? formData.username : "anonim",
-      gender: formData.gender,
-      age: formData.age,
-      phone: formData.phone,
-      activity: formData.activity,
-      province_code: formData.province_code,
-      district_code: formData.district_code,
-      sub_district_code: formData.sub_district_code,
+      ...formData,
+      age: formData.age?.toString(),
       birth_date: format(
         Date.parse(formData.birth_date!.replace("Z", "")),
         "yyyy-MM-dd HH:mm"
@@ -164,6 +174,11 @@ const FormProfileUpdate: React.FC = () => {
     }
     return false;
   }
+
+  // Filter province only show province.code 33 & 34
+  const filteredProvince = province.filter(
+    (e) => e.code === "33" || e.code === "34"
+  );
   return (
     <>
       <form className="grid gap-4" onSubmit={handleSubmit}>
@@ -187,7 +202,29 @@ const FormProfileUpdate: React.FC = () => {
         ) : (
           <></>
         )} */}
-
+        {user?.updated_at != null && new Date(user.updated_at).getTime() < new Date("2025-08-06").getTime() ? (
+          <div role="alert" className="p-5 flex flex-row bg-yellow-200 rounded-md items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="h-6 w-6 shrink-0 stroke-current text-black"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <p className="text-sm text-black">
+              Anda terakhir update {" "}
+              {format(new Date(user.updated_at!), "dd MMMM yyyy")} silahkan update profile anda. Untuk maping jamaah agar event YukNgaji Solo lebih asik dan seru 🔥🔥🔥
+            </p>
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="grid space-y-2">
           <div className="gap-y-1 font-normal">
             <span className="flex items-center font-semibold">
@@ -252,96 +289,6 @@ const FormProfileUpdate: React.FC = () => {
           <div className="gap-y-1 font-normal">
             <span className="flex items-center font-semibold">
               <label
-                htmlFor="email"
-                className="text-lg font-semibold text-black"
-              >
-                Email<span className="text-meta-1">*</span>
-              </label>
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <input
-              id="email"
-              placeholder="08xxxxxxxxxxx"
-              type="text"
-              className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              readOnly
-              required
-            />
-            {formErrors.email && (
-              <p className="mt-1 text-danger text-sm font-semibold">
-                {formErrors.email}
-              </p>
-            )}
-          </div>
-          <div className="mt-2"></div>
-        </div>
-        {/* <div className="grid space-y-2">
-          <div className="gap-y-1 font-normal">
-            <span className="flex items-center font-semibold">
-              <label
-                htmlFor="instagram"
-                className="text-lg font-semibold text-black"
-              >
-                Instagram<span className="text-meta-1">*</span>
-              </label>
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <input
-              id="instagram"
-              placeholder="@username"
-              type="text"
-              className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
-              name="instagram"
-              value={formData.instagram}
-              onChange={handleChange}
-              required
-            />
-            {formErrors.instagram && (
-              <p className="mt-1 text-danger text-sm font-semibold">
-                {formErrors.instagram}
-              </p>
-            )}
-          </div>
-          <div className="mt-2"></div>
-        </div> */}
-        <div className="grid space-y-2">
-          <div className="gap-y-1 font-normal">
-            <span className="flex items-center font-semibold">
-              <label
-                htmlFor="brith_date"
-                className="text-lg font-semibold text-black"
-              >
-                Tanggal Lahir<span className="text-meta-1">*</span>
-              </label>
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <input
-              id="birth_date"
-              name="birth_date"
-              value={formData.birth_date}
-              onChange={handleChange}
-              type="date"
-              className="select select-bordered py-3 px-4 pr-auto w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
-              required
-            />
-            {formErrors.birth_date && (
-              <p className="mt-1 text-danger text-sm font-semibold">
-                {formErrors.birth_date}
-              </p>
-            )}
-          </div>
-          <div className="mt-2"></div>
-        </div>
-        <div className="grid space-y-2">
-          <div className="gap-y-1 font-normal">
-            <span className="flex items-center font-semibold">
-              <label
                 htmlFor="username"
                 className="text-lg font-semibold text-black"
               >
@@ -360,7 +307,7 @@ const FormProfileUpdate: React.FC = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="mt-2"></div>
+          <div className="text-sm text-black">Digunakan untuk nama yang muncul di QnA bisa diisi nama samaran</div>
         </div>
         <div className="grid space-y-2">
           <div className="gap-y-1 font-normal">
@@ -400,14 +347,14 @@ const FormProfileUpdate: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <select
-              value={formData["province_code"]}
+              value={formData?.province_code ?? ""}
               onChange={handleChange}
               name="province_code"
               className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
               required
             >
               <option value="">Pilih Provinsi</option>
-              {province.map((e) => (
+              {filteredProvince.map((e) => (
                 <option key={e.code} value={e.code}>
                   {e.name}
                 </option>
@@ -425,100 +372,98 @@ const FormProfileUpdate: React.FC = () => {
           <div className="gap-y-1 font-normal">
             <span className="flex items-center font-semibold">
               <label
-                htmlFor="district_code"
+                htmlFor="province_code"
                 className="text-lg font-semibold text-black"
               >
                 Kota / Kabupaten<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
-          <div className="flex flex-col">
-            <select
-              value={formData["district_code"]}
-              onChange={handleChange}
-              name="district_code"
-              className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
-              required
-            >
-              <option value="">Pilih Kabupaten</option>
-              {district.map((e) => (
-                <option key={e.code} value={e.code}>
-                  {e.name}
-                </option>
-              ))}
-            </select>
-            {formErrors.district_code && (
-              <p className="mt-1 text-danger text-sm font-semibold">
-                {formErrors.district_code}
-              </p>
+          <div className="flex flex-col relative">
+            <input
+              type="text"
+              placeholder="Ketik nama Kabupaten"
+              className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] text-lg text-black border-black"
+              value={
+                district.find((d) => d.code === formData.district_code)?.name ??
+                districtQuery
+              }
+              onChange={(e) => {
+                const val = e.target.value;
+                setDistrictQuery(val);
+                setFormData({ ...formData, district_code: "" });
+              }}
+            />
+            {districtQuery != "" && districtQuery != formData?.district?.name && (
+              <div className="absolute z-10 bg-yellow-200 border border-black mt-10 w-full max-h-[200px] overflow-y-auto rounded shadow">
+                {filteredDistricts.map((d) => (
+                  <div
+                    key={d.code}
+                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer text-black"
+                    onClick={() => {
+                      setFormData({ ...formData, district_code: d.code, district: d });
+                      setDistrictQuery(d.name)
+                      dispatch(getSubDistrict(d.code));
+                    }}
+                  >
+                    {d.name}
+                  </div>
+                ))}
+                {filteredDistricts.length === 0 && (
+                  <div className="px-4 py-2 text-gray-500">Tidak ditemukan</div>
+                )}
+              </div>
             )}
           </div>
-          <div className="mt-2"></div>
         </div>
+
         <div className="grid space-y-2">
           <div className="gap-y-1 font-normal">
             <span className="flex items-center font-semibold">
               <label
-                htmlFor="sub_district_code"
+                htmlFor="province_code"
                 className="text-lg font-semibold text-black"
               >
-                Kecamatan<span className="text-meta-1">*</span>
+                Kecamatan <span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
-          <div className="flex flex-col">
-            <select
-              value={formData["sub_district_code"]}
-              onChange={handleChange}
-              name="sub_district_code"
-              className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
-              required
-            >
-              <option value="">Pilih Kecamatan</option>
-              {sub_district.map((e) => (
-                <option key={e.code} value={e.code}>
-                  {e.name.toLocaleUpperCase()}
-                </option>
-              ))}
-            </select>
-            {formErrors.sub_district_code && (
-              <p className="mt-1 text-danger text-sm font-semibold">
-                {formErrors.sub_district_code}
-              </p>
-            )}
-          </div>
-          <div className="mt-2"></div>
-        </div>
-        {/* <div className="grid space-y-2">
-          <div className="gap-y-1 font-normal">
-            <span className="flex items-center font-semibold">
-              <label
-                htmlFor="address"
-                className="text-lg font-semibold text-black"
-              >
-                Alamat<span className="text-meta-1">*</span>
-              </label>
-            </span>
-          </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col relative">
             <input
-              id="address"
-              placeholder="Masukkan alamat domisili"
               type="text"
-              className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
+              placeholder="Ketik nama Kecamatan"
+              className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] text-lg text-black border-black"
+              value={
+                sub_district.find((sd) => sd.code === formData.sub_district_code)?.name ??
+                subDistrictQuery
+              }
+              onChange={(e) => {
+                const val = e.target.value;
+                setSubDistrictQuery(val);
+                setFormData({ ...formData, sub_district_code: "" });
+              }}
             />
-            {formErrors.address && (
-              <p className="mt-1 text-danger text-sm font-semibold">
-                {formErrors.address}
-              </p>
+            {subDistrictQuery != "" && subDistrictQuery != formData?.sub_district?.name && (
+              <div className="absolute z-10 bg-yellow-200 border border-black mt-10 w-full max-h-[200px] overflow-y-auto rounded shadow">
+                {filteredSubDistricts.map((sd) => (
+                  <div
+                    key={sd.code}
+                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer text-black"
+                    onClick={() => {
+                      setFormData({ ...formData, sub_district_code: sd.code, sub_district: sd });
+                      setSubDistrictQuery(sd.name);
+                    }}
+                  >
+                    {sd.name}
+                  </div>
+                ))}
+                {filteredSubDistricts.length === 0 && (
+                  <div className="px-4 py-2 text-gray-500">Tidak ditemukan</div>
+                )}
+              </div>
             )}
           </div>
-          <div className="mt-2"></div>
-        </div> */}
+        </div>
         <div className="grid space-y-2">
           <div className="gap-y-1 font-normal">
             <span className="flex items-center font-semibold">
@@ -532,22 +477,51 @@ const FormProfileUpdate: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <select
-              value={formData["activity"]}
+              value={formData?.activity ?? ''}
               onChange={handleChange}
               name="activity"
               className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
             >
               <option disabled>Pilih aktifitas keseharian</option>
-              <option value="umm wa rabbatul bayt">Umm wa Rabbatul Bayt</option>
+              <option value="pelajar">Pelajar</option>
+              <option value="mahasiswa">Mahasiswa</option>
               <option value="kerja">Kerja</option>
               <option value="bisnis">Bisnis</option>
-              <option value="mahasiswa">Mahasiswa</option>
-              <option value="pelajar">Pelajar</option>
+              <option value="ibu rumah tangga">Ibu Rumah Tangga</option>
               <option value="lainnya">Lainnya</option>
             </select>
           </div>
           <div className="mt-2"></div>
         </div>
+        <div className="grid space-y-2">
+          <div className="gap-y-1 font-normal">
+            <span className="flex items-center font-semibold">
+              <label
+                htmlFor="activity"
+                className="text-lg font-semibold text-black"
+              >
+                Dapat Info Kajian Darimana<span className="text-meta-1">*</span>
+              </label>
+            </span>
+          </div>
+          <div className="flex flex-col">
+            <select
+              value={formData?.source ?? ''}
+              onChange={handleChange}
+              name="source"
+              className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+            >
+              <option disabled>Pilih info kajian darimana</option>
+              <option value="sosmed_yns">Sosmed YukNgaji Solo</option>
+              <option value="sosmed_ustadz">Sosmed Ustadz Pengisi</option>
+              <option value="ajakan_teman">Ajakan Teman</option>
+              <option value="jamaah_masjid">Jamaah Masjid</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div className="mt-2"></div>
+        </div>
+
         <div className="grid space-y-2">
           <div className="gap-y-1 font-normal"></div>
           <button
@@ -558,7 +532,7 @@ const FormProfileUpdate: React.FC = () => {
           </button>
           <div className="mt-2"></div>
         </div>
-      </form>
+      </form >
     </>
   );
 };

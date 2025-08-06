@@ -29,16 +29,16 @@ const validateSubDistrictCode = (
   return "";
 };
 
-const validateAddress = (address: string): string | undefined => {
-  if (!address) {
-    return "Alamat tidak boleh kosong";
+const validateActivity = (activity: string): string | undefined => {
+  if (!activity) {
+    return "Aktifitas tidak boleh kosong";
   }
   return "";
 };
 
-const validateBirthDate = (birth_date: string): string | undefined => {
-  if (!birth_date) {
-    return "Tanggal lahir tidak boleh kosong";
+const validateSource = (source: string): string | undefined => {
+  if (!source) {
+    return "Info kajian darimana tidak boleh kosong";
   }
   return "";
 };
@@ -103,12 +103,10 @@ export const ValidateField = (
       return validateDistrictCode(value);
     case "sub_district_code":
       return validateSubDistrictCode(value);
-    case "address":
-      return validateAddress(value);
-    case "birth_date":
-      return validateBirthDate(value);
-    case "instagram":
-      return validateInstagram(value);
+    case "activity":
+      return validateActivity(value);
+    case "source":
+      return validateSource(value);
     default:
       return "";
   }

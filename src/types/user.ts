@@ -13,7 +13,7 @@ export type User = {
   role?:string;
   activity?:string|null;
   event?:Event;
-  createdAt?:string;
+  created_at?:string;
   email?:string |null;
   google_id?:string |null;
   instagram?:string |null;
@@ -24,6 +24,8 @@ export type User = {
   sub_district_code?:string|null;
   sub_district?:Region |null;
   password?:string |null;
+  source?:string |null;
+  updated_at?:string |null;
 };
 
 export type VerifyOTP = {
