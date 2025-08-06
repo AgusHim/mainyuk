@@ -112,7 +112,7 @@ export default function EventDetailPage({
         <CommonHeader title="Tanya Jawab" isShowTrailing={true} />
         <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
           {presence.data != null && now < startAt ? (
-            <div className="w-full mb-5 p-10 rounded-xl border-2 bg-white dark:bg-boxdark border-black shadow-bottom dark:border-black">
+            <div className="w-full mb-5 p-10 rounded-xl border-2 bg-yellow-300 dark:bg-boxdark border-black shadow-bottom dark:border-black">
               <div className="flex flex-row justify-between items-center">
                 <p className="text-black dark:text-white">
                   Konfirmasi kehadiran bisa klik tombol berikut
