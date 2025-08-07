@@ -13,7 +13,7 @@ function UpdateProfilePageInner() {
   const query = useSearchParams();
   const redirectTo = query.get("redirectTo");
   return (
-    <RequiredAuthLayout redirectTo={`${redirectTo ?? "/profile"}`}>
+    <RequiredAuthLayout redirectTo={`${redirectTo}`}>
       <MainLayout>
         <CommonHeader
           title="Update Profile"

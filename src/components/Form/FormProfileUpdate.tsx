@@ -337,6 +337,33 @@ const FormProfileUpdate: React.FC = () => {
           <div className="gap-y-1 font-normal">
             <span className="flex items-center font-semibold">
               <label
+                htmlFor="age"
+                className="text-lg font-semibold text-black"
+              >
+                Usia<span className="text-meta-1">*</span>
+              </label>
+            </span>
+          </div>
+          <div className="flex flex-col">
+            <select
+              value={formData["age"]}
+              onChange={handleChange}
+              name="age"
+              className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              required
+            >
+              <option value="<17">{'< 17 Tahun'}</option>
+              <option value="17-25">{'17 - 25 Tahun'}</option>
+              <option value="26-35">{'26 - 35 Tahun'}</option>
+              <option value=">35">{'> 35 Tahun'}</option>
+            </select>
+          </div>
+          <div className="mt-2"></div>
+        </div>
+        <div className="grid space-y-2">
+          <div className="gap-y-1 font-normal">
+            <span className="flex items-center font-semibold">
+              <label
                 htmlFor="province_code"
                 className="text-lg font-semibold text-black"
               >

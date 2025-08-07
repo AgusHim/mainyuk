@@ -4,13 +4,13 @@ export default function HomeLinktree() {
     {
       color: "bg-[#7CE87C]",
       text: "Daftar Events 🍿",
-      link: "https://darisini.com/circles/Q2lyY2xlUHJvZmlsZTpjbTNvMnI3em0wMDBvbWkwM3luamVpN3kz",
+      link: "https://ynsolo.com/events",
     },
-    {
-      color: "bg-pink-400",
-      text: "Daftar KEY #13 🔑",
-      link: "https://darisini.com/events/cm4jd8hn00010jp034o73501r",
-    },
+    // {
+    //   color: "bg-pink-400",
+    //   text: "Daftar KEY #13 🔑",
+    //   link: "https://ynsolo.com/events",
+    // },
     {
       color: "bg-red-300",
       text: "Kepoin Admin 💬",
