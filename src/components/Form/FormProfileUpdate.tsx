@@ -52,6 +52,7 @@ const FormProfileUpdate: React.FC = () => {
     ...user,
     username: user?.username ?? "anonim",
     //instagram: user?.instagram ?? "",
+    age:user?.age??'16',
     birth_date:
       user?.birth_date != null ? format(
         Date.parse(user?.birth_date?.replace("Z", "")),
@@ -352,10 +353,10 @@ const FormProfileUpdate: React.FC = () => {
               className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
               required
             >
-              <option value="<17">{'< 17 Tahun'}</option>
-              <option value="17-25">{'17 - 25 Tahun'}</option>
-              <option value="26-35">{'26 - 35 Tahun'}</option>
-              <option value=">35">{'> 35 Tahun'}</option>
+              <option value="16">{'< 17 Tahun'}</option>
+              <option value="17">{'17 - 25 Tahun'}</option>
+              <option value="26">{'26 - 35 Tahun'}</option>
+              <option value="36">{'> 35 Tahun'}</option>
             </select>
           </div>
           <div className="mt-2"></div>
