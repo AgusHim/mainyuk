@@ -51,8 +51,10 @@ const FormProfileUpdate: React.FC = () => {
   const [formData, setFormData] = useState<User>({
     ...user,
     username: user?.username ?? "anonim",
-    //instagram: user?.instagram ?? "",
-    age:user?.age??'16',
+    gender: user?.gender ?? "male",
+    age: user?.age ?? '16',
+    activity: user?.activity ?? 'pelajar',
+    source: user?.source ?? 'sosmed_yns',
     birth_date:
       user?.birth_date != null ? format(
         Date.parse(user?.birth_date?.replace("Z", "")),
