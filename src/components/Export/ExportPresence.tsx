@@ -14,13 +14,16 @@ const filterData = (data: Presence[]): any[] => {
   data.forEach((e: Presence) => {
     load.push({
       Nama: e.user.name,
-      Username: e.user.username,
       Gender: e.user.gender,
       Usia: `${e.user.age} Th`,
-      Alamat: `${e.user.address}`,
+      Kecamatan: `${e.user.sub_district?.name}`,
+      Kabupaten: `${e.user.district?.name}`,
+      Provinsi: `${e.user?.province?.name}`,
       "No HP": `${e.user.phone ?? "-"}`,
+      Aktifitas: e.user.activity,
+      "Info Kajian": e.user.source,
       Event: `${e.event.title}`,
-      Dibuat: `${formatStrToDateTime(e.created_at!, "dd MMM yyyy HH:mm")}`,
+      "Tgl Absen": `${formatStrToDateTime(e.created_at!, "dd MMM yyyy HH:mm")}`,
     });
   });
   return load;
