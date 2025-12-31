@@ -11,6 +11,7 @@ export type Ticket = {
   min_order_pax: number | null;
   max_order_pax: number | null;
   max_pax: number | null;
+  sold_pax?: number;
   gender_allowed: string;
   isFull: boolean;
   created_at: string;

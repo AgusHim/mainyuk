@@ -58,7 +58,10 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
     const pax_multiplier = ticket.pax_multiplier ?? 1;
     const max_order_pax = ticket.max_order_pax ?? 1;
     const update = current + pax_multiplier;
-    if (update <= max_order_pax) {
+    const available = (ticket.max_pax ?? 0) - (ticket.sold_pax ?? 0);
+    const limit = Math.min(max_order_pax, available);
+
+    if (update <= limit) {
       setFormData({ ...formData, [name]: update });
     }
   };
@@ -158,17 +161,29 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
                               : `Rp${e.price.toLocaleString("id-ID")}`}
                         </h1>
                         {formData[`${e.id}_qty`] == 0 ? (
-                          <button
-                            type="button"
-                            className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 px-4 py-1.5 text-sm hover:opacity-80 active:opacity-70 rounded-full font-bold border border-black shadow-custom2"
-                            onClick={() => {
-                              increaseQty(e);
-                            }}
-                          >
-                            <div className="flex items-center justify-center gap-x-2">
-                              <span>Pesan</span>
-                            </div>
-                          </button>
+                          (e.max_pax ?? 0) - (e.sold_pax ?? 0) <= 0 ? (
+                            <button
+                              type="button"
+                              className="text-white bg-gray-400 focus:outline-none transition ease-in-out duration-300 px-4 py-1.5 text-sm rounded-full font-bold border border-black shadow-custom2 cursor-not-allowed"
+                              disabled
+                            >
+                              <div className="flex items-center justify-center gap-x-2">
+                                <span>Sold Out</span>
+                              </div>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 px-4 py-1.5 text-sm hover:opacity-80 active:opacity-70 rounded-full font-bold border border-black shadow-custom2"
+                              onClick={() => {
+                                increaseQty(e);
+                              }}
+                            >
+                              <div className="flex items-center justify-center gap-x-2">
+                                <span>Pesan</span>
+                              </div>
+                            </button>
+                          )
                         ) : (
                           <div className="flex items-center gap-x-1">
                             <button
