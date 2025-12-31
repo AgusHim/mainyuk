@@ -115,6 +115,12 @@ const OrderPaymentMethodCard = () => {
               </span>
             </div>
           )}
+          <div className="mt-4 border-t border-black pt-4">
+            <p className="text-black text-sm mb-2 font-medium">
+              Sudah melakukan pembayaran? Silahkan konfirmasi dan kirim bukti
+              transfer ke Admin.
+            </p>
+          </div>
         </div>
       </div>
     </div>
