@@ -77,7 +77,10 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
     }
   };
   const checkAllValuesAreZero = () => {
-    return Object.values(formData).every((value) => value === 0);
+    const hasQtyZero = Object.entries(formData).some(
+      ([key, value]) => key.includes("_qty") && value === 0
+    );
+    return hasQtyZero;
   };
 
   const handleSubmit = async (e: any) => {
@@ -257,7 +260,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
               <button
                 type="submit"
                 disabled={checkAllValuesAreZero()}
-                className={`grid w-full place-items-center rounded-lg border-2 border-black p-3 text-lg font-bold ${checkAllValuesAreZero() ? "bg-gray-400 cursor-not-allowed" : "bg-primary text-white shadow-custom"}`}
+                className={`grid w-full place-items-center rounded-lg border-2 border-black p-3 text-lg font-bold ${checkAllValuesAreZero() ? "bg-gray-400 cursor-not-allowed text-gray-100" : "bg-primary text-white shadow-custom"}`}
               >
                 Beli Tiket
               </button>
