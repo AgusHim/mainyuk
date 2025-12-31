@@ -256,7 +256,8 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
               <div className="gap-y-1 font-normal"></div>
               <button
                 type="submit"
-                className="grid w-full place-items-center rounded-lg border-2 border-black p-3 text-lg font-bold bg-primary text-white shadow-custom"
+                disabled={checkAllValuesAreZero()}
+                className={`grid w-full place-items-center rounded-lg border-2 border-black p-3 text-lg font-bold ${checkAllValuesAreZero() ? "bg-gray-400 cursor-not-allowed" : "bg-primary text-white shadow-custom"}`}
               >
                 Beli Tiket
               </button>
