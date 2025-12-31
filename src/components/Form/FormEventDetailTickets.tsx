@@ -233,7 +233,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
               <div className="mt-8 flex items-center justify-between gap-x-4 text-black">
                 <p className="font-medium text-lg">Total harga</p>
                 <p className="font-bold text-xl">
-                  Rp. {totalPayment().toLocaleString("id-ID")}
+                  {totalPayment() == 1 ? "Pay As You Wish" : `Rp. ${totalPayment().toLocaleString("id-ID")}`}
                 </p>
               </div>
             </div>

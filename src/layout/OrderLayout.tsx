@@ -260,7 +260,7 @@ export default function OrderLayout({
                 <div className="flex w-full justify-between gap-4 py-2">
                   <p className="text-md text-black">Total Harga</p>
                   <h1 className="font-semibold text-md text-green-600">
-                    {order.user_tickets?.[0]?.ticket?.price === 1
+                    {totalPayment() === 1
                       ? "Pay As You Wish"
                       : `Rp ${totalPayment().toLocaleString("id-ID")}`}
                   </h1>
