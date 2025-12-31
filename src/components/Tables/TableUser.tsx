@@ -2,30 +2,30 @@ import { User } from "@/types/user";
 
 const eventData: User[] = [
   {
-    id:"asdada",
-    username:"sadada",
+    id: "asdada",
+    username: "sadada",
     name: "Wahab",
     address: "Solo",
-    phone:"0823123131",
+    phone: "0823123131",
     age: 23,
     gender: "Ikhwan",
-    role:'jamaah',
+    role: 'jamaah',
     created_at: "10/01/2021",
-    event:{
+    event: {
       title: "Kajian Pekanan"
     }
   },
   {
-    id:"asdada",
-    username:"sadada",
+    id: "asdada",
+    username: "sadada",
     name: "Fulan",
     address: "Sukoharjo",
-    phone:"0823123131",
+    phone: "0823123131",
     age: 20,
     gender: "Akhwat",
-    role:'jamaah',
+    role: 'jamaah',
     created_at: "10/01/2021",
-    event:{
+    event: {
       title: "Fun Futsal"
     }
   },
@@ -45,10 +45,10 @@ const TableUser = () => {
                 Gender
               </th>
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white text-center">
-                No HP
+                No Whatsapp
               </th>
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                Asal
+                Dashboard
               </th>
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                 Umur
@@ -71,7 +71,7 @@ const TableUser = () => {
                     <p className="text-black dark:text-white">
                       {data.gender}
                     </p>
-                    
+
                   </div>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -91,7 +91,7 @@ const TableUser = () => {
                   <p className="text-black dark:text-white">
                     {data.event!.title!}
                   </p>
-                  <p className="text-sm">{data?.created_at??''}</p>
+                  <p className="text-sm">{data?.created_at ?? ''}</p>
                 </td>
               </tr>
             ))}

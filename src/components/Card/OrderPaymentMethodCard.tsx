@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
+import QRCode from "qrcode.react";
 
 const OrderPaymentMethodCard = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +26,8 @@ const OrderPaymentMethodCard = () => {
         toast.error("Gagal copy");
       });
   };
+
+  const isQris = order?.payment_method?.type?.toLowerCase() === "qris";
 
   return (
     <div>
@@ -61,19 +64,28 @@ const OrderPaymentMethodCard = () => {
               </p>
             </div>
           </div>
-          <div className="my-3 flex justify-between p-3 bg-yellow-200 rounded-lg">
-            <p className="text-black text-xl font-bold">
-              {order?.payment_method?.account_number}
-            </p>
-            <button
-              onClick={() =>
-                handleCopy(order?.payment_method?.account_number ?? "")
-              }
-              className="bg-transparent hover:bg-primary text-sm text-primary font-semibold hover:text-white py-1 px-2 border border-primary hover:border-transparent rounded"
-            >
-              Salin
-            </button>
-          </div>
+          {isQris ? (
+            <div className="my-3 flex justify-center p-3 bg-white rounded-lg">
+              <QRCode
+                value={order?.payment_method?.account_number ?? ""}
+                size={200}
+              />
+            </div>
+          ) : (
+            <div className="my-3 flex justify-between p-3 bg-yellow-200 rounded-lg">
+              <p className="text-black text-xl font-bold">
+                {order?.payment_method?.account_number}
+              </p>
+              <button
+                onClick={() =>
+                  handleCopy(order?.payment_method?.account_number ?? "")
+                }
+                className="bg-transparent hover:bg-primary text-sm text-primary font-semibold hover:text-white py-1 px-2 border border-primary hover:border-transparent rounded"
+              >
+                Salin
+              </button>
+            </div>
+          )}
 
           <div>
             <p className="text-black text-md">Total Nominal Transfer</p>

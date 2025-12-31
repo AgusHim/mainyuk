@@ -70,7 +70,7 @@ const CheckoutTicketsCard = () => {
             <div className="flex items-center justify-between gap-4">
               <h1 className="text-xl font-bold text-black">Total Bayar</h1>
               <p className="text-xl font-bold text-black">
-                Rp {totalPayment().toLocaleString("id-ID")}
+                {totalPayment() === 1 ? "Pay As You Wish" : "Rp " + totalPayment().toLocaleString("id-ID")}
               </p>
             </div>
           </div>

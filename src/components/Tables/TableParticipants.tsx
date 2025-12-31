@@ -35,12 +35,9 @@ const TableParticipants: React.FC = () => {
                   Gender
                 </th>
                 <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
-                  No Telp
+                  No Whatsapp
                 </th>
-                <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
-                  Instagram
-                </th>
-                <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
+                <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center capitalize">
                   Aktifitas
                 </th>
                 <th className="min-w-[120px] py-3 px-2 font-medium text-black dark:text-white text-center">
@@ -69,13 +66,13 @@ const TableParticipants: React.FC = () => {
                           {ticket?.ticket?.name ?? ""}
                         </p>
                         <p className="text-black text-sm dark:text-white text-center">
-                          {ticket?.user_name?? ""}
+                          {ticket?.user_name ?? ""}
                         </p>
                         <p className="text-black text-sm dark:text-white text-center">
-                          {ticket?.user_gender?? ""}
+                          {ticket?.user_gender ?? ""}
                         </p>
                         <p className="text-black text-sm dark:text-white text-center">
-                          {ticket?.user_email?? ""}
+                          {ticket?.user_email ?? ""}
                         </p>
                       </div>
                     </td>
@@ -100,13 +97,6 @@ const TableParticipants: React.FC = () => {
                       <div className="flex justify-center items-center">
                         <p className="text-black dark:text-white">
                           {ticket?.user?.phone ?? ""}
-                        </p>
-                      </div>
-                    </td>
-                    <td className="border-b border-black py-3 px-2 dark:border-strokedark">
-                      <div className="flex justify-center items-center">
-                        <p className="text-black dark:text-white">
-                          {ticket?.user?.instagram ?? ""}
                         </p>
                       </div>
                     </td>

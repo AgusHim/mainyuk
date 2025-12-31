@@ -39,10 +39,10 @@ const TablePresence = () => {
                 Gender
               </th>
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white text-center">
-                No HP
+                No Whatsapp
               </th>
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                Asal
+                Domisili
               </th>
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                 Umur
@@ -77,7 +77,7 @@ const TablePresence = () => {
                 </td>
                 <td className="border-b border-black py-5 px-4">
                   <p className="text-black dark:text-white">
-                    {data.user.address}
+                    {data.user?.sub_district?.name}, {data.user?.district?.name}, {data.user?.province?.name}
                   </p>
                 </td>
                 <td className="border-b border-black py-5 px-4">

@@ -3,8 +3,8 @@ export default function HomeLinktree() {
   const links = [
     {
       color: "bg-[#7CE87C]",
-      text: "Daftar Events 🍿",
-      link: "https://ynsolo.com/events",
+      text: "Walking Tour 🏃🏻‍♂️ 🏃🏻‍♀️",
+      link: "https://ynsolo.com/walking-tour",
     },
     // {
     //   color: "bg-pink-400",

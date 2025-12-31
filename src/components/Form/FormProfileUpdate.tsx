@@ -264,7 +264,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="phone"
                 className="text-lg font-semibold text-black"
               >
-                No Handphone<span className="text-meta-1">*</span>
+                No Whatsapp<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
@@ -500,7 +500,7 @@ const FormProfileUpdate: React.FC = () => {
                 htmlFor="activity"
                 className="text-lg font-semibold text-black"
               >
-                Aktifitas<span className="text-meta-1">*</span>
+                Aktifitas saat ini apa kak?<span className="text-meta-1">*</span>
               </label>
             </span>
           </div>
