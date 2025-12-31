@@ -25,13 +25,15 @@ export function RequiredAuthLayout(props: LayoutProps) {
         if (value == null) {
           router.replace(`/signin?redirectTo=${props.redirectTo}`);
         }
-        
+
         // Jika user.updated_at kurang dari hari 6 Agustus 2025 redirect ke profile update
         if (value != null && new Date(value.updated_at || "").getTime() < new Date("2025-08-06").getTime()) {
-          if (props.redirectTo != null && props.redirectTo != undefined) {
-            router.replace(`/profile/update?redirectTo=${props.redirectTo}`);
-          } else {
-            router.replace(`/profile/update`);
+          if (currentPath != "/profile/update") {
+            if (props.redirectTo != null && props.redirectTo != undefined) {
+              router.replace(`/profile/update?redirectTo=${props.redirectTo}`);
+            } else {
+              router.replace(`/profile/update`);
+            }
           }
         }
 
@@ -54,7 +56,7 @@ export function RequiredAuthLayout(props: LayoutProps) {
             }
           }
         }
-        
+
         if (currentPath.includes("/scan/presence")) {
           if (
             value !== null &&
