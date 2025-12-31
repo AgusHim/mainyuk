@@ -123,7 +123,9 @@ const TableTickets: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
                 </td>
                 <td className="border-b border-black py-5 px-4">
                   <p className="text-black dark:text-white">
-                    {data.price == 0?'GRATIS':`Rp ${data.price.toLocaleString("id-ID")}`}
+                    {data.price == 0 ? 'GRATIS' : data.price == 1
+                      ? "Pay As You Wish"
+                      : `Rp ${data.price.toLocaleString("id-ID")}`}
                   </p>
                 </td>
                 <td className="border-b border-black py-5 px-4">

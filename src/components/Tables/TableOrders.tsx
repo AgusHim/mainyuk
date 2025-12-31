@@ -18,7 +18,7 @@ const TableOrders = () => {
 
   useEffect(() => {
     if (orders == null) {
-      dispatch(getAdminOrders({ status: status??"", event_id: event_id }));
+      dispatch(getAdminOrders({ status: status ?? "", event_id: event_id }));
     }
   }, []);
 
@@ -113,7 +113,9 @@ const TableOrders = () => {
           <p className="font-bold text-black dark:text-white text-lg">
             {order.amount == 0
               ? "GRATIS"
-              : `Rp ${order?.amount?.toLocaleString("id-ID")}`}
+              : order.amount == 1
+                ? "Pay As You Wish"
+                : `Rp ${order?.amount?.toLocaleString("id-ID")}`}
           </p>
         </div>
         <div className="my-2 w-full flex justify-between">
@@ -135,7 +137,9 @@ const TableOrders = () => {
           <p className="font-bold text-primary text-xl">
             {total(order) == 0
               ? "GRATIS"
-              : `Rp ${total(order).toLocaleString("id-ID")}`}
+              : total(order) == 1
+                ? "Pay As You Wish"
+                : `Rp ${total(order).toLocaleString("id-ID")}`}
           </p>
         </div>
         <div>
@@ -239,7 +243,9 @@ const TableOrders = () => {
                     <p className="text-black dark:text-white">
                       {total(data) == 0
                         ? "GRATIS"
-                        : `Rp ${total(data).toLocaleString("id-ID")}`}
+                        : total(data) == 1
+                          ? "Pay As You Wish"
+                          : `Rp ${total(data).toLocaleString("id-ID")}`}
                     </p>
                   </td>
                   <td className="border-b border-black py-3 px-2">
@@ -267,7 +273,9 @@ const TableOrders = () => {
                     <p className="text-black dark:text-white">
                       {data.amount == 0
                         ? "GRATIS"
-                        : `Rp ${data?.amount?.toLocaleString("id-ID")}`}
+                        : data.amount == 1
+                          ? "Pay As You Wish"
+                          : `Rp ${data?.amount?.toLocaleString("id-ID")}`}
                     </p>
                   </td>
                   <td className="border-b border-black py-5 px-4">
@@ -285,9 +293,9 @@ const TableOrders = () => {
                       {data.expired_at == null
                         ? ""
                         : formatStrToDateTime(
-                            data.expired_at!,
-                            "dd-MM-yyyy HH:mm"
-                          )}
+                          data.expired_at!,
+                          "dd-MM-yyyy HH:mm"
+                        )}
                     </p>
                   </td>
                   <td className="border-b border-black py-3 px-2">

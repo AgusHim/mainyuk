@@ -128,9 +128,9 @@ export default function OrderLayout({
                               {event == null
                                 ? ""
                                 : formatStrToDateTime(
-                                    event?.start_at ?? "",
-                                    "EEEE, dd MMM yyyy HH:mm"
-                                  )}
+                                  event?.start_at ?? "",
+                                  "EEEE, dd MMM yyyy HH:mm"
+                                )}
                             </p>
                           </div>
                           <div className="mt-3 flex w-full items-center">
@@ -238,21 +238,31 @@ export default function OrderLayout({
                 <div className="flex w-full justify-between gap-4 py-2">
                   <p className="text-md text-black">Tiket</p>
                   <h1 className="font-semibold text-md text-black">
-                    Rp {order.amount?.toLocaleString("id-ID")}
+                    {order.user_tickets?.[0]?.ticket?.price === 1
+                      ? "Pay As You Wish"
+                      : `Rp ${order.amount?.toLocaleString("id-ID")}`}
                   </h1>
                 </div>
                 <div className="border-b border-b-black"></div>
-                <div className="flex w-full justify-between gap-4 py-2">
-                  <p className="text-md text-black">Biaya Jasa Pembayaran</p>
-                  <h1 className="font-semibold text-md text-black">
-                    Rp {order.admin_fee?.toLocaleString("id-ID")}
-                  </h1>
-                </div>
+                {
+                  order.admin_fee! > 0 ? (
+                    <div className="flex w-full justify-between gap-4 py-2">
+                      <p className="text-md text-black">Biaya Jasa Pembayaran</p>
+                      <h1 className="font-semibold text-md text-black">
+                        Rp {order.admin_fee?.toLocaleString("id-ID")}
+                      </h1>
+                    </div>
+                  ) : (
+                    <></>
+                  )
+                }
                 <div className="border-b border-b-black"></div>
                 <div className="flex w-full justify-between gap-4 py-2">
                   <p className="text-md text-black">Total Harga</p>
                   <h1 className="font-semibold text-md text-green-600">
-                    Rp {totalPayment().toLocaleString("id-ID")}
+                    {order.user_tickets?.[0]?.ticket?.price === 1
+                      ? "Pay As You Wish"
+                      : `Rp ${totalPayment().toLocaleString("id-ID")}`}
                   </h1>
                 </div>
               </div>
@@ -317,7 +327,7 @@ const OrderStatus: React.FC<{ status: string }> = ({ status }) => {
   );
 };
 
-const phoneNumber = "+6281241000056";
+const phoneNumber = "+6282262448523";
 const phoneKey = "+6285642555555";
 
 const getWhatsAppUrl = (order: Order, total: number) => {

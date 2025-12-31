@@ -79,22 +79,30 @@ const OrderPaymentMethodCard = () => {
             <p className="text-black text-md">Total Nominal Transfer</p>
             <div className="my-2 flex justify-between p-3 bg-yellow-200 rounded-lg">
               <p className="text-black text-xl font-bold">
-                <HighlightDecimal value={totalPayment()} />
+                {totalPayment() === 1 ? (
+                  "Pay As You Wish"
+                ) : (
+                  <HighlightDecimal value={totalPayment()} />
+                )}
               </p>
-              <button
-                onClick={() => handleCopy(`${totalPayment()}`)}
-                className="bg-transparent hover:bg-primary text-sm text-primary font-semibold hover:text-white py-1 px-2 border border-primary hover:border-transparent rounded"
-              >
-                Salin
-              </button>
+              {totalPayment() !== 1 && (
+                <button
+                  onClick={() => handleCopy(`${totalPayment()}`)}
+                  className="bg-transparent hover:bg-primary text-sm text-primary font-semibold hover:text-white py-1 px-2 border border-primary hover:border-transparent rounded"
+                >
+                  Salin
+                </button>
+              )}
             </div>
           </div>
-          <div className="my-2 p-3 bg-primary bg-opacity-40 text-black text-sm">
-            Pastikan total nominal transfer{" "}
-            <span className="font-bold">
-              TEPAT BERJUMLAH ANGKA DIATAS (hingga 3 angka terakhir).
-            </span>
-          </div>
+          {totalPayment() !== 1 && (
+            <div className="my-2 p-3 bg-primary bg-opacity-40 text-black text-sm">
+              Pastikan total nominal transfer{" "}
+              <span className="font-bold">
+                TEPAT BERJUMLAH ANGKA DIATAS (hingga 3 angka terakhir).
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>

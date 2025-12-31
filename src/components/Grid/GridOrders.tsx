@@ -81,13 +81,12 @@ export default function GridOrders() {
                       </div>
                       <div className="ml-auto">
                         <button
-                          className={`h-full whitespace-nowrap rounded-full font-medium px-2 py-0.5 text-xs tag-error border-black text-white border ${
-                            e.status == "paid"
-                              ? "bg-success"
-                              : e.status == "pending"
+                          className={`h-full whitespace-nowrap rounded-full font-medium px-2 py-0.5 text-xs tag-error border-black text-white border ${e.status == "paid"
+                            ? "bg-success"
+                            : e.status == "pending"
                               ? "bg-yellow-500"
                               : "bg-danger"
-                          }`}
+                            }`}
                         >
                           {e.status?.toUpperCase()}
                         </button>
@@ -119,7 +118,9 @@ export default function GridOrders() {
                             <h1 className="font-semibold text-xs text-black">
                               {e.amount == 0
                                 ? "Gratis"
-                                : `Rp ${total.toLocaleString("id-ID")}`}
+                                : e.amount == 1
+                                  ? "Pay As You Wish"
+                                  : `Rp ${total.toLocaleString("id-ID")}`}
                             </h1>
                           </div>
                           <div></div>

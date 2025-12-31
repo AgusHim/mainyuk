@@ -83,7 +83,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
       toast.info("Kamu belum memilih tiket 😭");
       return;
     }
-    sendGAEvent('event', 'event.tickets.buy', { 'event_id': event?.id, 'event_name':event?.title });
+    sendGAEvent('event', 'event.tickets.buy', { 'event_id': event?.id, 'event_name': event?.title });
     let orderTickets: UserTicket[] = [];
     for (let index in tickets!) {
       const ticket = tickets[index];
@@ -108,7 +108,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
 
   const today = new Date();
   const startAt = new Date(event!.start_at!.replace("Z", ""));
-  if(today > startAt){
+  if (today > startAt) {
     return (
       <div className="px-5 md:px-10">
         <div className="grid gap-4">
@@ -153,7 +153,9 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
                         <h1 className="font-semibold text-sm text-black">
                           {e.price == 0
                             ? "Gratis"
-                            : `Rp${e.price.toLocaleString("id-ID")}`}
+                            : e.price == 1
+                              ? "Pay As You Wish"
+                              : `Rp${e.price.toLocaleString("id-ID")}`}
                         </h1>
                         {formData[`${e.id}_qty`] == 0 ? (
                           <button
