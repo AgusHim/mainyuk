@@ -53,8 +53,8 @@ const FormProfileUpdate: React.FC = () => {
     username: user?.username ?? "anonim",
     gender: user?.gender ?? "male",
     age: user?.age ?? '16',
-    activity: user?.activity ?? 'pelajar',
-    source: user?.source ?? 'sosmed_yns',
+    activity: user?.activity ?? "",
+    source: user?.source ?? "",
     birth_date:
       user?.birth_date != null ? format(
         Date.parse(user?.birth_date?.replace("Z", "")),
@@ -69,9 +69,7 @@ const FormProfileUpdate: React.FC = () => {
     [key: string]: string | undefined;
   }>({});
 
-  const messageError = Object.values(formErrors).find(
-    (error) => error !== undefined && error !== ""
-  );
+
 
   useEffect(() => {
     if (province.length == 0) {
@@ -83,7 +81,6 @@ const FormProfileUpdate: React.FC = () => {
     if (user?.district?.code != null) {
       dispatch(getSubDistrict(user?.district?.code ?? ""));
     }
-    validateErrors();
   }, []);
 
   const handleChange = (event: any) => {
@@ -121,22 +118,43 @@ const FormProfileUpdate: React.FC = () => {
     }
   };
 
-  const validateErrors = (): boolean => {
-    Object.entries(formData).forEach(([key, value]) => {
-      const error = ValidateField(key, value as string);
-      setFormErrors((prevErrors) => ({
-        ...prevErrors,
-        [key]: error,
-      }));
+  const validateForm = (data: User) => {
+    const fieldsToValidate = [
+      'name',
+      'phone',
+      'gender',
+      'age',
+      'province_code',
+      'district_code',
+      'sub_district_code',
+      'activity',
+      'source'
+    ];
+    const newErrors: { [key: string]: string | undefined } = {};
+    let firstErrorMessage = '';
+
+    fieldsToValidate.forEach((key) => {
+      const value = data[key as keyof User];
+      const error = ValidateField(key, value as string ?? '');
+      if (error) {
+        newErrors[key] = error;
+        if (!firstErrorMessage) firstErrorMessage = error;
+      }
     });
-    return messageError == undefined;
+
+    setFormErrors(newErrors);
+    return { isValid: !firstErrorMessage, firstErrorMessage };
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    validateErrors();
-    if (messageError != undefined) {
-      toast.info(messageError);
+
+    const { isValid, firstErrorMessage } = validateForm(formData);
+
+    if (!isValid) {
+      if (firstErrorMessage) {
+        toast.info(firstErrorMessage);
+      }
       return;
     }
     var userData = {
@@ -420,7 +438,6 @@ const FormProfileUpdate: React.FC = () => {
               onChange={(e) => {
                 const val = e.target.value;
                 setDistrictQuery(val);
-                setFormData({ ...formData, district_code: "" });
               }}
             />
             {districtQuery != "" && districtQuery != formData?.district?.name && (
@@ -430,8 +447,10 @@ const FormProfileUpdate: React.FC = () => {
                     key={d.code}
                     className="px-4 py-2 hover:bg-gray-200 cursor-pointer text-black"
                     onClick={() => {
-                      setFormData({ ...formData, district_code: d.code, district: d });
+                      setFormData(prev => ({ ...prev, district_code: d.code, district: d, sub_district_code: "", sub_district: null }));
                       setDistrictQuery(d.name)
+                      setSubDistrictQuery(""); // Also clear sub-district query
+                      setFormErrors(prev => ({ ...prev, district_code: "" })); // Clear error
                       dispatch(getSubDistrict(d.code));
                     }}
                   >
@@ -442,6 +461,11 @@ const FormProfileUpdate: React.FC = () => {
                   <div className="px-4 py-2 text-gray-500">Tidak ditemukan</div>
                 )}
               </div>
+            )}
+            {formErrors.district_code && (
+              <p className="mt-1 text-danger text-sm font-semibold">
+                {formErrors.district_code}
+              </p>
             )}
           </div>
         </div>
@@ -469,7 +493,6 @@ const FormProfileUpdate: React.FC = () => {
               onChange={(e) => {
                 const val = e.target.value;
                 setSubDistrictQuery(val);
-                setFormData({ ...formData, sub_district_code: "" });
               }}
             />
             {subDistrictQuery != "" && subDistrictQuery != formData?.sub_district?.name && (
@@ -479,8 +502,9 @@ const FormProfileUpdate: React.FC = () => {
                     key={sd.code}
                     className="px-4 py-2 hover:bg-gray-200 cursor-pointer text-black"
                     onClick={() => {
-                      setFormData({ ...formData, sub_district_code: sd.code, sub_district: sd });
+                      setFormData(prev => ({ ...prev, sub_district_code: sd.code, sub_district: sd }));
                       setSubDistrictQuery(sd.name);
+                      setFormErrors(prev => ({ ...prev, sub_district_code: "" })); // Clear error
                     }}
                   >
                     {sd.name}
@@ -490,6 +514,11 @@ const FormProfileUpdate: React.FC = () => {
                   <div className="px-4 py-2 text-gray-500">Tidak ditemukan</div>
                 )}
               </div>
+            )}
+            {formErrors.sub_district_code && (
+              <p className="mt-1 text-danger text-sm font-semibold">
+                {formErrors.sub_district_code}
+              </p>
             )}
           </div>
         </div>
@@ -511,7 +540,7 @@ const FormProfileUpdate: React.FC = () => {
               name="activity"
               className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
             >
-              <option disabled>Pilih aktifitas keseharian</option>
+              <option disabled value="" >Pilih aktifitas keseharian</option>
               <option value="pelajar">Pelajar</option>
               <option value="mahasiswa">Mahasiswa</option>
               <option value="kerja">Kerja</option>
@@ -519,6 +548,11 @@ const FormProfileUpdate: React.FC = () => {
               <option value="ibu rumah tangga">Ibu Rumah Tangga</option>
               <option value="lainnya">Lainnya</option>
             </select>
+            {formErrors.activity && (
+              <p className="mt-1 text-danger text-sm font-semibold">
+                {formErrors.activity}
+              </p>
+            )}
           </div>
           <div className="mt-2"></div>
         </div>
@@ -540,13 +574,18 @@ const FormProfileUpdate: React.FC = () => {
               name="source"
               className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
             >
-              <option disabled>Pilih info kajian darimana</option>
+              <option disabled value="">Pilih info kajian darimana</option>
               <option value="sosmed_yns">Sosmed YukNgaji Solo</option>
               <option value="sosmed_ustadz">Sosmed Ustadz Pengisi</option>
               <option value="ajakan_teman">Ajakan Teman</option>
               <option value="jamaah_masjid">Jamaah Masjid</option>
               <option value="lainnya">Lainnya</option>
             </select>
+            {formErrors.source && (
+              <p className="mt-1 text-danger text-sm font-semibold">
+                {formErrors.source}
+              </p>
+            )}
           </div>
           <div className="mt-2"></div>
         </div>
