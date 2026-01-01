@@ -51,7 +51,7 @@ const FormProfileUpdate: React.FC = () => {
   const [formData, setFormData] = useState<User>({
     ...user,
     username: user?.username ?? "anonim",
-    gender: user?.gender ?? "male",
+    gender: user?.gender ?? "",
     age: user?.age ?? '16',
     activity: user?.activity ?? "",
     source: user?.source ?? "",
@@ -325,6 +325,7 @@ const FormProfileUpdate: React.FC = () => {
               name="username"
               value={formData.username}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="text-sm text-black">Digunakan untuk nama yang muncul di QnA bisa diisi nama samaran</div>
@@ -348,6 +349,7 @@ const FormProfileUpdate: React.FC = () => {
               className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
               required
             >
+              <option disabled value="">Pilih gender</option>
               <option value="male">Laki-laki</option>
               <option value="female">Perempuan</option>
             </select>
