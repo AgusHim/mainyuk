@@ -354,6 +354,7 @@ const OrderStatus: React.FC<{ status: string }> = ({ status }) => {
 
 const phoneNumber = "+6282262448523";
 const phoneKey = "+6285642555555";
+const phoneSports = "+6287872721044";
 
 const getWhatsAppUrl = (order: Order, total: number) => {
   const message = `Konfirmasi Pembayaran%0A%0A*${order?.event?.title}*%0A%0AOrder ID:${order?.public_id}%0AMetode Pembayaran:${order.payment_method?.name}%0ATotal Transfer:${total}%0ANama Pemesan:${order.user?.name}%0A`;
@@ -362,6 +363,9 @@ const getWhatsAppUrl = (order: Order, total: number) => {
   let phone = phoneNumber;
   if (order.event?.divisi?.name == "KEY") {
     phone = phoneKey;
+  }
+  if (order.event?.divisi?.name.includes("Sports")) {
+    phone = phoneSports;
   }
   if (isMobile) {
     // Use intent for Android
