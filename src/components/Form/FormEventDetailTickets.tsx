@@ -77,10 +77,11 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
     }
   };
   const checkAllValuesAreZero = () => {
-    const hasQtyZero = Object.entries(formData).some(
-      ([key, value]) => key.includes("_qty") && value === 0
+    const hasAnyQty = Object.entries(formData).some(
+      ([key, value]) => key.includes("_qty") && value > 0
     );
-    return hasQtyZero;
+    // console.log(formData);
+    return !hasAnyQty;
   };
 
   const handleSubmit = async (e: any) => {

@@ -10,10 +10,14 @@ export const encryptData = (data: any) => {
 
 // Function to decrypt data
 export const decryptData = (encrypted: string) => {
-  const bytes = Crypto.AES.decrypt(
-    encrypted,
-    process.env.AUTH_SECRET ?? "secret"
-  );
-  const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
-  return decryptedData;
+  try {
+    const bytes = Crypto.AES.decrypt(
+      encrypted,
+      process.env.AUTH_SECRET ?? "secret"
+    );
+    const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
+    return decryptedData;
+  } catch (error) {
+    return null;
+  }
 };

@@ -6,6 +6,7 @@ import {
   faComment,
   faReceipt,
   faTicket,
+  faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
@@ -275,6 +276,12 @@ export default function OrderLayout({
                     className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
                   >
                     <div className="flex items-center justify-center gap-x-2">
+                      <FontAwesomeIcon
+                        icon={faTicket}
+                        width={25}
+                        height={25}
+                        style={{ fontSize: "20px", color: "white" }}
+                      />
                       <span>Lihat Tiket</span>
                     </div>
                   </button>
@@ -297,6 +304,24 @@ export default function OrderLayout({
                   </button>
                 </Link>
               )}
+            </div>
+            <div className="mt-2 grid gap-4">
+              {order.event?.divisi?.name.includes("Sports") ? <Link href={"https://chat.whatsapp.com/GUX7RrNbpF8Ks0IVImQSeK"} target="_blank">
+                <button
+                  type="button"
+                  className="text-white bg-success focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
+                >
+                  <div className="flex items-center justify-center gap-x-2">
+                    <FontAwesomeIcon
+                      icon={faComment}
+                      width={25}
+                      height={25}
+                      style={{ fontSize: "20px", color: "white" }}
+                    />
+                    <span>Grup WhatsApp</span>
+                  </div>
+                </button>
+              </Link> : <></>}
             </div>
           </div>
         </div>

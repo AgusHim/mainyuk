@@ -21,7 +21,7 @@ export default function GridEvents() {
     }
   }, []);
 
-  if(eventsData == null || isLoading){
+  if (eventsData == null || isLoading) {
     return <Loader></Loader>
   }
   const events = eventsData?.filter(event => event.isPublished);
@@ -78,7 +78,7 @@ export default function GridEvents() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <AllowedGender event={event}/>
+                    <AllowedGender event={event} />
                   </div>
                 </div>
               </div>
@@ -96,7 +96,7 @@ const AllowedGender: React.FC<{ event: Event }> = ({ event }) => {
       <div className="mb-2 flex items-center gap-1 rounded-xl bg-meta-7 p-2">
         <div className="flex-1">
           <h1 className="font-satoshi font-medium text-xs text-black">
-            Akhwat Only
+            Female Only
           </h1>
         </div>
       </div>
@@ -107,7 +107,7 @@ const AllowedGender: React.FC<{ event: Event }> = ({ event }) => {
       <div className="mb-2 flex items-center gap-1 rounded-xl bg-meta-5 p-2">
         <div className="flex-1">
           <h1 className="font-satoshi font-medium text-xs text-black">
-            Rijal Only
+            Male Only
           </h1>
         </div>
       </div>

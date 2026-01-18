@@ -175,7 +175,7 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
         </div>
       </section>
       <FormEventDetailTickets slug={slug} />
-      
+
     </>
   );
 };
@@ -184,14 +184,14 @@ const AllowedGender: React.FC<{ event: Event }> = ({ event }) => {
   if (event.allowed_gender == "FEMALE") {
     return (
       <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-1 text-sm tag-secondary border-black text-black border bg-meta-7">
-        Akhwat Only
+        Female Only
       </button>
     );
   }
   if (event.allowed_gender == "MALE") {
     return (
       <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-1 text-sm tag-secondary border-black text-black border bg-primary">
-        Akhwat Only
+        Male Only
       </button>
     );
   }
