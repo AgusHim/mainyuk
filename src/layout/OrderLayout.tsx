@@ -306,7 +306,7 @@ export default function OrderLayout({
               )}
             </div>
             <div className="mt-2 grid gap-4">
-              {order.event?.divisi?.name.includes("Sports") ? <Link href={"https://chat.whatsapp.com/GUX7RrNbpF8Ks0IVImQSeK"} target="_blank">
+              {order.status == "paid" && order.event?.divisi?.name.includes("Sports") ? <Link href={"https://chat.whatsapp.com/HSRFShOBsjpKUHiyJV49BZ"} target="_blank">
                 <button
                   type="button"
                   className="text-white bg-success focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
