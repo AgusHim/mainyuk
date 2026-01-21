@@ -4,7 +4,11 @@ import { getEventParticipants } from "@/redux/slices/eventSlice";
 import { Ranger } from "@/types/ranger";
 import { useEffect } from "react";
 
-const TableParticipants: React.FC = () => {
+interface Props {
+  filterTicketName?: string;
+}
+
+const TableParticipants: React.FC<Props> = ({ filterTicketName }) => {
   const dispatch = useAppDispatch();
   const event = useAppSelector((state) => state.event.event);
   const isLoading = useAppSelector((state) => state.presences.loading);
@@ -15,6 +19,12 @@ const TableParticipants: React.FC = () => {
       dispatch(getEventParticipants(event!.id!));
     }
   }, []);
+
+  const filteredParticipants = participants?.filter((ticket) => {
+    if (!filterTicketName || filterTicketName === "All") return true;
+    return ticket?.ticket?.name === filterTicketName;
+  });
+
   return (
     <>
       <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 shadow-bottom border-2 border-black dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -52,7 +62,7 @@ const TableParticipants: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {participants?.map((ticket, key) => {
+              {filteredParticipants?.map((ticket, key) => {
                 return (
                   <tr key={key}>
                     <td className="border-b border-black py-3 px-2 pl-9 dark:border-strokedark xl:pl-11">

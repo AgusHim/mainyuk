@@ -18,6 +18,7 @@ import Dialog from "../common/Dialog/Dialog";
 import FormTicket from "../Form/FormTicket";
 import { setTicket } from "@/redux/slices/ticketSlice";
 import TableParticipants from "../Tables/TableParticipants";
+import ExportParticipantsButton from "../Export/ExportParticipants";
 
 export default function DashboardEventDetailPage({
   params,
@@ -44,7 +45,13 @@ export default function DashboardEventDetailPage({
   }, []);
 
   const [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
+  const [activeTab, setActiveTab] = useState("tickets");
+  const [selectedTicketFilter, setSelectedTicketFilter] = useState("All");
   const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const ticketNames = Array.from(
+    new Set(participants?.map((p) => p.ticket?.name).filter(Boolean))
+  ) as string[];
 
   function toggleOnDialog() {
     if (!dialogRef.current) {
@@ -191,10 +198,6 @@ export default function DashboardEventDetailPage({
               </span>
               QR-Code
             </a>
-            <ExcelExportButton
-              data={presence != null ? presence : []}
-              fileName={event.title ?? "daftar_hadir"}
-            />
           </div>
         </div>
       </div>
@@ -261,37 +264,121 @@ export default function DashboardEventDetailPage({
           </svg>
         </CardDataStats>
       </div>
-      <div className="flex flex-col my-10 gap-3">
-        <div className="flex flex-row justify-between">
-          <p className="text-3xl text-black font-semibold">Daftar Tiket</p>
-          <button
-            onClick={() => {
-              dispatch(setTicket(null));
-              setDialogContent(<FormTicket toggleDialog={toggleOnDialog} />);
-              toggleOnDialog();
-            }}
-            className="w-full ml-auto mb-3 sm:w-50 inline-flex items-center justify-center gap-2.5 rounded-lg bg-meta-3 py-2 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-3 border-2 border-black"
-            style={{ boxShadow: "5px 5px 0px 0px #000000" }}
-          >
-            Tambah Tiket
-          </button>
-        </div>
+      <div className="mb-6 flex gap-4 border-b border-stroke dark:border-strokedark overflow-x-auto">
+        <button
+          className={`border-b-2 py-4 px-6 text-sm font-medium hover:text-primary ${activeTab === "tickets"
+            ? "border-primary text-primary"
+            : "border-transparent text-black dark:text-white"
+            }`}
+          onClick={() => setActiveTab("tickets")}
+        >
+          Tiket
+        </button>
+        <button
+          className={`border-b-2 py-4 px-6 text-sm font-medium hover:text-primary ${activeTab === "participants"
+            ? "border-primary text-primary"
+            : "border-transparent text-black dark:text-white"
+            }`}
+          onClick={() => setActiveTab("participants")}
+        >
+          Peserta
+        </button>
+        <button
+          className={`border-b-2 py-4 px-6 text-sm font-medium hover:text-primary ${activeTab === "presence"
+            ? "border-primary text-primary"
+            : "border-transparent text-black dark:text-white"
+            }`}
+          onClick={() => setActiveTab("presence")}
+        >
+          Absensi
+        </button>
+      </div>
 
-        <TableTickets
-          toggleDialog={toggleOnDialog}
-          setDialogContent={() => {
-            setDialogContent(<FormTicket toggleDialog={toggleOnDialog} />);
-          }}
-        />
-      </div>
-      <div className="flex flex-col gap-3 mb-10">
-        <p className="text-3xl text-black font-semibold">Peserta Terdaftar</p>
-        <TableParticipants />
-      </div>
-      <div className="flex flex-col gap-3">
-        <p className="text-3xl text-black font-semibold">Daftar Absensi</p>
-        <TablePresence />
-      </div>
+      {activeTab === "tickets" && (
+        <div className="flex flex-col my-10 gap-3">
+          <div className="flex flex-row justify-between">
+            <p className="text-3xl text-black font-semibold">Daftar Tiket</p>
+            <button
+              onClick={() => {
+                dispatch(setTicket(null));
+                setDialogContent(<FormTicket toggleDialog={toggleOnDialog} />);
+                toggleOnDialog();
+              }}
+              className="w-full ml-auto mb-3 sm:w-50 inline-flex items-center justify-center gap-2.5 rounded-lg bg-meta-3 py-2 px-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-3 border-2 border-black"
+              style={{ boxShadow: "5px 5px 0px 0px #000000" }}
+            >
+              Tambah Tiket
+            </button>
+          </div>
+
+          <TableTickets
+            toggleDialog={toggleOnDialog}
+            setDialogContent={() => {
+              setDialogContent(<FormTicket toggleDialog={toggleOnDialog} />);
+            }}
+          />
+        </div>
+      )}
+
+      {activeTab === "participants" && (
+        <div className="flex flex-col gap-3 mb-10">
+          <div className="flex flex-row justify-between items-center">
+            <p className="text-3xl text-black font-semibold">
+              Peserta Terdaftar
+            </p>
+            <div className="flex gap-2">
+              <div className="relative z-20 bg-white dark:bg-form-input">
+                <select
+                  className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-2 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  value={selectedTicketFilter}
+                  onChange={(e) => setSelectedTicketFilter(e.target.value)}
+                >
+                  <option value="All">Semua Tiket ({participants?.length ?? 0})</option>
+                  {ticketNames.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+                <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                      fill="#637381"
+                    ></path>
+                  </svg>
+                </span>
+              </div>
+              <ExportParticipantsButton
+                data={participants ?? []}
+                fileName={`${event?.title ?? "Peserta"}-Participants`}
+              />
+            </div>
+          </div>
+          <TableParticipants filterTicketName={selectedTicketFilter} />
+        </div>
+      )}
+
+      {activeTab === "presence" && (
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-row justify-between items-center">
+            <p className="text-3xl text-black font-semibold">Daftar Absensi</p>
+            <ExcelExportButton
+              data={presence != null ? presence : []}
+              fileName={event.title ?? "daftar_hadir"}
+            />
+          </div>
+          <TablePresence />
+        </div>
+      )}
       <Dialog toggleDialog={toggleOnDialog} ref={dialogRef}>
         {dialogContent}
       </Dialog>
