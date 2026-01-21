@@ -52,10 +52,14 @@ export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
                   </div>
                   <div className="cursor-pointer">
                     <div className="mb-2 text-sm font-normal text-black">
-                      {formatStrToDateTime(
-                        eventData.start_at!.replace("Z", ""),
-                        "EEEE, dd MMM yyyy HH:mm"
-                      )}
+                      {new Date(eventData.start_at!).toLocaleString("id-ID", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </div>
                     <div className="flex w-full items-center">
                       <div className="mr-2">
