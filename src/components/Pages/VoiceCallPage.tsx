@@ -33,14 +33,14 @@ const VoiceCallContent = ({
 }) => {
     // Get user info again inside component to pass as UID
     const user = useAppSelector((state) => state.auth.user);
-    // Use username or name or "Guest" as UID. 
-    // Ensure it's a string.
-    const uid = user?.username || "Guest";
+    const [uid] = useState(String(Math.floor(Math.random() * 1000000)));
 
     // State for joining/leaving the channel
     const [active, setActive] = useState(false);
     const [token, setToken] = useState<string | null>(null);
     const [fetchingToken, setFetchingToken] = useState(false);
+
+    const authLoading = useAppSelector((state) => state.auth.loading);
 
     // Join the channel only when active is true and token is present
     const { isLoading: isLoadingJoin, isConnected } = useJoin(
@@ -52,10 +52,20 @@ const VoiceCallContent = ({
     const { localMicrophoneTrack } = useLocalMicrophoneTrack(isGuide && active);
 
     // Publish (only for Guide)
-    usePublish([localMicrophoneTrack]);
+    usePublish(localMicrophoneTrack ? [localMicrophoneTrack] : []);
 
     const remoteUsers = useRemoteUsers();
     const { audioTracks } = useRemoteAudioTracks(remoteUsers);
+
+    // Ensure mic is unmuted when track is ready
+    useEffect(() => {
+        if (localMicrophoneTrack && isGuide && active) {
+            console.log("Track ready, unmuting...");
+            localMicrophoneTrack.setMuted(false);
+            localMicrophoneTrack.setEnabled(true);
+            setMicMuted(false);
+        }
+    }, [localMicrophoneTrack, isGuide, active]);
 
     // Play remote audio tracks
     useEffect(() => {
@@ -69,6 +79,14 @@ const VoiceCallContent = ({
             });
         };
     }, [active, audioTracks]);
+
+    useEffect(() => {
+        console.log("Local mic track:", localMicrophoneTrack);
+    }, [localMicrophoneTrack]);
+
+    useEffect(() => {
+        console.log("Remote users:", remoteUsers);
+    }, [remoteUsers]);
 
     const handleJoin = async () => {
         try {
@@ -114,10 +132,12 @@ const VoiceCallContent = ({
 
     return (
         <div className="flex flex-col justify-start gap-8 min-h-[50vh] p-4 w-full max-w-7xl">
-            {/* Event Detail Card */}
+            {/* ... Event Detail Card ... */}
             <div className="w-full h-fit bg-yellow-300 border-2 border-black rounded-xl shadow-custom p-4">
+                {/* ... */}
                 {event ? (
                     <div className="flex flex-row gap-4">
+                        {/* ... */}
                         <div className="w-40 h-40 rounded-lg overflow-hidden border-2 border-black">
                             <img
                                 src={event.image_url || "/images/logo/yn_logo.png"}
@@ -153,10 +173,10 @@ const VoiceCallContent = ({
                 {!active ? (
                     <button
                         onClick={handleJoin}
-                        disabled={fetchingToken}
-                        className={`px-8 py-3 rounded-xl font-bold border-2 border-black shadow-custom transition-all active:translate-x-1 active:translate-y-1 active:shadow-none ${fetchingToken ? "bg-gray-300" : "bg-green-500 hover:bg-green-400"} text-white`}
+                        disabled={fetchingToken || authLoading}
+                        className={`px-8 py-3 rounded-xl font-bold border-2 border-black shadow-custom transition-all active:translate-x-1 active:translate-y-1 active:shadow-none ${fetchingToken || authLoading ? "bg-gray-300" : "bg-green-500 hover:bg-green-400"} text-white`}
                     >
-                        {fetchingToken ? "Getting Token..." : (isGuide ? "Start Voice" : "Join Voice")}
+                        {authLoading ? "Loading User..." : fetchingToken ? "Getting Token..." : (isGuide ? "Start Voice" : "Join Voice")}
                     </button>
                 ) : (
                     <>
@@ -215,7 +235,7 @@ const VoiceCallContent = ({
                         {remoteGuides.map(user => (
                             <li key={user.uid} className="flex items-center gap-2 p-2 bg-yellow-200 border-2 border-black rounded-lg">
                                 <span className="w-3 h-3 rounded-full bg-green-500 border border-black"></span>
-                                <span className="text-black font-medium">{user.uid}</span>
+                                <span className="text-black font-medium">{user.hasAudio}</span>
                             </li>
                         ))}
                     </ul>
@@ -233,7 +253,9 @@ const VoiceCallContent = ({
                         {remoteListeners.map(user => (
                             <li key={user.uid} className="flex items-center gap-2 p-2 bg-white border border-gray-100 rounded-lg">
                                 <span className="w-3 h-3 rounded-full bg-gray-400 border border-black"></span>
-                                <span className="text-black">{user.uid}</span>
+                                <span className="text-black">
+                                    {user.uid} <span className="text-xs text-gray-500">({user.hasAudio ? "Audio On" : "No Audio"})</span>
+                                </span>
                             </li>
                         ))}
                     </ul>
@@ -277,9 +299,17 @@ export default function VoiceCallPage({ params }: { params: { id: string } }) {
     // Determine role. 
     const isGuide = user?.role === "admin" || user?.role === "guide";
 
+    console.log("VoiceCallPage Debug:", {
+        username: user?.username,
+        role: user?.role,
+        isGuide,
+        paramsId: params.id
+    });
+
     return (
         <MainLayout>
             <CommonHeader title={event?.title || "City Tour Voice Call"} />
+
             <div className="flex flex-col items-center justify-start p-4">
                 {loading ? (
                     <div className="text-center">Loading...</div>

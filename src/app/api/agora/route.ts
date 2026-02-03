@@ -23,35 +23,20 @@ export async function GET(request: NextRequest) {
     const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
 
     // Build the token
-    // Note: uid can be string or number. RtcTokenBuilder supports both buildTokenWithUid (for int) and buildTokenWithAccount (for string)
-    // Since our uid is likely a string (username), we use buildTokenWithAccount (or buildTokenWithUid in older versions which accepted string, 
-    // but in v4+ typically 'Account' is for string UIDs). 
-    // Let's check if uid is numeric or string.
+    // We always use buildTokenWithUserAccount to ensure consistency with the client
+    // which treats the UID as a string (username).
 
     let token;
     try {
-        // If uid is a pure number, treat as int uid, else string user account
-        if (/^\d+$/.test(uid)) {
-            token = RtcTokenBuilder.buildTokenWithUid(
-                appID,
-                appCertificate,
-                channelName,
-                parseInt(uid),
-                role,
-                expirationTimeInSeconds,
-                privilegeExpiredTs
-            );
-        } else {
-            token = RtcTokenBuilder.buildTokenWithUserAccount(
-                appID,
-                appCertificate,
-                channelName,
-                uid,
-                role,
-                expirationTimeInSeconds,
-                privilegeExpiredTs
-            );
-        }
+        token = RtcTokenBuilder.buildTokenWithUserAccount(
+            appID,
+            appCertificate,
+            channelName,
+            uid,
+            role,
+            expirationTimeInSeconds,
+            privilegeExpiredTs
+        );
     } catch (err) {
         console.error("Error generating token:", err);
         return NextResponse.json({ error: "Failed to generate token" }, { status: 500 });
