@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { Event } from "@/types/event";
 import { formatStrToDateTime } from "@/utils/convert";
 
-const AGORA_APP_ID = process.env.NEXT_AGORA_APP_ID || "";
+const AGORA_APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID || "";
 
 const VoiceCallContent = ({
     eventId,
