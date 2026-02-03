@@ -39,11 +39,13 @@ const VoiceCallContent = ({
 
     // State for joining/leaving the channel
     const [active, setActive] = useState(false);
+    const [token, setToken] = useState<string | null>(null);
+    const [fetchingToken, setFetchingToken] = useState(false);
 
-    // Join the channel only when active is true
+    // Join the channel only when active is true and token is present
     const { isLoading: isLoadingJoin, isConnected } = useJoin(
-        { appid: AGORA_APP_ID, channel: eventId, token: null, uid: uid },
-        active
+        { appid: AGORA_APP_ID, channel: eventId, token: token, uid: uid },
+        active && !!token
     );
 
     // Local Microphone (only for Guide)
@@ -67,6 +69,30 @@ const VoiceCallContent = ({
             });
         };
     }, [active, audioTracks]);
+
+    const handleJoin = async () => {
+        try {
+            if (!eventId || !uid) {
+                console.error("Missing eventId or uid");
+                return;
+            }
+            setFetchingToken(true);
+            const res = await fetch(`/api/agora?channelName=${eventId}&uid=${uid}`);
+            const data = await res.json();
+            if (data.token) {
+                setToken(data.token);
+                setActive(true);
+            } else {
+                console.error("Failed to fetch token:", data.error);
+                alert("Failed to join: " + (data.error || "Unknown error"));
+            }
+        } catch (error) {
+            console.error("Error fetching token:", error);
+            alert("Failed to join: Network error");
+        } finally {
+            setFetchingToken(false);
+        }
+    };
 
     const [micMuted, setMicMuted] = useState(false);
 
@@ -126,10 +152,11 @@ const VoiceCallContent = ({
 
                 {!active ? (
                     <button
-                        onClick={() => setActive(true)}
-                        className="px-8 py-3 rounded-xl font-bold border-2 border-black shadow-custom transition-all active:translate-x-1 active:translate-y-1 active:shadow-none bg-green-500 hover:bg-green-400 text-white"
+                        onClick={handleJoin}
+                        disabled={fetchingToken}
+                        className={`px-8 py-3 rounded-xl font-bold border-2 border-black shadow-custom transition-all active:translate-x-1 active:translate-y-1 active:shadow-none ${fetchingToken ? "bg-gray-300" : "bg-green-500 hover:bg-green-400"} text-white`}
                     >
-                        {isGuide ? "Start Voice" : "Join Voice"}
+                        {fetchingToken ? "Getting Token..." : (isGuide ? "Start Voice" : "Join Voice")}
                     </button>
                 ) : (
                     <>
