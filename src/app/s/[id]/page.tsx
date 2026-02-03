@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import VoiceCallPage from "@/components/Pages/VoiceCallPage";
 
 export const metadata: Metadata = {
-    title: "Voice Call City Tour",
-    description: "Live voice call for City Tour",
+    title: "Stream - YukNgaji Solo",
+    description: "Live voice call YukNgaji Solo",
 };
 
 interface PageProps {
