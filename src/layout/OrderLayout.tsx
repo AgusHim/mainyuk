@@ -358,7 +358,7 @@ const phoneKeysReta = "+6283866404846";
 const phoneSports = "+6287872721044";
 
 const getWhatsAppUrl = (order: Order, total: number) => {
-  const message = `Konfirmasi Pembayaran%0A%0A*${order?.event?.title}*%0A%0AOrder ID:${order?.public_id}%0AMetode Pembayaran:${order.payment_method?.name}%0ATotal Transfer:${total}%0ANama Pemesan:${order.user?.name}%0A`;
+  const message = `Konfirmasi Pembayaran%0A%0A*${order?.event?.title}*%0A%0AOrder ID:${order?.public_id}%0ANama Event:${order?.event?.title}%0AMetode Pembayaran:${order.payment_method?.name}%0ATotal Transfer:${total}%0ANama Pemesan:${order.user?.name}%0A`;
 
   const isMobile = /Android/i.test(navigator.userAgent);
   let phone = phoneNumber;
