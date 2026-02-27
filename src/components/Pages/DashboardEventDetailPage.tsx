@@ -19,6 +19,7 @@ import FormTicket from "../Form/FormTicket";
 import { setTicket } from "@/redux/slices/ticketSlice";
 import TableParticipants from "../Tables/TableParticipants";
 import ExportParticipantsButton from "../Export/ExportParticipants";
+import PollManager from "../Polls/PollManager";
 
 export default function DashboardEventDetailPage({
   params,
@@ -292,6 +293,15 @@ export default function DashboardEventDetailPage({
         >
           Absensi
         </button>
+        <button
+          className={`border-b-2 py-4 px-6 text-sm font-medium hover:text-primary ${activeTab === "polls"
+            ? "border-primary text-primary"
+            : "border-transparent text-black dark:text-white"
+            }`}
+          onClick={() => setActiveTab("polls")}
+        >
+          Polls
+        </button>
       </div>
 
       {activeTab === "tickets" && (
@@ -377,6 +387,12 @@ export default function DashboardEventDetailPage({
             />
           </div>
           <TablePresence />
+        </div>
+      )}
+
+      {activeTab === "polls" && event?.id && (
+        <div className="flex flex-col my-10 gap-3">
+          <PollManager eventId={event.id} />
         </div>
       )}
       <Dialog toggleDialog={toggleOnDialog} ref={dialogRef}>

@@ -16,6 +16,7 @@ import orderSlice from "./slices/orderSlice";
 import ticketSlice from "./slices/ticketSlice";
 import paymentMethodSlice from "./slices/PaymentMethodSlice";
 import regionSlice from "./slices/RegionSlice";
+import pollSlice from "./slices/pollSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -36,6 +37,7 @@ export const makeStore = () => {
       ticket: ticketSlice,
       paymentMethod: paymentMethodSlice,
       region: regionSlice,
+      poll: pollSlice,
     },
   });
 };

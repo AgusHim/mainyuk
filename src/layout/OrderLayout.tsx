@@ -354,7 +354,7 @@ const OrderStatus: React.FC<{ status: string }> = ({ status }) => {
 
 const phoneNumber = "+6282262448523";
 const phoneKey = "+6285642555555";
-const phoneKeysReta = "+6283866404846";
+const phoneKeysFemale = "+6285772149565";
 const phoneSports = "+6287872721044";
 
 const getWhatsAppUrl = (order: Order, total: number) => {
@@ -366,7 +366,7 @@ const getWhatsAppUrl = (order: Order, total: number) => {
     if (order.user?.gender == "male") {
       phone = phoneNumber;
     } else {
-      phone = phoneKeysReta;
+      phone = phoneKeysFemale;
     }
   }
   if (order.event?.divisi?.name.includes("Sports")) {
