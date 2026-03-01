@@ -35,16 +35,7 @@ const CheckoutPaymentMethodCard = () => {
   }
 
   const filterPaymentMethod = (): PaymentMethod[] => {
-    if (event?.divisi?.name == "KEY") {
-      return paymentMethods.filter((method) =>
-        method.account_name.toLowerCase().includes("ani riyani")
-      );
-    } else {
-      return paymentMethods.filter(
-        (method) =>
-          method.account_name.toLowerCase().includes("ani riyani") == false
-      );
-    }
+    return paymentMethods;
   };
 
   return (
