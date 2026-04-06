@@ -27,7 +27,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
     if (tickets == null || tickets?.[0].event_id != event?.id) {
       dispatch(getPublicTickets(event?.id ?? "")).then((e) => {
         if (e.payload != null) {
-          setTickets(e.payload as Ticket[]);
+          setTickets((e.payload as Ticket[]).sort((a, b) => b.price - a.price));
           let form: { [key: string]: number } = {};
           for (let index in e.payload) {
             const ticket = e.payload[index];
