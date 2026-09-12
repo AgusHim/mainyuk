@@ -24,16 +24,16 @@ const ACTIVITIES = [
 
 export default function Activities() {
   return (
-    <section id="aktivitas" className="yn-section border-t border-[#E4E2DA]">
+    <section id="aktivitas" className="yn-section border-t border-[var(--yn-border)]">
       <div className="yn-container">
         <Reveal>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1F6B5A] md:text-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--yn-accent)] md:text-sm">
             Aktivitas
           </p>
         </Reveal>
         <Reveal delay={80}>
           <h2
-            className="mt-6 max-w-[20ch] font-semibold text-[#171717]"
+            className="mt-6 max-w-[20ch] font-semibold text-[var(--yn-foreground)]"
             style={{
               fontSize: "clamp(2.4rem, 5vw, 4.5rem)",
               lineHeight: 1,
@@ -44,23 +44,23 @@ export default function Activities() {
           </h2>
         </Reveal>
 
-        <div className="mt-16 divide-y divide-[#E4E2DA] border-t border-[#E4E2DA] md:mt-20">
+        <div className="mt-16 divide-y divide-[var(--yn-border)] border-t border-[var(--yn-border)] md:mt-20">
           {ACTIVITIES.map((activity, index) => (
             <Reveal key={activity.number} delay={index * 100}>
               <a
                 href={activity.href}
-                className="group grid grid-cols-1 items-baseline gap-3 py-10 transition-colors hover:bg-white/60 md:grid-cols-12 md:gap-8 md:py-12"
+                className="group grid grid-cols-1 items-baseline gap-3 py-10 transition-colors hover:bg-[var(--yn-surface)]/60 md:grid-cols-12 md:gap-8 md:py-12"
               >
-                <span className="text-4xl font-semibold text-[#E4E2DA] transition-colors group-hover:text-[#1F6B5A] md:col-span-2 md:text-6xl">
+                <span className="text-4xl font-semibold text-[var(--yn-border)] transition-colors group-hover:text-[var(--yn-accent)] md:col-span-2 md:text-6xl">
                   {activity.number}
                 </span>
-                <span className="text-2xl font-semibold tracking-tight text-[#171717] md:col-span-4 md:text-4xl">
+                <span className="text-2xl font-semibold tracking-tight text-[var(--yn-foreground)] md:col-span-4 md:text-4xl">
                   {activity.title}
                 </span>
-                <span className="max-w-[420px] text-base leading-[1.65] text-[#6F6D66] md:col-span-5">
+                <span className="max-w-[420px] text-base leading-[1.65] text-[var(--yn-muted)] md:col-span-5">
                   {activity.description}
                 </span>
-                <span className="text-sm font-medium text-[#1F6B5A] md:col-span-1 md:text-right">
+                <span className="text-sm font-medium text-[var(--yn-accent)] md:col-span-1 md:text-right">
                   &rarr;
                 </span>
               </a>

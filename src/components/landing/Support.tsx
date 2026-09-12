@@ -2,19 +2,19 @@ import Reveal from "./Reveal";
 
 export default function Support() {
   return (
-    <section className="yn-section border-t border-[#E4E2DA]">
+    <section className="yn-section border-t border-[var(--yn-border)]">
       <div className="yn-container">
-        <div className="rounded-[32px] bg-white p-8 md:p-16">
+        <div className="rounded-[32px] bg-[var(--yn-surface)] p-8 md:p-16">
           <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-12">
             <div className="md:col-span-7">
               <Reveal>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1F6B5A] md:text-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--yn-accent)] md:text-sm">
                   Dukung Gerakan Ini
                 </p>
               </Reveal>
               <Reveal delay={80}>
                 <h2
-                  className="mt-6 max-w-[18ch] font-semibold text-[#171717]"
+                  className="mt-6 max-w-[18ch] font-semibold text-[var(--yn-foreground)]"
                   style={{
                     fontSize: "clamp(2rem, 4vw, 3.5rem)",
                     lineHeight: 1.05,
@@ -25,7 +25,7 @@ export default function Support() {
                 </h2>
               </Reveal>
               <Reveal delay={160}>
-                <p className="yn-text-content mt-6 text-base leading-[1.65] text-[#6F6D66]">
+                <p className="yn-text-content mt-6 text-base leading-[1.65] text-[var(--yn-muted)]">
                   Dukunganmu membantu kegiatan komunitas tetap berjalan —
                   terbuka, transparan, dan tepat sasaran.
                 </p>
@@ -37,7 +37,7 @@ export default function Support() {
                   href="https://api.whatsapp.com/send/?phone=%2B6281241000056&text=Assalamu'alaikum, Saya ingin support dakwah YN Solo"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-[44px] w-full items-center justify-center rounded-full bg-[#1F6B5A] px-7 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[#174F43] md:text-base"
+                  className="flex min-h-[44px] w-full items-center justify-center rounded-full bg-[var(--yn-accent)] px-7 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[var(--yn-accent-dark)] md:text-base"
                 >
                   Dukung YukNgaji Solo
                 </a>

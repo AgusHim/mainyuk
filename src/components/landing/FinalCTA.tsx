@@ -25,7 +25,7 @@ export default function FinalCTA() {
           <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="#event"
-              className="flex min-h-[44px] w-full items-center justify-center rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[#171717] transition-all duration-200 hover:-translate-y-px hover:bg-[#F0EFE9] sm:w-auto md:text-base"
+              className="flex min-h-[44px] w-full items-center justify-center rounded-full bg-[var(--yn-surface)] px-7 py-3.5 text-sm font-semibold text-[var(--yn-foreground)] transition-all duration-200 hover:-translate-y-px hover:bg-[var(--yn-surface-muted)] sm:w-auto md:text-base"
             >
               Lihat Event
             </a>
@@ -33,7 +33,7 @@ export default function FinalCTA() {
               href="https://api.whatsapp.com/send/?phone=%2B6281241000056&text=Assalamu'alaikum, min"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex min-h-[44px] w-full items-center justify-center rounded-full border border-white/20 px-7 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-white/10 sm:w-auto md:text-base"
+              className="flex min-h-[44px] w-full items-center justify-center rounded-full border border-white/20 px-7 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[var(--yn-surface)]/10 sm:w-auto md:text-base"
             >
               Chat dengan Admin
             </a>

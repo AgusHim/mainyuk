@@ -3,18 +3,18 @@ import Reveal from "./Reveal";
 
 export default function CommunityIntro() {
   return (
-    <section className="yn-section bg-[#F0EFE9]">
+    <section className="yn-section bg-[var(--yn-surface-muted)]">
       <div className="yn-container">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Reveal>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1F6B5A] md:text-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--yn-accent)] md:text-sm">
                 YukNgaji Solo
               </p>
             </Reveal>
             <Reveal delay={80}>
               <h2
-                className="mt-6 max-w-[18ch] font-semibold text-[#171717]"
+                className="mt-6 max-w-[18ch] font-semibold text-[var(--yn-foreground)]"
                 style={{
                   fontSize: "clamp(2.4rem, 5vw, 4.5rem)",
                   lineHeight: 1,
@@ -25,7 +25,7 @@ export default function CommunityIntro() {
               </h2>
             </Reveal>
             <Reveal delay={160}>
-              <p className="yn-text-content mt-8 text-base leading-[1.65] text-[#6F6D66] md:text-lg md:leading-[1.7]">
+              <p className="yn-text-content mt-8 text-base leading-[1.65] text-[var(--yn-muted)] md:text-lg md:leading-[1.7]">
                 Kami membangun ruang untuk bertemu, belajar, bergerak, dan
                 tumbuh bersama. Dari kajian santai, jalan-jalan keliling
                 kota, sampai olahraga bareng — semuanya karena satu hal:

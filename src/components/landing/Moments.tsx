@@ -24,18 +24,18 @@ const PHOTOS = [
 
 export default function Moments() {
   return (
-    <section id="momen" className="yn-section bg-[#F0EFE9]">
+    <section id="momen" className="yn-section bg-[var(--yn-surface-muted)]">
       <div className="yn-container-wide">
         <div className="grid grid-cols-1 items-end gap-6 md:grid-cols-12">
           <div className="md:col-span-8">
             <Reveal>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1F6B5A] md:text-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--yn-accent)] md:text-sm">
                 Momen Bahagia
               </p>
             </Reveal>
             <Reveal delay={80}>
               <h2
-                className="mt-6 max-w-[18ch] font-semibold text-[#171717]"
+                className="mt-6 max-w-[18ch] font-semibold text-[var(--yn-foreground)]"
                 style={{
                   fontSize: "clamp(2.4rem, 5vw, 4.5rem)",
                   lineHeight: 1,
@@ -48,7 +48,7 @@ export default function Moments() {
           </div>
           <div className="md:col-span-4">
             <Reveal delay={160}>
-              <p className="yn-text-content text-base leading-[1.65] text-[#6F6D66] md:text-lg">
+              <p className="yn-text-content text-base leading-[1.65] text-[var(--yn-muted)] md:text-lg">
                 Bukti bahwa komunitas ini benar-benar hidup — dari kajian,
                 jalan santai, sampai tawa di sela kegiatan.
               </p>

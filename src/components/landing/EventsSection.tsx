@@ -34,7 +34,7 @@ function EventCard({ event }: { event: Event }) {
   return (
     <Link
       href={`/events/${event.slug ?? ""}`}
-      className="group block overflow-hidden rounded-[24px] border border-[#E4E2DA] bg-white transition-all duration-200 hover:-translate-y-1"
+      className="group block overflow-hidden rounded-[24px] border border-[var(--yn-border)] bg-[var(--yn-surface)] transition-all duration-200 hover:-translate-y-1"
     >
       <div className="relative aspect-[16/10] overflow-hidden rounded-t-[24px]">
         <Image
@@ -46,16 +46,16 @@ function EventCard({ event }: { event: Event }) {
         />
       </div>
       <div className="p-6">
-        <p className="text-xs font-medium uppercase tracking-[0.15em] text-[#1F6B5A] md:text-sm">
+        <p className="text-xs font-medium uppercase tracking-[0.15em] text-[var(--yn-accent)] md:text-sm">
           {date ? `${date.day} ${date.month} ${date.year}` : "Segera"}
         </p>
-        <h3 className="mt-3 text-xl font-semibold tracking-tight text-[#171717] md:text-2xl">
+        <h3 className="mt-3 text-xl font-semibold tracking-tight text-[var(--yn-foreground)] md:text-2xl">
           {event.title}
         </h3>
         {event.location_desc?.[0] && (
-          <p className="mt-2 text-sm text-[#6F6D66]">{event.location_desc[0]}</p>
+          <p className="mt-2 text-sm text-[var(--yn-muted)]">{event.location_desc[0]}</p>
         )}
-        <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-[#171717]">
+        <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-[var(--yn-foreground)]">
           Lihat Detail <span aria-hidden="true">&rarr;</span>
         </span>
       </div>
@@ -65,11 +65,11 @@ function EventCard({ event }: { event: Event }) {
 
 function EventSkeleton() {
   return (
-    <div className="overflow-hidden rounded-[24px] border border-[#E4E2DA] bg-white">
-      <div className="aspect-[16/10] animate-pulse bg-[#F0EFE9]" />
+    <div className="overflow-hidden rounded-[24px] border border-[var(--yn-border)] bg-[var(--yn-surface)]">
+      <div className="aspect-[16/10] animate-pulse bg-[var(--yn-surface-muted)]" />
       <div className="space-y-3 p-6">
-        <div className="h-3 w-24 animate-pulse rounded-full bg-[#F0EFE9]" />
-        <div className="h-5 w-3/4 animate-pulse rounded-full bg-[#F0EFE9]" />
+        <div className="h-3 w-24 animate-pulse rounded-full bg-[var(--yn-surface-muted)]" />
+        <div className="h-5 w-3/4 animate-pulse rounded-full bg-[var(--yn-surface-muted)]" />
       </div>
     </div>
   );
@@ -90,18 +90,18 @@ export default function EventsSection() {
     .slice(0, 6);
 
   return (
-    <section id="event" className="yn-section border-t border-[#E4E2DA]">
+    <section id="event" className="yn-section border-t border-[var(--yn-border)]">
       <div className="yn-container">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
             <Reveal>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1F6B5A] md:text-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--yn-accent)] md:text-sm">
                 Event Terbaru
               </p>
             </Reveal>
             <Reveal delay={80}>
               <h2
-                className="mt-6 max-w-[16ch] font-semibold text-[#171717]"
+                className="mt-6 max-w-[16ch] font-semibold text-[var(--yn-foreground)]"
                 style={{
                   fontSize: "clamp(2.4rem, 5vw, 4.5rem)",
                   lineHeight: 1,
@@ -115,7 +115,7 @@ export default function EventsSection() {
           <Reveal delay={160}>
             <a
               href="/events"
-              className="inline-flex min-h-[44px] items-center rounded-full border border-[#E4E2DA] px-6 py-3 text-sm font-semibold text-[#171717] transition-all duration-200 hover:-translate-y-px hover:bg-white"
+              className="inline-flex min-h-[44px] items-center rounded-full border border-[var(--yn-border)] px-6 py-3 text-sm font-semibold text-[var(--yn-foreground)] transition-all duration-200 hover:-translate-y-px hover:bg-[var(--yn-surface)]"
             >
               Lihat Semua Event &rarr;
             </a>
@@ -133,11 +133,11 @@ export default function EventsSection() {
         </div>
 
         {eventData != null && events.length === 0 && (
-          <p className="yn-text-content mt-8 text-base text-[#6F6D66]">
+          <p className="yn-text-content mt-8 text-base text-[var(--yn-muted)]">
             Belum ada event yang dipublikasikan. Pantau terus halaman ini, atau
             <a
               href="https://api.whatsapp.com/send/?phone=%2B6281241000056&text=Assalamu'alaikum, min"
-              className="font-medium text-[#1F6B5A] underline underline-offset-4"
+              className="font-medium text-[var(--yn-accent)] underline underline-offset-4"
             >
               kepoin admin
             </a>{" "}

@@ -25,7 +25,7 @@ export default function Header() {
     <header
       className={`sticky top-0 z-50 transition-all duration-200 ${
         scrolled
-          ? "border-b border-[#E4E2DA] bg-[#F8F7F3]/90 backdrop-blur-md"
+          ? "border-b border-[var(--yn-border)] bg-[var(--yn-background)]/90 backdrop-blur-md"
           : "border-b border-transparent bg-transparent"
       }`}
     >
@@ -46,14 +46,14 @@ export default function Header() {
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-[#6F6D66] transition-colors hover:text-[#171717]"
+              className="text-sm font-medium text-[var(--yn-muted)] transition-colors hover:text-[var(--yn-foreground)]"
             >
               {link.label}
             </a>
           ))}
           <a
             href="/events"
-            className="rounded-full bg-[#1F6B5A] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[#174F43]"
+            className="rounded-full bg-[var(--yn-accent)] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[var(--yn-accent-dark)]"
           >
             Lihat Event
           </a>
@@ -64,7 +64,7 @@ export default function Header() {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-expanded={menuOpen}
           aria-label="Buka menu"
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E4E2DA] bg-white md:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)] md:hidden"
         >
           {menuOpen ? (
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -79,21 +79,21 @@ export default function Header() {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-[#E4E2DA] bg-[#F8F7F3] md:hidden">
+        <div className="border-t border-[var(--yn-border)] bg-[var(--yn-background)] md:hidden">
           <nav className="yn-container flex flex-col gap-1 py-4" aria-label="Navigasi mobile">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="rounded-2xl px-4 py-3 text-base font-medium text-[#171717] transition-colors hover:bg-[#F0EFE9]"
+                className="rounded-2xl px-4 py-3 text-base font-medium text-[var(--yn-foreground)] transition-colors hover:bg-[var(--yn-surface-muted)]"
               >
                 {link.label}
               </a>
             ))}
             <a
               href="/events"
-              className="mt-2 flex min-h-[44px] items-center justify-center rounded-full bg-[#1F6B5A] px-5 py-3 text-base font-semibold text-white"
+              className="mt-2 flex min-h-[44px] items-center justify-center rounded-full bg-[var(--yn-accent)] px-5 py-3 text-base font-semibold text-white"
             >
               Lihat Event
             </a>

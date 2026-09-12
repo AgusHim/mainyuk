@@ -17,13 +17,13 @@ export default function Hero() {
         <div className="grid grid-cols-1 items-end gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <Reveal>
-              <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-[#1F6B5A] md:text-sm">
+              <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--yn-accent)] md:text-sm">
                 YukNgaji Solo
               </p>
             </Reveal>
             <Reveal delay={80}>
               <h1
-                className="max-w-[13ch] font-semibold text-[#171717]"
+                className="max-w-[13ch] font-semibold text-[var(--yn-foreground)]"
                 style={{
                   fontSize: "clamp(2.8rem, 7vw, 6rem)",
                   lineHeight: 0.98,
@@ -34,7 +34,7 @@ export default function Hero() {
               </h1>
             </Reveal>
             <Reveal delay={160}>
-              <p className="yn-text-content mt-8 text-base leading-[1.65] text-[#6F6D66] md:text-lg md:leading-[1.7]">
+              <p className="yn-text-content mt-8 text-base leading-[1.65] text-[var(--yn-muted)] md:text-lg md:leading-[1.7]">
                 Ruang bertemu, belajar, bergerak, dan bertumbuh untuk pemuda
                 di Solo dan sekitarnya. Datang sendiri, pulang bareng
                 teman-teman baru.
@@ -44,22 +44,22 @@ export default function Hero() {
               <div className="mt-10 flex flex-wrap items-center gap-4">
                 <a
                   href="#event"
-                  className="flex min-h-[44px] items-center rounded-full bg-[#1F6B5A] px-7 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[#174F43] md:text-base"
+                  className="flex min-h-[44px] items-center rounded-full bg-[var(--yn-accent)] px-7 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[var(--yn-accent-dark)] md:text-base"
                 >
                   Lihat Event
                 </a>
                 <a
                   href="#temanbahagia"
-                  className="flex min-h-[44px] items-center rounded-full border border-[#E4E2DA] bg-transparent px-7 py-3.5 text-sm font-semibold text-[#171717] transition-all duration-200 hover:-translate-y-px hover:bg-white md:text-base"
+                  className="flex min-h-[44px] items-center rounded-full border border-[var(--yn-border)] bg-transparent px-7 py-3.5 text-sm font-semibold text-[var(--yn-foreground)] transition-all duration-200 hover:-translate-y-px hover:bg-[var(--yn-surface)] md:text-base"
                 >
                   Kenal Lebih Dekat
                 </a>
               </div>
             </Reveal>
             <Reveal delay={320}>
-              <p className="mt-8 text-sm text-[#6F6D66]">
+              <p className="mt-8 text-sm text-[var(--yn-muted)]">
                 Komunitas dakwah pemuda Surakarta&nbsp;
-                <span className="font-medium text-[#1F6B5A]">#TemanBahagia</span>
+                <span className="font-medium text-[var(--yn-accent)]">#TemanBahagia</span>
               </p>
             </Reveal>
           </div>
