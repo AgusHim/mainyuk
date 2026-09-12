@@ -9,6 +9,12 @@ import {
   getRangersPresence,
 } from "@/redux/slices/rangerPresenceSlice";
 import TableRangersPresence from "../Tables/TableRangersPresence";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 export default function DashboardContributionsPage() {
   const dispatch = useAppDispatch();
@@ -43,19 +49,14 @@ export default function DashboardContributionsPage() {
   return (
     <>
       <Breadcrumb pageName="Riwayat Kontribusi" />
-      <div role="tablist" className="tabs tabs-lifted tabs-lg">
-        <input
-          type="radio"
-          name="my_tabs_2"
-          role="tab"
-          className="tab tabs-lg text-black dark:text-white [--tab-bg:white]"
-          aria-label="Kontribusiku"
-          defaultChecked
-        />
-        <div
-          role="tabpanel"
-          className="tab-content border-base-300 rounded-box p-6 overflow-x-auto whitespace-nowrap"
-        >
+      <Tabs defaultValue="kontribusiku">
+        <TabsList>
+          <TabsTrigger value="kontribusiku">Kontribusiku</TabsTrigger>
+          {user?.role == "pj" || user?.role == "admin" ? (
+            <TabsTrigger value="ranger">Kontribusi Ranger</TabsTrigger>
+          ) : null}
+        </TabsList>
+        <TabsContent value="kontribusiku">
           <div className="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
             <CardDataStats
               title="Total Kontribusi"
@@ -114,21 +115,11 @@ export default function DashboardContributionsPage() {
           <div className="flex flex-col gap-10">
             <TableRangerPresence />
           </div>
-        </div>
+        </TabsContent>
 
         {user?.role == "pj" || user?.role == "admin" ? (
           <>
-            <input
-              type="radio"
-              name="my_tabs_2"
-              role="tab"
-              className="tab w-10 text-black dark:text-white [--tab-bg:white] text-sm md:text-lg"
-              aria-label="Kontribusi Ranger"
-            />
-            <div
-              role="tabpanel"
-              className="tab-content border-base-300 rounded-box p-6 overflow-x-auto whitespace-nowrap"
-            >
+            <TabsContent value="ranger">
               <div className="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
                 <CardDataStats
                   title="Total Kontribusi Ranger"
@@ -191,12 +182,12 @@ export default function DashboardContributionsPage() {
               <div className="flex flex-col gap-10">
                 <TableRangersPresence />
               </div>
-            </div>
+            </TabsContent>
           </>
         ) : (
           <div></div>
         )}
-      </div>
+      </Tabs>
     </>
   );
 }

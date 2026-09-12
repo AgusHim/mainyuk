@@ -9,7 +9,7 @@ import { Comment } from "@/types/comment";
 import { Like } from "@/types/like";
 import { WsMessage } from "@/types/wsMessage";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const EventWebsocket = () => {
   const dispatch = useAppDispatch();

@@ -13,6 +13,26 @@ const nextConfig = {
             hostname: '*.cdninstagram.com',
             port: '',
           },
+          {
+            protocol: 'https',
+            hostname: 'i.ibb.co',
+            port: '',
+          },
+          {
+            protocol: 'https',
+            hostname: 'i.ibb.co.com',
+            port: '',
+          },
+          {
+            protocol: 'https',
+            hostname: 'yukngaji.vercel.app',
+            port: '',
+          },
+          {
+            protocol: 'https',
+            hostname: 'be.ynsolo.com',
+            port: '',
+          },
         ],
       },
 }

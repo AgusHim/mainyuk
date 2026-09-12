@@ -1,0 +1,72 @@
+/* YukNgaji Solo — Landing design tokens (DESAIN.md §49) */
+:root {
+  --yn-background: #f8f7f3;
+  --yn-foreground: #171717;
+  --yn-surface: #ffffff;
+  --yn-surface-muted: #f0efe9;
+  --yn-border: #e4e2da;
+  --yn-accent: #1f6b5a;
+  --yn-accent-dark: #174f43;
+  --yn-accent-soft: #e5f0ec;
+  --yn-muted: #6f6d66;
+}
+
+.yn-landing {
+  background: var(--yn-background);
+  color: var(--yn-foreground);
+  font-feature-settings: "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+
+.yn-container {
+  width: min(1280px, calc(100% - 40px));
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .yn-container {
+    width: min(1280px, calc(100% - 64px));
+  }
+}
+
+@media (min-width: 1280px) {
+  .yn-container-wide {
+    width: min(1360px, calc(100% - 64px));
+    margin-inline: auto;
+  }
+}
+
+.yn-section {
+  padding-block: clamp(72px, 10vw, 160px);
+}
+
+.yn-text-content {
+  max-width: 650px;
+}
+
+/* Scroll reveal — subtle, CSS only */
+@media (prefers-reduced-motion: no-preference) {
+  .yn-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 700ms ease-out,
+      transform 700ms ease-out;
+  }
+
+  .yn-reveal.yn-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yn-landing *,
+  .yn-landing *::before,
+  .yn-landing *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

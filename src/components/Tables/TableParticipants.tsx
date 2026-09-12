@@ -1,7 +1,6 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getEventParticipants } from "@/redux/slices/eventSlice";
-import { Ranger } from "@/types/ranger";
 import { useEffect } from "react";
 
 interface Props {
@@ -144,50 +143,6 @@ const TableParticipants: React.FC<Props> = ({ filterTicketName }) => {
             </tbody>
           </table>
         </div>
-      </div>
-    </>
-  );
-};
-
-interface ConfirmProps {
-  ranger: Ranger | null;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
-
-const ConfirmDialog: React.FC<ConfirmProps> = ({
-  ranger,
-  onConfirm,
-  onCancel,
-}) => {
-  return (
-    <>
-      <h3 className="font-bold text-lg text-black dark:text-white">
-        Konfirmasi Hapus Ranger
-      </h3>
-      <p className="py-4 text-black dark:text-white">
-        Kamu yakin ingin menghapus ranger{" "}
-        <span className="font-bold text-lg text-primary">
-          {ranger?.user?.name}
-        </span>
-      </p>
-      <div className="modal-action">
-        <label
-          htmlFor="confirmation-modal"
-          onClick={onConfirm}
-          className="btn bg-danger hover:bg-danger hover:bg-opacity-70 text-white"
-          style={{ boxShadow: "5px 5px 0px #000000" }}
-        >
-          Hapus
-        </label>
-        <label
-          htmlFor="confirmation-modal"
-          onClick={onCancel}
-          className="btn bg-success hover:bg-success hover:bg-opacity-70 text-white"
-          style={{ boxShadow: "5px 5px 0px #000000" }}
-        >
-          Batal
-        </label>
       </div>
     </>
   );

@@ -9,6 +9,18 @@ import {
   postTicket,
 } from "@/redux/slices/ticketSlice";
 import { Ticket } from "@/types/ticket";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+
 type Props = {
   toggleDialog: () => void;
 };
@@ -95,144 +107,157 @@ const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
 
   return (
     <>
-      <h3 className="font-bold text-2xl text-black dark:text-white">
+      <h3 className="text-2xl font-bold text-black dark:text-white">
         {ticket != null ? "Edit Tiket" : "Tambah Tiket"}
       </h3>
-      <div className="divider"></div>
+      <Separator className="my-2" />
       <form onSubmit={handleSubmit}>
         {/* Name */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="name">
-            <span className="label-text text-black dark:text-white">
-              Nama Tiket <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label htmlFor="name" className="font-bold text-black dark:text-white">
+            Nama Tiket <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["name"]}
             onChange={handleChange}
             type="text"
             name="name"
-            placeholder="Masukan nama lengkap ranger"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            placeholder="Masukan nama tiket"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             required
           />
         </div>
         {/* End of Name */}
 
         {/* Description */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="description">
-            <span className="label-text text-black dark:text-white">
-              Deskripsi Tiket <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label
+            htmlFor="description"
+            className="font-bold text-black dark:text-white"
+          >
+            Deskripsi Tiket <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["description"]}
             onChange={handleChange}
             type="text"
             name="description"
             placeholder="Masukan deskripsi tiket"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             required
           />
         </div>
         {/* End of Description */}
 
         {/* GenderAllowed & Visibility */}
-        <div className="flex flex-wrap -mx-3 mb-2">
-          <div className="w-1/2 px-3 mb-6 md:mb-0">
-            <label className="label font-bold" htmlFor="gender_allowed">
-              <span className="label-text text-black dark:text-white">
-                Gender Allowed <span className="text-meta-1 text-lg">*</span>
-              </span>
-            </label>
-            <div className="relative">
-              <select
-                name="gender_allowed"
-                value={formData["gender_allowed"]}
-                onChange={handleChange}
-                className="block appearance-none w-full select select-bordered bg-white dark:bg-boxdark focus:border-primary"
-                id="grid-state"
+        <div className="-mx-3 mb-2 flex flex-wrap">
+          <div className="mb-6 w-1/2 space-y-1.5 px-3 md:mb-0">
+            <Label
+              htmlFor="gender_allowed"
+              className="font-bold text-black dark:text-white"
+            >
+              Gender Allowed <span className="text-meta-1 text-lg">*</span>
+            </Label>
+            <Select
+              name="gender_allowed"
+              value={formData["gender_allowed"]}
+              onValueChange={(value) =>
+                handleChange({ target: { name: "gender_allowed", value } })
+              }
+            >
+              <SelectTrigger
+                id="gender_allowed"
+                className="h-11 w-full rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
               >
-                <option value="both">Semua</option>
-                <option value="male">Khusus Ikhwan</option>
-                <option value="female">Khusus Akhwat</option>
-              </select>
-            </div>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="both">Semua</SelectItem>
+                <SelectItem value="male">Khusus Ikhwan</SelectItem>
+                <SelectItem value="female">Khusus Akhwat</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <div className="w-1/2 px-3 mb-6 md:mb-0">
-            <label className="label font-bold" htmlFor="visibility">
-              <span className="label-text text-black dark:text-white">
-                Visibility <span className="text-meta-1 text-lg">*</span>
-              </span>
-            </label>
-            <div className="relative">
-              <select
-                name="visibility"
-                value={formData["visibility"]}
-                onChange={handleChange}
-                className="block appearance-none w-full select select-bordered bg-white dark:bg-boxdark focus:border-primary"
-                id="grid-state"
+          <div className="mb-6 w-1/2 space-y-1.5 px-3 md:mb-0">
+            <Label
+              htmlFor="visibility"
+              className="font-bold text-black dark:text-white"
+            >
+              Visibility <span className="text-meta-1 text-lg">*</span>
+            </Label>
+            <Select
+              name="visibility"
+              value={formData["visibility"]}
+              onValueChange={(value) =>
+                handleChange({ target: { name: "visibility", value } })
+              }
+            >
+              <SelectTrigger
+                id="visibility"
+                className="h-11 w-full rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
               >
-                <option value="public">PUBLIC</option>
-                <option value="draft">DRAFT</option>
-                <option value="private">PRIVATE</option>
-              </select>
-            </div>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="public">PUBLIC</SelectItem>
+                <SelectItem value="draft">DRAFT</SelectItem>
+                <SelectItem value="private">PRIVATE</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         {/* GenderAllowed & Visibility */}
 
         {/* Price */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="price">
-            <span className="label-text text-black dark:text-white">
-              Harga Tiket <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label htmlFor="price" className="font-bold text-black dark:text-white">
+            Harga Tiket <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["price"]}
             onChange={handleChange}
             type="text"
             name="price"
             placeholder="Masukan harga tiket"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             required
           />
         </div>
         {/* End of Price */}
 
         {/* Max Pax & Pax Multiplier */}
-        <div className="flex flex-wrap -mx-3 mb-2">
-          <div className="w-1/2 px-3 mb-6 md:mb-0">
-            <label className="label font-bold" htmlFor="max_pax">
-              <span className="label-text text-black dark:text-white">
-                Maksimal Pax <span className="text-meta-1 text-lg">*</span>
-              </span>
-            </label>
-            <input
+        <div className="-mx-3 mb-2 flex flex-wrap">
+          <div className="mb-6 w-1/2 space-y-1.5 px-3 md:mb-0">
+            <Label
+              htmlFor="max_pax"
+              className="font-bold text-black dark:text-white"
+            >
+              Maksimal Pax <span className="text-meta-1 text-lg">*</span>
+            </Label>
+            <Input
               value={formData["max_pax"]}
               onChange={handleChange}
               type="text"
               name="max_pax"
               placeholder="Masukan maksimal pax"
-              className="w-30 appearance-none block py-2 px-2 input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+              className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
               required
             />
           </div>
-          <div className="w-1/2 px-3 mb-6 md:mb-0">
-            <label className="label font-bold" htmlFor="pax_multiplier">
-              <span className="label-text text-black dark:text-white">
-                Pax Multiplier <span className="text-meta-1 text-lg">*</span>
-              </span>
-            </label>
-            <input
+          <div className="mb-6 w-1/2 space-y-1.5 px-3 md:mb-0">
+            <Label
+              htmlFor="pax_multiplier"
+              className="font-bold text-black dark:text-white"
+            >
+              Pax Multiplier <span className="text-meta-1 text-lg">*</span>
+            </Label>
+            <Input
               value={formData["pax_multiplier"]}
               onChange={handleChange}
               type="text"
               name="pax_multiplier"
               placeholder="Masukan maksimal pax perorder"
-              className="w-30 appearance-none block input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+              className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
               required
             />
           </div>
@@ -240,36 +265,38 @@ const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
         {/* Max Pax & Pax Multiplier */}
 
         {/* Min & Max Order Pax */}
-        <div className="flex flex-wrap -mx-3 mb-2">
-          <div className="w-1/2 px-3 mb-6 md:mb-0">
-            <label className="label font-bold" htmlFor="min_order_pax">
-              <span className="label-text text-black dark:text-white">
-                Min Order Pax <span className="text-meta-1 text-lg">*</span>
-              </span>
-            </label>
-            <input
+        <div className="-mx-3 mb-2 flex flex-wrap">
+          <div className="mb-6 w-1/2 space-y-1.5 px-3 md:mb-0">
+            <Label
+              htmlFor="min_order_pax"
+              className="font-bold text-black dark:text-white"
+            >
+              Min Order Pax <span className="text-meta-1 text-lg">*</span>
+            </Label>
+            <Input
               value={formData["min_order_pax"]}
               onChange={handleChange}
               type="text"
               name="min_order_pax"
               placeholder="Masukan maksimal pax perorder"
-              className="w-30 appearance-none block py-2 px-2 input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+              className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
               required
             />
           </div>
-          <div className="w-1/2 px-3 mb-6 md:mb-0">
-            <label className="label font-bold" htmlFor="max_order_pax">
-              <span className="label-text text-black dark:text-white">
-                Max Order Pax <span className="text-meta-1 text-lg">*</span>
-              </span>
-            </label>
-            <input
+          <div className="mb-6 w-1/2 space-y-1.5 px-3 md:mb-0">
+            <Label
+              htmlFor="max_order_pax"
+              className="font-bold text-black dark:text-white"
+            >
+              Max Order Pax <span className="text-meta-1 text-lg">*</span>
+            </Label>
+            <Input
               value={formData["max_order_pax"]}
               onChange={handleChange}
               type="text"
               name="max_order_pax"
               placeholder="Masukan maksimal pax perorder"
-              className="w-30 appearance-none block py-2 px-2 input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+              className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
               required
             />
           </div>
@@ -277,19 +304,20 @@ const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
         {/* Min & Max Order Pax */}
 
         {/* Start At */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="start_at">
-            <span className="label-text text-black dark:text-white">
-              Jadwal Mulai <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label
+            htmlFor="start_at"
+            className="font-bold text-black dark:text-white"
+          >
+            Jadwal Mulai <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["start_at"]}
             onChange={handleChange}
             type="datetime-local"
             name="start_at"
             placeholder="Jadwal mulai"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             min="2024-01-01T00:00"
             required
           />
@@ -297,36 +325,34 @@ const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
         {/* End of Start At */}
 
         {/* End At */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="end_at">
-            <span className="label-text text-black dark:text-white">
-              Jadwal Selesai <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label htmlFor="end_at" className="font-bold text-black dark:text-white">
+            Jadwal Selesai <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["end_at"]}
             onChange={handleChange}
             type="datetime-local"
             name="end_at"
             placeholder="Jadwal selesai"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             min="2024-01-01T00:00"
             required
           />
         </div>
         {/* End of End At */}
 
-        <div className="form-control my-2 mt-10">
+        <div className="my-2 mt-10">
           {isLoadingTicket ? (
-            <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
+            <div className="mx-auto mt-10 h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
           ) : (
-            <button
+            <Button
               type="submit"
-              className="btn btn-primary text-white border-2 border-black"
+              className="h-11 w-full border-2 border-black sm:w-auto sm:px-10"
               style={{ boxShadow: "0px 5px 0px 0px #000000" }}
             >
               {ticket == null ? "Tambah Tiket" : "Simpan Perubahan"}
-            </button>
+            </Button>
           )}
         </div>
       </form>

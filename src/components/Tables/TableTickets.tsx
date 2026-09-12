@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons/faEdit";
 import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
 import Dialog from "../common/Dialog/Dialog";
+import { Button } from "@/components/ui/button";
 import { Ticket } from "@/types/ticket";
 import { formatStrToDateTime } from "@/utils/convert";
 
@@ -220,23 +221,23 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
         Kamu yakin ingin menghapus tiket{" "}
         <span className="font-bold text-lg text-primary">{ticket?.name}</span>
       </p>
-      <div className="modal-action">
-        <label
-          htmlFor="confirmation-modal"
+      <div className="mt-6 flex justify-end gap-3">
+        <Button
+          type="button"
           onClick={onConfirm}
-          className="btn bg-danger hover:bg-danger hover:bg-opacity-70 text-white"
+          className="h-10 border-2 border-black bg-danger text-white hover:bg-danger/80"
           style={{ boxShadow: "5px 5px 0px #000000" }}
         >
           Hapus
-        </label>
-        <label
-          htmlFor="confirmation-modal"
+        </Button>
+        <Button
+          type="button"
           onClick={onCancel}
-          className="btn bg-success hover:bg-success hover:bg-opacity-70 text-white"
+          className="h-10 border-2 border-black bg-success text-white hover:bg-success/80"
           style={{ boxShadow: "5px 5px 0px #000000" }}
         >
           Batal
-        </label>
+        </Button>
       </div>
     </>
   );

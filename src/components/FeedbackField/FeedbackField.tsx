@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { postFeedback } from "@/redux/slices/feedbackSlice";
 import { CreateFeedback } from "@/types/feedback";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const FeedbackField = () => {
   const dispatch = useAppDispatch();
@@ -56,13 +57,14 @@ const FeedbackField = () => {
         {isLoading ? (
           <div className="ml-2 h-8 w-8 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>
         ) : (
-          <button
+          <Button
+            type="button"
             onClick={handleSubmit}
-            className="max-h-12 w-20 btn bg-primary text-white p-2 rounded-md border-2 border-black"
+            className="h-11 w-20 rounded-md border-2 border-black p-2"
             style={{ boxShadow: "5px 5px 0px 0px #000000" }}
           >
             Kirim
-          </button>
+          </Button>
         )}
       
     </div>

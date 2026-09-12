@@ -8,12 +8,14 @@ import { ResScanTicket } from "@/types/presence";
 import { PresenceTicket } from "@/types/ticket";
 import { useEffect, useRef, useState } from "react";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { CSSProperties } from "react";
 import { formatStrToDateTime } from "@/utils/convert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import QRCode from "qrcode.react";
+import Dialog from "../common/Dialog/Dialog";
+import { Button } from "@/components/ui/button";
 
 export default function ScanTicketPage({
   params,
@@ -145,37 +147,39 @@ export default function ScanTicketPage({
               <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
             ) : (
               hasPermission && (
-                <button
+                <Button
+                  type="button"
                   onClick={toggleCamera}
-                  className="w-full mt-5 btn bg-black text-white"
+                  className="mt-5 h-11 w-full bg-black text-white hover:bg-black/80"
                 >
                   Switch to {camera === "environment" ? "Front" : "Rear"} Camera
-                </button>
+                </Button>
               )
             )}
 
             {!error && videoDevices.length > 0 && !hasPermission && (
               <div>
                 {videoDevices.map((device, index) => (
-                  <button
+                  <Button
                     key={device.deviceId}
+                    type="button"
                     onClick={() => requestCameraPermission(device.deviceId)}
-                    className="mt-5 w-full btn bg-black text-white"
+                    className="mt-5 h-11 w-full bg-black text-white hover:bg-black/80"
                   >
                     {device.label || `Request Camera Permission`}
-                  </button>
+                  </Button>
                 ))}
               </div>
             )}
             {error && <p style={{ color: "red" }}>{error}</p>}
 
-            <dialog
+            <Dialog
               ref={dialogRef}
-              id="confirm"
-              className="modal modal-bottom max-w-layout mx-auto h-full"
+              toggleDialog={toggleDialog}
+              title="Hasil Scan QR"
+              contentClassName="border-2 border-black bg-yellow-400 p-5 sm:max-w-[430px]"
             >
-              <div className="modal-box bg-yellow-400 min-h-full p-5">
-                <div className="flex flex-col w-full bg-yellow-300 justify-center items-center rounded-xl px-5 py-10">
+              <div className="flex w-full flex-col items-center justify-center rounded-xl bg-yellow-300 px-5 py-10">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
                     size="5x"
@@ -224,11 +228,11 @@ export default function ScanTicketPage({
                       </div>
                     </div>
                   </div>
-                  <details className="collapse collapse-arrow p-0" open={true}>
-                    <summary className="collapse-title text-lg font-medium text-black">
+                  <details className="w-full" open>
+                    <summary className="cursor-pointer list-none text-lg font-medium text-black">
                       Riwayat Check-in
                     </summary>
-                    <div className="collapse-content px-5">
+                    <div className="px-5">
                       {presence?.presences?.map((e, i) => (
                         <div key={i} className="w-full flex flex-row justify-between">
                           <p className="font-medium text-sm text-black ">
@@ -245,21 +249,15 @@ export default function ScanTicketPage({
                       ))}
                     </div>
                   </details>
-                  <form
-                    method="dialog"
-                    onReset={toggleDialog}
-                    className="w-full"
+                  <Button
+                    type="button"
+                    onClick={toggleDialog}
+                    className="mt-10 h-11 w-full border-2 border-black text-lg shadow-bottom-right"
                   >
-                    <button
-                      type="reset"
-                      className="mt-10 w-full btn bg-primary hover:bg-opacity-80 hover:bg-primary shadow-bottom-right text-white text-lg"
-                    >
-                      Scan Lainnya
-                    </button>
-                  </form>
+                    Scan Lainnya
+                  </Button>
                 </div>
-              </div>
-            </dialog>
+            </Dialog>
           </div>
         </MainLayout>
       </RequiredAuthLayout>

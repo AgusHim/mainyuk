@@ -25,6 +25,7 @@ import Header from "../Header/Header";
 import { MainLayout } from "@/layout/MainLayout";
 import { CommonHeader } from "../Header/CommonHeader";
 import RequiredAuthLayout from "@/layout/AuthLayout";
+import { Button } from "@/components/ui/button";
 
 export default function EventDetailPage({
   params,
@@ -117,15 +118,18 @@ export default function EventDetailPage({
                 <p className="text-black dark:text-white">
                   Konfirmasi kehadiran bisa klik tombol berikut
                 </p>
-                <a
-                  href={getWhatsAppUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary ml-4 text-white"
-                  style={{ boxShadow: "5px 5px 0px 0px #000000" }}
+                <Button
+                  asChild
+                  className="ml-4 h-10 border-2 border-black shadow-[5px_5px_0_0_#000000]"
                 >
-                  Whatsapp
-                </a>
+                  <a
+                    href={getWhatsAppUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Whatsapp
+                  </a>
+                </Button>
               </div>
             </div>
           ) : (
@@ -233,13 +237,15 @@ const DialogSuccesRegistered: React.FC<DialogProps> = ({ event }) => {
               Kamu bisa konfirmasi kehadiran dan juga bisa mengirimkan
               pertanyaan untuk dibacakan saat acara nanti
             </p>
-            <div className="modal-action justify-center">
-              <a
+            <div className="mt-6 flex justify-center">
+              <Button
+                type="button"
+                variant="ghost"
                 onClick={toggleDialog}
                 className="text-xl font-bold text-primary"
               >
                 Tutup
-              </a>
+              </Button>
             </div>
           </div>
         </>

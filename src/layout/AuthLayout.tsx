@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getSessionUser } from "@/redux/slices/authSlice";
@@ -12,13 +12,19 @@ interface LayoutProps {
 }
 
 export function RequiredAuthLayout(props: LayoutProps) {
-  const currentPath: string = window.location.pathname;
   const dispatch = useAppDispatch();
   const router = useRouter();
   const query = useSearchParams();
   const user = useAppSelector((state) => state.auth.user);
+  const [currentPath, setCurrentPath] = useState<string>("");
 
   useEffect(() => {
+    setCurrentPath(window.location.pathname);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const currentPath: string = window.location.pathname;
     dispatch(getSessionUser())
       .unwrap()
       .then((value) => {

@@ -6,9 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormRanger from "../Form/FormRanger";
 import { useState, useRef } from "react";
 import Dialog from "../common/Dialog/Dialog";
+import { Button } from "@/components/ui/button";
 import { Ranger } from "@/types/ranger";
 import { deleteFromListRanger, deleteRanger } from "@/redux/slices/rangerSlice";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const TableRanger: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -40,9 +41,7 @@ const TableRanger: React.FC = () => {
         }
       })
       .catch((error) => {
-        toast.error(`Gagal hapus ranger`, {
-          className: "toast",
-        });
+        toast.error(`Gagal hapus ranger`);
       });
   }
 
@@ -250,23 +249,23 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
           {ranger?.user?.name}
         </span>
       </p>
-      <div className="modal-action">
-        <label
-          htmlFor="confirmation-modal"
+      <div className="mt-6 flex justify-end gap-3">
+        <Button
+          type="button"
           onClick={onConfirm}
-          className="btn bg-danger hover:bg-danger hover:bg-opacity-70 text-white"
+          className="h-10 border-2 border-black bg-danger text-white hover:bg-danger/80"
           style={{ boxShadow: "5px 5px 0px #000000" }}
         >
           Hapus
-        </label>
-        <label
-          htmlFor="confirmation-modal"
+        </Button>
+        <Button
+          type="button"
           onClick={onCancel}
-          className="btn bg-success hover:bg-success hover:bg-opacity-70 text-white"
+          className="h-10 border-2 border-black bg-success text-white hover:bg-success/80"
           style={{ boxShadow: "5px 5px 0px #000000" }}
         >
           Batal
-        </label>
+        </Button>
       </div>
     </>
   );

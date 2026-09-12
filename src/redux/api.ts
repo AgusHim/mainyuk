@@ -1,6 +1,6 @@
 import { decryptData, encryptData } from "@/utils/crypto";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 // Dynamically determine the host value based on the environment variable
 const baseURL = (role: string) => {
@@ -71,9 +71,7 @@ api.interceptors.response.use(
     if (error.response) {
       message = error.response.data.error;
       if (typeof message === "string") {
-        toast.error(message, {
-          className: "toast",
-        });
+        toast.error(message);
       }
       return Promise.reject(error);
     }
@@ -110,9 +108,7 @@ user_api.interceptors.response.use(
     if (error.response) {
       message = error.response.data.error;
       if (typeof message === "string") {
-        toast.error(message, {
-          className: "toast",
-        });
+        toast.error(message);
       }
       return Promise.reject(error);
     }
@@ -149,9 +145,7 @@ admin_api.interceptors.response.use(
     if (error.response) {
       message = error.response.data.error;
       if (typeof message === "string") {
-        toast.error(message, {
-          className: "toast",
-        });
+        toast.error(message);
       }
       return Promise.reject(error);
     }
@@ -188,9 +182,7 @@ ranger_api.interceptors.response.use(
     if (error.response) {
       message = error.response.data.error;
       if (typeof message === "string") {
-        toast.error(message, {
-          className: "toast",
-        });
+        toast.error(message);
       }
       return Promise.reject(error);
     }

@@ -8,7 +8,8 @@ import { sendGAEvent } from "@next/third-parties/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
   slug,
@@ -119,7 +120,9 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
     return (
       <div className="px-5 md:px-10">
         <div className="grid gap-4">
-          <Link href={`/events/${event?.slug}/qna`} className="btn mb-10 w-full rounded-lg border-2 border-black p-3 text-lg font-bold bg-primary text-white shadow-custom hover:bg-meta-7">Masuk QnA</Link>
+          <Button asChild className="mb-10 h-12 w-full rounded-lg border-2 border-black text-lg font-bold shadow-custom hover:bg-meta-7">
+            <Link href={`/events/${event?.slug}/qna`}>Masuk QnA</Link>
+          </Button>
         </div>
       </div>
     );

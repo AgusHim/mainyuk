@@ -5,6 +5,7 @@ import { logOutUser } from "@/redux/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import Dialog from "../common/Dialog/Dialog";
 import FormAccount from "../Form/FormAccount";
+import { Button } from "@/components/ui/button";
 
 const DropdownUser = () => {
   const dispatch = useAppDispatch();
@@ -63,9 +64,13 @@ const DropdownUser = () => {
 
   if (user == null) {
     return (
-      <div className="relative btn w-25 bg-primary hover:bg-secondary text-white"  style={{ boxShadow: "3px 3px 0px 0px #000000" }}>
+      <Button
+        asChild
+        className="h-10 w-25 bg-primary text-white hover:bg-secondary"
+        style={{ boxShadow: "3px 3px 0px 0px #000000" }}
+      >
         <Link href={`/signin?redirectTo=${pathname}`}>Login</Link>
-      </div>
+      </Button>
     );
   }
 

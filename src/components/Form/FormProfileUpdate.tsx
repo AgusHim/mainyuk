@@ -12,7 +12,7 @@ import { ValidateField } from "@/utils/Validation/Validation";
 import { format } from "date-fns/format";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const FormProfileUpdate: React.FC = () => {
   const router = useRouter();
@@ -202,26 +202,6 @@ const FormProfileUpdate: React.FC = () => {
   return (
     <>
       <form className="grid gap-4" onSubmit={handleSubmit}>
-        {/* {isComplated() == false ? (
-          <div role="alert" className="alert alert-info">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="h-6 w-6 shrink-0 stroke-current"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            <span>Mohon lengkapi data</span>
-          </div>
-        ) : (
-          <></>
-        )} */}
         {user?.updated_at != null && new Date(user.updated_at).getTime() < new Date("2025-08-06").getTime() ? (
           <div role="alert" className="p-5 flex flex-row bg-yellow-200 rounded-md items-center gap-2">
             <svg
@@ -346,7 +326,7 @@ const FormProfileUpdate: React.FC = () => {
               value={formData["gender"]}
               onChange={handleChange}
               name="gender"
-              className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
               required
             >
               <option disabled value="">Pilih gender</option>
@@ -372,7 +352,7 @@ const FormProfileUpdate: React.FC = () => {
               value={formData["age"]}
               onChange={handleChange}
               name="age"
-              className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
               required
             >
               <option value="16">{'< 17 Tahun'}</option>
@@ -399,7 +379,7 @@ const FormProfileUpdate: React.FC = () => {
               value={formData?.province_code ?? ""}
               onChange={handleChange}
               name="province_code"
-              className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
               required
             >
               <option value="">Pilih Provinsi</option>
@@ -540,7 +520,7 @@ const FormProfileUpdate: React.FC = () => {
               value={formData?.activity ?? ''}
               onChange={handleChange}
               name="activity"
-              className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
             >
               <option disabled value="" >Pilih aktifitas keseharian</option>
               <option value="pelajar">Pelajar</option>
@@ -574,7 +554,7 @@ const FormProfileUpdate: React.FC = () => {
               value={formData?.source ?? ''}
               onChange={handleChange}
               name="source"
-              className="select select-bordered py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
+              className="py-3 px-4 w-full bg-yellow-200 rounded-lg border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg text-black font-normal placeholder-gray-600 flex items-center border-black"
             >
               <option disabled value="">Pilih info kajian darimana</option>
               <option value="sosmed_yns">Sosmed YukNgaji Solo</option>

@@ -4,8 +4,25 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect, useState } from "react";
 import { getDivisi } from "@/redux/slices/divisiSlice";
 import { Agenda } from "@/types/agenda";
-import { editAgenda, getAgenda, postAgenda, setAgendaStartAt } from "@/redux/slices/agendaSlice";
+import {
+  editAgenda,
+  getAgenda,
+  postAgenda,
+  setAgendaStartAt,
+} from "@/redux/slices/agendaSlice";
 import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+
 type Props = {
   toggleDialog: () => void;
 };
@@ -22,9 +39,9 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
 
   const [formData, setFormData] = useState({
     id: agenda?.id ?? "",
-    name: agenda?.name??"",
-    type: agenda?.type??"meeting",
-    location: agenda?.location??"",
+    name: agenda?.name ?? "",
+    type: agenda?.type ?? "meeting",
+    location: agenda?.location ?? "",
     divisi_id: agenda?.divisi?.id ?? "1",
     start_at: agenda?.start_at!.replace("Z", ""),
   });
@@ -60,7 +77,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
         .then((res) => {
           if (res != null) {
             toggleDialog();
-            dispatch(getAgenda({start_at:agendaStartAt,end_at:agendaEndAt}));
+            dispatch(getAgenda({ start_at: agendaStartAt, end_at: agendaEndAt }));
           }
         })
         .catch((error) => {
@@ -73,7 +90,7 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
         .then((res) => {
           if (res != null) {
             toggleDialog();
-            dispatch(getAgenda({start_at:agendaStartAt,end_at:agendaEndAt}));
+            dispatch(getAgenda({ start_at: agendaStartAt, end_at: agendaEndAt }));
           }
         })
         .catch((error) => {
@@ -85,124 +102,139 @@ const FormAgenda: React.FC<Props> = ({ toggleDialog }) => {
 
   return (
     <>
-      <h3 className="font-bold text-2xl text-black dark:text-white">
+      <h3 className="text-2xl font-bold text-black dark:text-white">
         {agenda != null ? "Edit Agenda" : "Tambah Agenda"}
       </h3>
-      <div className="divider"></div>
+      <Separator className="my-2" />
       <form onSubmit={handleSubmit}>
         {/* Name */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="name">
-            <span className="label-text text-black dark:text-white">
-              Nama Agenda <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label htmlFor="name" className="font-bold text-black dark:text-white">
+            Nama Agenda <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["name"]}
             onChange={handleChange}
             type="text"
             name="name"
             placeholder="Masukan nama agenda"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             required
           />
         </div>
         {/* End of Name */}
 
         {/* Type */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="type">
-            <span className="label-text text-black dark:text-white">
-              Kategori <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <select
-            value={formData["type"]}
-            onChange={handleChange}
+        <div className="my-2 space-y-1.5">
+          <Label htmlFor="type" className="font-bold text-black dark:text-white">
+            Kategori <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Select
             name="type"
-            className="select select-bordered bg-white dark:bg-boxdark focus:border-primary"
             required
+            value={formData["type"]}
+            onValueChange={(value) =>
+              handleChange({ target: { name: "type", value } })
+            }
           >
-            <option disabled>Pilih kategori agenda</option>
-            <option value="meeting">Meeting</option>
-            <option value="hangout">Hangout</option>
-            <option value="event">Event</option>
-          </select>
+            <SelectTrigger
+              id="type"
+              className="h-11 w-full rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
+            >
+              <SelectValue placeholder="Pilih kategori agenda" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="meeting">Meeting</SelectItem>
+              <SelectItem value="hangout">Hangout</SelectItem>
+              <SelectItem value="event">Event</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         {/* End of Type */}
 
         {/* Divisi */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="divisi_id">
-            <span className="label-text text-black dark:text-white">
-              Divisi <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <select
-            value={formData["divisi_id"]}
-            onChange={handleChange}
-            name="divisi_id"
-            className="select select-bordered bg-white dark:bg-boxdark focus:border-primary"
+        <div className="my-2 space-y-1.5">
+          <Label
+            htmlFor="divisi_id"
+            className="font-bold text-black dark:text-white"
           >
-            <option disabled>Pilih divisi agenda</option>
-            {listDivisi?.map((divisi, key) => (
-              <option key={key} value={divisi.id}>
-                {divisi.name}
-              </option>
-            ))}
-          </select>
+            Divisi <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Select
+            name="divisi_id"
+            value={formData["divisi_id"]}
+            onValueChange={(value) =>
+              handleChange({ target: { name: "divisi_id", value } })
+            }
+          >
+            <SelectTrigger
+              id="divisi_id"
+              className="h-11 w-full rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
+            >
+              <SelectValue placeholder="Pilih divisi agenda" />
+            </SelectTrigger>
+            <SelectContent>
+              {listDivisi?.map((divisi, key) => (
+                <SelectItem key={key} value={divisi.id!}>
+                  {divisi.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         {/* End of Divisi */}
 
         {/* Location */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="location">
-            <span className="label-text text-black dark:text-white">
-              Location
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label
+            htmlFor="location"
+            className="font-bold text-black dark:text-white"
+          >
+            Location
+          </Label>
+          <Input
             value={formData["location"]}
             onChange={handleChange}
             type="text"
             name="location"
             placeholder="Masukan lokasi agenda"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
           />
         </div>
         {/* End of Location */}
 
         {/* Start At */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="start_at">
-            <span className="label-text text-black dark:text-white">
-              Waktu Pelaksanaan <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label
+            htmlFor="start_at"
+            className="font-bold text-black dark:text-white"
+          >
+            Waktu Pelaksanaan <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["start_at"]}
             onChange={handleChange}
             type="datetime-local"
             name="start_at"
             placeholder="Waktu Pelaksanaan Agenda"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             min="2024-01-01T00:00"
             required
           />
         </div>
         {/* End of Start At */}
 
-        <div className="form-control my-2 mt-10">
+        <div className="my-2 mt-10">
           {isLoadingAgenda ? (
-            <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
+            <div className="mx-auto mt-10 h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
           ) : (
-            <button
+            <Button
               type="submit"
-              className="btn btn-primary text-white border-2 border-black"
+              className="h-11 w-full border-2 border-black sm:w-auto sm:px-10"
               style={{ boxShadow: "0px 5px 0px 0px #000000" }}
             >
               {agenda == null ? "Tambah Agenda Baru" : "Simpan Perubahan"}
-            </button>
+            </Button>
           )}
         </div>
       </form>

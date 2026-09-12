@@ -12,7 +12,8 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { VerifyOTP } from "@/types/user";
 import ButtonLoginGoogle from "../common/Button/ButtonLoginGoogle";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export default function SignOTPPage() {
   const router = useRouter();
@@ -138,20 +139,23 @@ export default function SignOTPPage() {
               {loading ? (
                 <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
               ) : (
-                <button
+                <Button
+                  type="button"
                   onClick={handleRequestOTP}
-                  className="w-full mt-5 btn bg-primary text-white hover:shadow-none hover:bg-primary transition-all hover:translate-x-1 hover:translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-black shadow-custom"
+                  className="mt-5 h-11 w-full border-2 border-black shadow-custom transition-all hover:translate-x-1 hover:translate-y-1 hover:bg-primary/90 hover:shadow-none"
                 >
                   LANJUTKAN
-                </button>
+                </Button>
               )}
 
               {isWebView() ? (
                 <></>
               ) : (
                 <div>
-                  <div className="divider divider-warning text-black my-5">
-                    ATAU
+                  <div className="my-5 flex items-center gap-3">
+                    <div className="h-px flex-1 bg-black/20" />
+                    <span className="text-black">ATAU</span>
+                    <div className="h-px flex-1 bg-black/20" />
                   </div>
                   {loadingGoogle ? (
                     <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
@@ -187,12 +191,13 @@ export default function SignOTPPage() {
               {loading ? (
                 <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
               ) : (
-                <button
+                <Button
+                  type="button"
                   onClick={handleLoginOTP}
-                  className="w-full mt-5 btn bg-primary text-white hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-black shadow-custom"
+                  className="mt-5 h-11 w-full border-2 border-black shadow-custom transition-all hover:translate-x-1 hover:translate-y-1 hover:bg-primary/90 hover:shadow-none"
                 >
                   LOGIN
-                </button>
+                </Button>
               )}
 
               <div

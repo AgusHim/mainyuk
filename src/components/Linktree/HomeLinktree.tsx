@@ -4,12 +4,12 @@ export default function HomeLinktree() {
     {
       color: "bg-[#7CE87C]",
       text: "Walking Tour 🏃🏻‍♂️ 🏃🏻‍♀️",
-      link: "https://ynsolo.com/walking-tour",
+      link: "https://ynsolo.id/walking-tour",
     },
     // {
     //   color: "bg-pink-400",
     //   text: "Daftar KEY #13 🔑",
-    //   link: "https://ynsolo.com/events",
+    //   link: "https://ynsolo.id/events",
     // },
     {
       color: "bg-red-300",

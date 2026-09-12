@@ -1,6 +1,6 @@
 export function HomeFooter() {
   return (
-    <footer className="footer footer-center text-base-content p-4">
+    <footer className="p-4 text-center">
       <aside>
         <p className="text-black dark:text-white">
           Copyright © {new Date().getFullYear()} #YukNgajiSolo

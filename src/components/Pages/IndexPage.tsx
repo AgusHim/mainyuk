@@ -1,61 +1,29 @@
-"use client";
-import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { getEventByCode } from "@/redux/slices/eventSlice";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "react-toastify";
-import { HomeCarousel } from "../Carousel/HomeCarousel";
-import { HomeFooter } from "../Footer/HomeFooter";
-import HomeLinktree from "../Linktree/HomeLinktree";
-import GridEventsHome from "../Grid/GridEventsHome";
-import { BottomNavBar } from "../BottomNavBar/BottomNavBar";
+import Header from "../landing/Header";
+import Hero from "../landing/Hero";
+import TemanBahagia from "../landing/TemanBahagia";
+import CommunityIntro from "../landing/CommunityIntro";
+import Activities from "../landing/Activities";
+import EventsSection from "../landing/EventsSection";
+import Moments from "../landing/Moments";
+import Support from "../landing/Support";
+import FinalCTA from "../landing/FinalCTA";
+import Footer from "../landing/Footer";
 
 export default function IndexPage() {
-  const dispatch = useAppDispatch();
-  const isLoading = useAppSelector((state) => state.event.loading);
-  const router = useRouter();
-
-  const [formData, setFormData] = useState({
-    code: "",
-  });
-
-  const handleChange = (event: any) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    if (formData.code.length < 3) {
-      toast.error("Kode tidak valid", {
-        className: "toast",
-      });
-      return;
-    }
-    dispatch(getEventByCode(formData.code))
-      .unwrap()
-      .then((res) => {
-        if (res != null) {
-          router.push(`/events/${res.slug}`);
-        }
-      })
-      .catch((error) => {
-        // Handle errors here if needed
-        toast.error("Maaf kode tidak aktif", {
-          className: "toast",
-        });
-        console.error("Error fetching data:", error);
-      });
-  };
   return (
-    <>
-      <div className="mx-4">
-        <HomeLinktree />
-        <HomeCarousel />
-        <GridEventsHome />
-        <HomeFooter />
-        <BottomNavBar />
-      </div>
-    </>
+    <div className="yn-landing min-h-screen w-full overflow-x-hidden">
+      <Header />
+      <main>
+        <Hero />
+        <TemanBahagia />
+        <CommunityIntro />
+        <Activities />
+        <EventsSection />
+        <Moments />
+        <Support />
+        <FinalCTA />
+      </main>
+      <Footer />
+    </div>
   );
 }

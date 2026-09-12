@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { postComment } from "@/redux/slices/qnaSlice";
 import { CreateComment } from "@/types/comment";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const CommentField = () => {
   const dispatch = useAppDispatch();
@@ -50,13 +51,14 @@ const CommentField = () => {
       {isLoading ? (
         <div className="ml-2 h-8 w-8 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>
       ) : (
-        <button
+        <Button
+          type="button"
           onClick={handleSubmit}
-          className="mt-3 md:mt-0 max-h-12 ml-0 md:ml-4 w-30 lg:w-40 btn bg-primary text-white p-2 rounded-md border-2 border-black"
-          style={{boxShadow: '5px 5px 0px 0px #000000'}}
+          className="mt-3 ml-0 h-11 w-30 rounded-md border-2 border-black p-2 md:mt-0 md:ml-4 lg:w-40"
+          style={{ boxShadow: "5px 5px 0px 0px #000000" }}
         >
           Kirim
-        </button>
+        </Button>
       )}
     </div>
   );

@@ -3,7 +3,7 @@
 import React from "react";
 import { loginGoogle } from "@/redux/slices/authSlice";
 import { useAppDispatch } from "@/hooks/hooks";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const ButtonLoginGoogle: React.FC = () => {
   const dispatch = useAppDispatch();

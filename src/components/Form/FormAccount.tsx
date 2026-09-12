@@ -3,11 +3,26 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { editAccount } from "@/redux/slices/authSlice";
 import { getDivisi } from "@/redux/slices/divisiSlice";
-import { editRanger, getRangers, postRanger } from "@/redux/slices/rangerSlice";
+import {
+  editRanger,
+  getRangers,
+  postRanger,
+} from "@/redux/slices/rangerSlice";
 import { User } from "@/types/user";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
 interface FormProps {
   toggleDialog: () => void;
@@ -69,208 +84,228 @@ const FormAccount: React.FC<FormProps> = ({ toggleDialog }) => {
 
   return (
     <>
-      {" "}
-      <h3 className="font-bold text-2xl text-black dark:text-white">
+      <h3 className="text-2xl font-bold text-black dark:text-white">
         Setting Account
       </h3>
-      <div className="divider"></div>
+      <Separator className="my-2" />
       <form onSubmit={handleSubmit}>
         {/* Name */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="name">
-            <span className="label-text text-black dark:text-white">
-              Nama Lengkap <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label htmlFor="name" className="font-bold text-black dark:text-white">
+            Nama Lengkap <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["name"]}
             onChange={handleChange}
             type="text"
             name="name"
             placeholder="Masukan nama lengkap ranger"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             required
           />
         </div>
         {/* End of Name */}
 
         {/* Gender */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="gender">
-            <span className="label-text text-black dark:text-white">
-              Gender <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <select
-            value={formData["gender"]}
-            onChange={handleChange}
-            name="gender"
-            className="select select-bordered bg-white dark:bg-boxdark focus:border-primary"
-            required
+        <div className="my-2 space-y-1.5">
+          <Label
+            htmlFor="gender"
+            className="font-bold text-black dark:text-white"
           >
-            <option disabled>Pilih gender ranger</option>
-            <option value="male">Ikhwan</option>
-            <option value="female">Akhwat</option>
-          </select>
+            Gender <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Select
+            name="gender"
+            required
+            value={formData["gender"]}
+            onValueChange={(value) =>
+              handleChange({ target: { name: "gender", value } })
+            }
+          >
+            <SelectTrigger
+              id="gender"
+              className="h-11 w-full rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
+            >
+              <SelectValue placeholder="Pilih gender ranger" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="male">Ikhwan</SelectItem>
+              <SelectItem value="female">Akhwat</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         {/* End of Gender */}
 
         {/* Username */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="username">
-            <span className="label-text text-black dark:text-white">
-              Username
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label
+            htmlFor="username"
+            className="font-bold text-black dark:text-white"
+          >
+            Username
+          </Label>
+          <Input
             value={formData["username"]}
             onChange={handleChange}
             type="text"
             name="username"
             placeholder="Masukan username tampil di Q&A"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
           />
         </div>
         {/* End of Username */}
 
         {/* Age */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="age">
-            <span className="label-text text-black dark:text-white">
-              Usia <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label htmlFor="age" className="font-bold text-black dark:text-white">
+            Usia <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["age"]}
             onChange={handleChange}
             type="number"
             name="age"
             placeholder="Masukan usia ranger"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             required
           />
         </div>
         {/* End of Age */}
 
         {/* Phone */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="phone">
-            <span className="label-text text-black dark:text-white">
-              No WhatsApp <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label htmlFor="phone" className="font-bold text-black dark:text-white">
+            No WhatsApp <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["phone"]}
             onChange={handleChange}
             type="tel"
             name="phone"
             placeholder="Masukan nomor WhatsApp ranger"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             required
           />
         </div>
         {/* End of Phone */}
 
         {/* Address */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="address">
-            <span className="label-text text-black dark:text-white">
-              Alamat Lengkap <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label
+            htmlFor="address"
+            className="font-bold text-black dark:text-white"
+          >
+            Alamat Lengkap <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["address"]}
             onChange={handleChange}
             type="text"
             name="address"
             placeholder="Masukan alamat lengkap ranger"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             required
           />
         </div>
         {/* End of Address */}
 
         {/* Activity */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="activity">
-            <span className="label-text text-black dark:text-white">
-              Aktifitas <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <select
-            value={formData["activity"]}
-            onChange={handleChange}
-            name="activity"
-            className="select select-bordered bg-white dark:bg-boxdark focus:border-primary"
+        <div className="my-2 space-y-1.5">
+          <Label
+            htmlFor="activity"
+            className="font-bold text-black dark:text-white"
           >
-            <option disabled>Pilih aktifitas keseharian</option>
-            <option value="umm wa rabbatul bayt">Umm wa Rabbatul Bayt</option>
-            <option value="kerja">Kerja</option>
-            <option value="bisnis">Bisnis</option>
-            <option value="mahasiswa">Mahasiswa</option>
-            <option value="pelajar">Pelajar</option>
-            <option value="lainnya">Lainnya</option>
-          </select>
+            Aktifitas <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Select
+            name="activity"
+            value={formData["activity"]}
+            onValueChange={(value) =>
+              handleChange({ target: { name: "activity", value } })
+            }
+          >
+            <SelectTrigger
+              id="activity"
+              className="h-11 w-full rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
+            >
+              <SelectValue placeholder="Pilih aktifitas keseharian" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="umm wa rabbatul bayt">
+                Umm wa Rabbatul Bayt
+              </SelectItem>
+              <SelectItem value="kerja">Kerja</SelectItem>
+              <SelectItem value="bisnis">Bisnis</SelectItem>
+              <SelectItem value="mahasiswa">Mahasiswa</SelectItem>
+              <SelectItem value="pelajar">Pelajar</SelectItem>
+              <SelectItem value="lainnya">Lainnya</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         {/* End of Activity */}
 
-        <div className="mt-8 divider">Akun Login Ranger</div>
+        <div className="my-2 mt-8 flex items-center gap-3">
+          <div className="h-px flex-1 bg-stroke dark:bg-strokedark" />
+          <span className="text-sm font-semibold text-black dark:text-white">
+            Akun Login Ranger
+          </span>
+          <div className="h-px flex-1 bg-stroke dark:bg-strokedark" />
+        </div>
 
         {/* Email */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="email">
-            <span className="label-text text-black dark:text-white">
-              Email <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label htmlFor="email" className="font-bold text-black dark:text-white">
+            Email <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["email"]}
             onChange={handleChange}
             name="email"
             type="email"
             id="email"
             placeholder="Masukan email untuk login"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             required
           />
         </div>
         {/* End of Email */}
 
         {/* Password */}
-        <div className="form-control my-2">
-          <label className="label font-bold" htmlFor="password">
-            <span className="label-text text-black dark:text-white">
-              Password <span className="text-meta-1 text-lg">*</span>
-            </span>
-          </label>
-          <input
+        <div className="my-2 space-y-1.5">
+          <Label
+            htmlFor="password"
+            className="font-bold text-black dark:text-white"
+          >
+            Password <span className="text-meta-1 text-lg">*</span>
+          </Label>
+          <Input
             value={formData["password"]}
             onChange={handleChange}
             name="password"
             type="password"
             id="password"
             placeholder="Masukan password untuk login"
-            className="input input-bordered bg-white dark:bg-boxdark focus:border-primary"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
           />
 
-          <p className="m-2 text-sm text-primary font-bold">
+          <p className="m-2 text-sm font-bold text-primary">
             <span>
               <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>
             </span>{" "}
             Biarkan kosong jika tidak ingin mengganti password
           </p>
         </div>
-        <div className="form-control my-2 mt-10">
+        <div className="my-2 mt-10">
           {isLoading ? (
-            <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
+            <div className="mx-auto mt-10 h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
           ) : (
-            <button
+            <Button
               type="submit"
-              className="btn btn-primary text-white border-2 border-black"
+              className="h-11 w-full border-2 border-black sm:w-auto sm:px-10"
               style={{ boxShadow: "0px 5px 0px 0px #000000" }}
             >
               Simpan Perubahan
-            </button>
+            </Button>
           )}
         </div>
       </form>

@@ -5,6 +5,7 @@ import { Order, VerifyOrder } from "@/types/order";
 import { formatStrToDateTime } from "@/utils/convert";
 import { useEffect, useRef, useState } from "react";
 import Dialog from "../common/Dialog/Dialog";
+import { Button } from "@/components/ui/button";
 import DropdownEvents from "../Dropdowns/DropdownEvents";
 import DropdownStatus from "../Dropdowns/DropdownStatus";
 
@@ -147,24 +148,27 @@ const TableOrders = () => {
             Pilih salah satu dibawah ini untuk update status pembayaran
           </p>
           <div className="w-full flex justify-evenly">
-            <button
+            <Button
+              type="button"
               onClick={() => handleVerify(order, "paid")}
-              className="btn min-w-30 text-white text-lg hover:bg-primary bg-success shadow-custom2 hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1"
+              className="h-10 min-w-30 rounded-lg border-2 border-black bg-success text-lg text-white shadow-custom2 transition-all hover:-translate-y-0 hover:translate-x-1 hover:translate-y-1 hover:bg-success/90 hover:shadow-none"
             >
               PAID
-            </button>
-            <button
+            </Button>
+            <Button
+              type="button"
               onClick={() => handleVerify(order, "pending")}
-              className="btn min-w-30 text-white text-lg hover:bg-primary bg-yellow-400 shadow-custom2 hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1"
+              className="h-10 min-w-30 rounded-lg border-2 border-black bg-yellow-400 text-lg text-white shadow-custom2 transition-all hover:translate-x-1 hover:translate-y-1 hover:bg-yellow-400/90 hover:shadow-none"
             >
               PENDING
-            </button>
-            <button
+            </Button>
+            <Button
+              type="button"
               onClick={() => handleVerify(order, "expired")}
-              className="btn min-w-30 text-white text-lg hover:bg-primary bg-danger shadow-custom2 hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1"
+              className="h-10 min-w-30 rounded-lg border-2 border-black bg-danger text-lg text-white shadow-custom2 transition-all hover:translate-x-1 hover:translate-y-1 hover:bg-danger/90 hover:shadow-none"
             >
               EXPIRED
-            </button>
+            </Button>
           </div>
         </div>
       </div>

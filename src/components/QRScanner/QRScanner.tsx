@@ -6,8 +6,10 @@ import { getRangerDetail, resetRanger } from "@/redux/slices/rangerSlice";
 import { RangerPresence } from "@/types/rengerPresence";
 import React, { useEffect, useRef, useState } from "react";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { formatStrToDateTime } from "@/utils/convert";
+import Dialog from "../common/Dialog/Dialog";
+import { Button } from "@/components/ui/button";
 
 const QRScanner = ({ params }: { params: { id: string } }) => {
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -47,19 +49,15 @@ const QRScanner = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = () => {
     closeModal();
 
     if (agenda == null) {
-      toast.error("Agenda tidak ditemukan", {
-        className: "toast bottom-center",
-      });
+      toast.error("Agenda tidak ditemukan");
       return;
     }
     if (ranger == null) {
-      toast.error("Renger tidak ditemukan", {
-        className: "toast bottom-center",
-      });
+      toast.error("Renger tidak ditemukan");
       return;
     }
     if (ranger != null && agenda != null) {
@@ -68,12 +66,9 @@ const QRScanner = ({ params }: { params: { id: string } }) => {
         agenda_id: agenda?.id!,
         divisi_id: agenda?.divisi?.id!,
       };
-      event.preventDefault();
       dispatch(postRangerPresence(presence as RangerPresence)).then((value) => {
         if (value != null) {
-          toast.success(`Berhasil absen ${ranger?.user?.name}`, {
-            className: "toast",
-          });
+          toast.success(`Berhasil absen ${ranger?.user?.name}`);
         }
       });
     }
@@ -115,55 +110,52 @@ const QRScanner = ({ params }: { params: { id: string } }) => {
         }}
         constraints={{ facingMode: "environment" }}
       />
-      <dialog
+      <Dialog
         ref={modalRef}
-        id="confirm"
-        className="modal modal-bottom sm:modal-middle"
+        toggleDialog={closeModal}
+        title="Konfirmasi Absensi"
       >
-        <div className="modal-box bg-[#F3F3F3] dark:bg-boxdark shadow-bottom-right border-2 border-black">
-          <div className="flex flex-row py-2">
-            <p className="min-w-[80px] text-lg text-black dark:text-white">
-              Nama
-            </p>
-            <p className="font-bold text-lg text-black dark:text-white">
-              {ranger?.user?.name}
-            </p>
-          </div>
-          <div className="flex flex-row py-2">
-            <p className="min-w-[80px] text-lg text-black dark:text-white">
-              Divisi
-            </p>
-            <p className="font-bold text-lg text-black dark:text-white">
-              {ranger?.divisi?.name}
-            </p>
-          </div>
-          <div className="flex flex-row py-2">
-            <p className="min-w-[80px] text-lg text-black dark:text-white">
-              Regional
-            </p>
-            <p className="font-bold text-lg text-black dark:text-white">
-              {ranger?.divisi?.regional}
-            </p>
-          </div>
-          <div className="modal-action">
-            <form method="dialog" onSubmit={handleSubmit} onReset={closeModal}>
-              {/* if there is a button in form, it will close the modal */}
-              <button
-                type="submit"
-                className="btn mr-4 bg-success hover:bg-success hover:bg-opacity-80 shadow-bottom-right text-white"
-              >
-                Absensi
-              </button>
-              <button
-                type="reset"
-                className="btn bg-danger hover:bg-opacity-80 hover:bg-danger shadow-bottom-right text-white"
-              >
-                Tutup
-              </button>
-            </form>
-          </div>
+        <div className="flex flex-row py-2">
+          <p className="min-w-[80px] text-lg text-black dark:text-white">
+            Nama
+          </p>
+          <p className="text-lg font-bold text-black dark:text-white">
+            {ranger?.user?.name}
+          </p>
         </div>
-      </dialog>
+        <div className="flex flex-row py-2">
+          <p className="min-w-[80px] text-lg text-black dark:text-white">
+            Divisi
+          </p>
+          <p className="text-lg font-bold text-black dark:text-white">
+            {ranger?.divisi?.name}
+          </p>
+        </div>
+        <div className="flex flex-row py-2">
+          <p className="min-w-[80px] text-lg text-black dark:text-white">
+            Regional
+          </p>
+          <p className="text-lg font-bold text-black dark:text-white">
+            {ranger?.divisi?.regional}
+          </p>
+        </div>
+        <div className="mt-6 flex justify-end gap-3">
+          <Button
+            type="button"
+            onClick={handleSubmit}
+            className="h-10 border-2 border-black bg-success text-white shadow-bottom-right hover:bg-success/80"
+          >
+            Absensi
+          </Button>
+          <Button
+            type="button"
+            onClick={closeModal}
+            className="h-10 border-2 border-black bg-danger text-white shadow-bottom-right hover:bg-danger/80"
+          >
+            Tutup
+          </Button>
+        </div>
+      </Dialog>
     </div>
   );
 };

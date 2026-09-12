@@ -49,7 +49,7 @@ export default function DashboardAgendaPage() {
       {error != null ? (
         <div
           role="alert"
-          className="alert alert-error border-2 border-black shadow-bottom mb-5 h-10 flex"
+          className="mb-5 flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger shadow-bottom"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -9,7 +9,7 @@ import {
 } from "@/redux/slices/orderSlice";
 import { CreateOrder, Order } from "@/types/order";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ValidateField } from "@/utils/Validation/Validation";
 

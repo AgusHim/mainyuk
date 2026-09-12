@@ -4,8 +4,7 @@ import { makeStore } from "../redux/store";
 import "./globals.css";
 import "./data-tables-css.css";
 import "./satoshi.css";
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "@/components/ui/sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -21,7 +20,7 @@ export default function RootLayout({
         <html lang="en">
           <link rel="icon" href="/images/favicon.ico" sizes="any" />
           <body suppressHydrationWarning={true}>
-            <ToastContainer position="top-center" theme="light"/>
+            <Toaster />
             {children}
           </body>
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GTM_ID || ''} />

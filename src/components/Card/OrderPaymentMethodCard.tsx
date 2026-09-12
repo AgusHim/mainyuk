@@ -2,7 +2,7 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import QRCode from "qrcode.react";
 
 const OrderPaymentMethodCard = () => {
