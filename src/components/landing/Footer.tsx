@@ -4,7 +4,8 @@ export default function Footer() {
   const navigation = [
     { label: "Home", href: "/" },
     { label: "Events", href: "/events" },
-    { label: "Walking Tour", href: "/walking-tour" },
+    { label: "Aktivitas", href: "#aktivitas" },
+    { label: "Tentang", href: "#temanbahagia" },
   ];
 
   const support = [
@@ -22,7 +23,6 @@ export default function Footer() {
 
   const social = [
     { label: "Instagram", href: "https://www.instagram.com/solofunsport/" },
-    { label: "Fun Sport", href: "https://www.instagram.com/solofunsport/" },
   ];
 
   return (
