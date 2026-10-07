@@ -1,5 +1,7 @@
 "use client";
 import BreadcrumbEvent from "@/components/Breadcrumbs/BreadcrumbEvent";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import DashboardLoader from "@/components/common/Loader/DashboardLoader";
 import Image from "next/image";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
@@ -66,14 +68,29 @@ export default function DashboardEventDetailPage({
     }
   }
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (error != null) {
-    return <h1>{error}</h1>;
+  if (event == null && isLoading) {
+    return <DashboardLoader />;
   }
   if (event == null) {
-    return <div></div>;
+    return (
+      <>
+        <Breadcrumb pageName="Detail Event" />
+        {error != null ? (
+          <div
+            role="alert"
+            className="mb-5 flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger shadow-bottom"
+          >
+            <span>{error}</span>
+          </div>
+        ) : (
+          <div className="rounded-sm border-2 border-black bg-white p-6 shadow-bottom dark:bg-boxdark">
+            <p className="text-sm text-black dark:text-white">
+              Event tidak ditemukan.
+            </p>
+          </div>
+        )}
+      </>
+    );
   }
 
   return (

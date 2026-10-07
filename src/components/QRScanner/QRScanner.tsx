@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { formatStrToDateTime } from "@/utils/convert";
 import Dialog from "../common/Dialog/Dialog";
 import { Button } from "@/components/ui/button";
+import DashboardLoader from "../common/Loader/DashboardLoader";
 
 const QRScanner = ({ params }: { params: { id: string } }) => {
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -18,6 +19,7 @@ const QRScanner = ({ params }: { params: { id: string } }) => {
   const ranger = useAppSelector((state) => state.ranger.ranger);
   const agenda = useAppSelector((state) => state.agenda.agenda);
   const isLoadingAgenda = useAppSelector((state) => state.agenda.loading);
+  const error = useAppSelector((state) => state.agenda.error);
   const isLoadingRanger = useAppSelector((state) => state.ranger.loading);
 
   const handleResultScan = (result: string) => {
@@ -74,8 +76,21 @@ const QRScanner = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  // Agenda belum termuat: tampilkan pemuat; bila gagal, jelaskan sebabnya.
+  // Sebelumnya keduanya menghasilkan halaman kosong tanpa keterangan.
+  if (agenda == null && error == null) {
+    return <DashboardLoader />;
+  }
+
   if (agenda == null) {
-    return <div></div>;
+    return (
+      <div
+        role="alert"
+        className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+      >
+        <span>{error}</span>
+      </div>
+    );
   }
 
   return (

@@ -14,6 +14,8 @@ import { toast } from "sonner";
 const TableRanger: React.FC = () => {
   const dispatch = useAppDispatch();
   const rangers = useAppSelector((state) => state.ranger.rangers);
+  const isLoading = useAppSelector((state) => state.ranger.loading);
+  const error = useAppSelector((state) => state.ranger.error);
 
   const [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
 
@@ -88,6 +90,37 @@ const TableRanger: React.FC = () => {
               </tr>
             </thead>
             <tbody>
+              {error != null ? (
+                <tr>
+                  <td
+                    colSpan={11}
+                    role="alert"
+                    className="border-b border-black py-6 px-2 text-center text-danger"
+                  >
+                    {error}
+                  </td>
+                </tr>
+              ) : null}
+              {error == null && (rangers == null || isLoading) ? (
+                <tr>
+                  <td
+                    colSpan={11}
+                    className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                  >
+                    Memuat…
+                  </td>
+                </tr>
+              ) : null}
+              {rangers != null && !isLoading && rangers.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={11}
+                    className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                  >
+                    Belum ada ranger pada rentang tanggal ini.
+                  </td>
+                </tr>
+              ) : null}
               {rangers?.map((ranger, key) => {
                 const present =
                   (ranger.present_divisi! >= 2 ? 2 : ranger.present_divisi) ?? 0;

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { admin_api } from "../api";
 import { Agenda } from "@/types/agenda";
 import { formatStrToDateTime } from "@/utils/convert";
@@ -100,16 +100,16 @@ export const agendaSlice = createSlice({
       state.loading = false;
       state.error = null;
     });
-    builder.addCase(
-      getAgenda.pending || getAgendaDetail.pending || postAgenda.pending || editAgenda.pending || deleteAgenda.pending,
+    builder.addMatcher(
+      isAnyOf(getAgenda.pending, getAgendaDetail.pending, postAgenda.pending, editAgenda.pending, deleteAgenda.pending),
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
 
-    builder.addCase(
-      getAgenda.rejected || getAgendaDetail.rejected || postAgenda.rejected || editAgenda.rejected || deleteAgenda.rejected,
+    builder.addMatcher(
+      isAnyOf(getAgenda.rejected, getAgendaDetail.rejected, postAgenda.rejected, editAgenda.rejected, deleteAgenda.rejected),
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

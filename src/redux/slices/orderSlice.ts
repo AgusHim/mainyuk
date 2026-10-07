@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { admin_api, user_api } from "../api";
 import { UserTicket } from "@/types/user_ticket";
 import { CreateOrder, Order, VerifyOrder } from "@/types/order";
@@ -129,8 +129,8 @@ export const orderSlice = createSlice({
       state.order = action.payload as Order;
       state.isLoadingOrder = false;
     });
-    builder.addCase(
-      getOrders.pending || getOrderByPublicID.pending,
+    builder.addMatcher(
+      isAnyOf(getOrders.pending, getOrderByPublicID.pending),
       (state, _) => {
         state.loading = true;
         state.error = null;
@@ -140,8 +140,8 @@ export const orderSlice = createSlice({
       state.isLoadingOrder = true;
       state.error = null;
     });
-    builder.addCase(
-      getOrders.rejected || postOrder.rejected,
+    builder.addMatcher(
+      isAnyOf(getOrders.rejected, postOrder.rejected),
       (state, action) => {
         state.loading = false;
         state.isLoadingOrder = false;

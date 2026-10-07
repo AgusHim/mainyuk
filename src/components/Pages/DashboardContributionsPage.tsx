@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import CardDataStats from "../CardDataStats";
 import TableRangerPresence from "../Tables/TableRangerPresence";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
+import DashboardLoader from "../common/Loader/DashboardLoader";
 import {
   getRangerPresence,
   getRangersPresence,
@@ -37,14 +38,29 @@ export default function DashboardContributionsPage() {
     }
   }, []);
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (error != null) {
-    return <h1>{error}</h1>;
+  if (presence == null && isLoading) {
+    return <DashboardLoader></DashboardLoader>;
   }
   if (presence == null) {
-    return <div></div>;
+    return (
+      <>
+        <Breadcrumb pageName="Riwayat Kontribusi" />
+        {error != null ? (
+          <div
+            role="alert"
+            className="mb-5 flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger shadow-bottom"
+          >
+            <span>{error}</span>
+          </div>
+        ) : (
+          <div className="rounded-sm border-2 border-black bg-white p-6 shadow-bottom dark:bg-boxdark">
+            <p className="text-sm text-black dark:text-white">
+              Belum ada kontribusi.
+            </p>
+          </div>
+        )}
+      </>
+    );
   }
   return (
     <>
@@ -184,9 +200,7 @@ export default function DashboardContributionsPage() {
               </div>
             </TabsContent>
           </>
-        ) : (
-          <div></div>
-        )}
+        ) : null}
       </Tabs>
     </>
   );

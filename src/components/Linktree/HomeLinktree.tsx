@@ -24,7 +24,7 @@ export default function HomeLinktree() {
     {
       color: "bg-[#86AB89]",
       text: "Donasi & Support 💌",
-      link: "https://api.whatsapp.com/send/?phone=%2B6281241000056&text=Assalamu'alaikum, Saya ingin support dakwah YN Solo",
+      link: "/donations",
     },
   ];
 

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { admin_api, ranger_api } from "../api";
 import { CreateRanger, Ranger } from "@/types/ranger";
 import { formatStrToDateTime } from "@/utils/convert";
@@ -114,23 +114,15 @@ export const RangerSlice = createSlice({
       state.loading = false;
       state.error = null;
     });
-    builder.addCase(
-      getRangers.pending ||
-        getRangerDetail.pending ||
-        postRanger.pending ||
-        editRanger.pending ||
-        deleteRanger.pending,
+    builder.addMatcher(
+      isAnyOf(getRangers.pending, getRangerDetail.pending, postRanger.pending, editRanger.pending, deleteRanger.pending),
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
-    builder.addCase(
-      getRangers.rejected ||
-        getRangerDetail.rejected ||
-        postRanger.rejected ||
-        editRanger.rejected ||
-        deleteRanger.rejected,
+    builder.addMatcher(
+      isAnyOf(getRangers.rejected, getRangerDetail.rejected, postRanger.rejected, editRanger.rejected, deleteRanger.rejected),
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

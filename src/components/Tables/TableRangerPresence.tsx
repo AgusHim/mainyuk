@@ -5,6 +5,8 @@ import { formatStrToDateTime } from "@/utils/convert";
 const TableRangerPresence = () => {
   
   const presence = useAppSelector((state) => state.rangerPresence.data);
+  const isLoading = useAppSelector((state) => state.rangerPresence.loading);
+  const error = useAppSelector((state) => state.rangerPresence.error);
 
   return (
     <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 shadow-bottom border-2 border-black dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -30,6 +32,37 @@ const TableRangerPresence = () => {
             </tr>
           </thead>
           <tbody>
+            {error != null ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  role="alert"
+                  className="border-b border-black py-6 px-2 text-center text-danger"
+                >
+                  {error}
+                </td>
+              </tr>
+            ) : null}
+            {error == null && (presence == null || isLoading) ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Memuat…
+                </td>
+              </tr>
+            ) : null}
+            {presence != null && !isLoading && presence.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Belum ada kontribusi.
+                </td>
+              </tr>
+            ) : null}
             {presence?.map((presence, key) => (
               <tr key={key}>
                 <td className="border-b border-black py-3 px-2 pl-9 dark:border-strokedark xl:pl-11">

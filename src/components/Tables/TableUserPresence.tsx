@@ -31,11 +31,8 @@ const TableUserPresence = () => {
     }
   }, []);
 
-  if (isLoading) {
+  if (isLoading && presenceData == null) {
     return <DashboardLoader />;
-  }
-  if (error != null) {
-    return <h1>{error}</h1>;
   }
   return (
     <div className="rounded-sm border border-black bg-white px-5 pt-6 pb-2.5 shadow-bottom dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -59,6 +56,37 @@ const TableUserPresence = () => {
             </tr>
           </thead>
           <tbody>
+            {error != null ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  role="alert"
+                  className="border-b border-black py-6 px-2 text-center text-danger"
+                >
+                  {error}
+                </td>
+              </tr>
+            ) : null}
+            {error == null && presenceData == null ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Memuat…
+                </td>
+              </tr>
+            ) : null}
+            {presenceData != null && presenceData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Belum ada riwayat kehadiran.
+                </td>
+              </tr>
+            ) : null}
             {presenceData?.map((data, key) => (
               <tr key={key}>
                 <td className="flex justify-center border-b border-black py-2 ">

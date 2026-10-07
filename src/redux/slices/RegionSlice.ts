@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { api } from "../api";
 import { Region } from "@/types/Region";
 
@@ -53,14 +53,14 @@ export const paymentMethodSlice = createSlice({
       state.loading = false;
     });
 
-    builder.addCase(
-      getProvince.pending || getDistrict.pending || getSubDistrict.pending,
+    builder.addMatcher(
+      isAnyOf(getProvince.pending, getDistrict.pending, getSubDistrict.pending),
       (state, _) => {
         state.loading = true;
       }
     );
-    builder.addCase(
-      getProvince.rejected || getDistrict.rejected || getSubDistrict.rejected,
+    builder.addMatcher(
+      isAnyOf(getProvince.rejected, getDistrict.rejected, getSubDistrict.rejected),
 
       (state, action) => {
         state.loading = false;

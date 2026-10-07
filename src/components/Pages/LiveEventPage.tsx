@@ -6,8 +6,15 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect } from "react";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import EventWebsocket from "../Websocket/EventWebsocket";
-import { getSessionUser } from "@/redux/slices/authSlice";
-import { usePathname, useRouter } from "next/navigation";
+import DashboardLoader from "../common/Loader/DashboardLoader";
+import dynamic from "next/dynamic";
+
+// Masuk dan kelengkapan profil ditangani RequiredAuthLayout, sama seperti
+// halaman anggota lain. Pemeriksaan peran tetap di sini karena layout itu tidak
+// mengurus peran.
+const RequiredAuthLayout = dynamic(() => import("@/layout/AuthLayout"), {
+  ssr: false,
+});
 
 export default function LiveEventPage({
   params,
@@ -15,45 +22,62 @@ export default function LiveEventPage({
   params: { slug: string };
 }) {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
   const event = useAppSelector((state) => state.event.event);
   const isLoading = useAppSelector((state) => state.event.loading) || useAppSelector((state) => state.auth.loading);
   const error = useAppSelector((state) => state.event.error);
 
-  const router = useRouter();
-  const pathname = usePathname() ?? "/";
-
   useEffect(() => {
-    if (!isLoading) {
-      dispatch(getSessionUser())
-      .unwrap()
-      .then((value) => {
-        if(value == null || value.role != 'admin'){
-          router.replace(`/signin?redirectTo=${pathname}`);
-        }
-        dispatch(getEventDetail(params.slug));
-      })
-      .catch((error) => {
-        // Handle errors here if needed
-        console.error('Error fetching data:', error);
-      });
-    }
+    dispatch(getEventDetail(params.slug));
   }, []);
 
   const hostUrl = process.env.BASE_URL;
   const qrValue = `https://${hostUrl}/events/${params.slug}/qna`;
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
+  // Peran bukan admin: tampilkan penjelasan, bukan lempar ke halaman masuk.
+  // Pengguna ini sudah masuk — mengirimnya ke /signin hanya membingungkan.
+  if (user != null && user.role !== "admin") {
+    return (
+      <RequiredAuthLayout redirectTo={`/live/${params.slug}`}>
+        <div className="flex min-h-screen items-center justify-center p-5">
+          <div className="rounded-sm border-2 border-black bg-white p-6 shadow-bottom dark:bg-boxdark">
+            <h1 className="text-lg font-semibold text-black dark:text-white">
+              Tidak berizin
+            </h1>
+            <p className="mt-1 text-sm text-black dark:text-white">
+              Layar live event hanya dapat dibuka oleh admin.
+            </p>
+          </div>
+        </div>
+      </RequiredAuthLayout>
+    );
   }
-  if (error != null) {
-    return <h1>{error}</h1>;
+
+  if (event == null && error == null) {
+    return (
+      <RequiredAuthLayout redirectTo={`/live/${params.slug}`}>
+        <DashboardLoader />
+      </RequiredAuthLayout>
+    );
   }
-  if(event == null){
-    return <div></div>
+
+  if (event == null) {
+    return (
+      <RequiredAuthLayout redirectTo={`/live/${params.slug}`}>
+        <div className="flex min-h-150 items-center justify-center p-6">
+          <div
+            role="alert"
+            className="flex h-auto w-full max-w-md items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+          >
+            <span>{error}</span>
+          </div>
+        </div>
+      </RequiredAuthLayout>
+    );
   }
 
   return (
-    <>
+    <RequiredAuthLayout redirectTo={`/live/${params.slug}`}>
     <EventWebsocket></EventWebsocket>
       <div className="min-h-screen max-h-screen flex flex-col md:flex-row bg-boxdark">
         <div className="w-full md:w-2/4 flex flex-col items-center justify-center p-5">
@@ -78,6 +102,6 @@ export default function LiveEventPage({
           </div>
         </div>
       </div>
-    </>
+    </RequiredAuthLayout>
   );
 }

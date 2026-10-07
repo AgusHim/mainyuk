@@ -18,4 +18,6 @@ export type CreatePresence = {
 export type ResScanTicket = {
   user_ticket: UserTicket;
   presences: string[] | null;
+  already_checked_in?: boolean;
+  check_in_date?: string;
 };

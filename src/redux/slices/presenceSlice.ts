@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { admin_api, api, user_api } from "../api";
 import { Presence } from "@/types/presence";
 import { config } from "process";
@@ -50,15 +50,15 @@ export const presenceSlice = createSlice({
       state.loading = false;
       state.error = null;
     });
-    builder.addCase(
-      getPresences.pending || getPresencesByAuth.pending,
+    builder.addMatcher(
+      isAnyOf(getPresences.pending, getPresencesByAuth.pending),
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
-    builder.addCase(
-      getPresences.rejected || getPresencesByAuth.rejected,
+    builder.addMatcher(
+      isAnyOf(getPresences.rejected, getPresencesByAuth.rejected),
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

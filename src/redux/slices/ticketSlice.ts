@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { admin_api, api, ranger_api, user_api } from "../api";
 import { PresenceTicket, Ticket } from "@/types/ticket";
 
@@ -88,29 +88,33 @@ export const ticketSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(
-      getTicketsByEventID.fulfilled || getPublicTickets.fulfilled,
+    builder.addMatcher(
+      isAnyOf(getTicketsByEventID.fulfilled, getPublicTickets.fulfilled),
       (state, action) => {
         state.tickets = action.payload as Ticket[];
         state.loading = false;
       }
     );
-    builder.addCase(
-      getTicketsByEventID.pending ||
-        getPublicTickets.pending ||
-        postTicket.pending ||
-        putTicket.pending ||
-        deleteTicket.pending,
+    builder.addMatcher(
+      isAnyOf(
+        getTicketsByEventID.pending,
+        getPublicTickets.pending,
+        postTicket.pending,
+        putTicket.pending,
+        deleteTicket.pending
+      ),
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
-    builder.addCase(
-      getTicketsByEventID.rejected ||
-        postTicket.rejected ||
-        putTicket.rejected ||
-        deleteTicket.rejected,
+    builder.addMatcher(
+      isAnyOf(
+        getTicketsByEventID.rejected,
+        postTicket.rejected,
+        putTicket.rejected,
+        deleteTicket.rejected
+      ),
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

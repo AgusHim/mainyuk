@@ -4,9 +4,15 @@ import { useEffect, useRef } from "react";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import { getSessionUser } from "@/redux/slices/authSlice";
 import { fetchActivePoll, fetchResults } from "@/redux/slices/pollSlice";
-import { usePathname, useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import QRCode from "qrcode.react";
 import { OptionResult } from "@/types/poll";
+
+// Masuk dan kelengkapan profil ditangani RequiredAuthLayout; pemeriksaan peran
+// tetap di sini karena layout itu tidak mengurus peran.
+const RequiredAuthLayout = dynamic(() => import("@/layout/AuthLayout"), {
+    ssr: false,
+});
 
 export default function LivePollDisplay({
     params,
@@ -15,24 +21,17 @@ export default function LivePollDisplay({
 }) {
     const dispatch = useAppDispatch();
     const event = useAppSelector((state) => state.event.event);
+    const user = useAppSelector((state) => state.auth.user);
     const activePoll = useAppSelector((state) => state.poll.activePoll);
     const results = useAppSelector((state) => state.poll.results);
     const isLoading = useAppSelector((state) => state.event.loading);
-    const router = useRouter();
-    const pathname = usePathname() ?? "/";
+    const error = useAppSelector((state) => state.event.error);
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    // Auth + fetch event
+    // Sesi diperiksa RequiredAuthLayout; di sini cukup mengambil detail event.
     useEffect(() => {
-        dispatch(getSessionUser())
-            .unwrap()
-            .then((value) => {
-                if (value == null || value.role != "admin") {
-                    router.replace(`/signin?redirectTo=${pathname}`);
-                }
-                dispatch(getEventDetail(params.slug));
-            })
-            .catch(console.error);
+        dispatch(getSessionUser());
+        dispatch(getEventDetail(params.slug));
     }, []);
 
     // Poll active poll & results
@@ -57,11 +56,46 @@ export default function LivePollDisplay({
     const hostUrl = process.env.BASE_URL;
     const qrValue = `https://${hostUrl}/events/${params.slug}/poll`;
 
+    // Peran bukan admin: jelaskan, jangan lempar ke halaman masuk — pengguna
+    // ini sudah masuk, jadi mengirimnya ke /signin hanya membingungkan.
+    if (user != null && user.role !== "admin") {
+        return (
+            <RequiredAuthLayout redirectTo={`/live/${params.slug}/poll`}>
+                <div className="flex min-h-screen items-center justify-center p-5">
+                    <div className="rounded-sm border-2 border-black bg-white p-6 shadow-bottom dark:bg-boxdark">
+                        <h1 className="text-lg font-semibold text-black dark:text-white">
+                            Tidak berizin
+                        </h1>
+                        <p className="mt-1 text-sm text-black dark:text-white">
+                            Layar poll hanya dapat dibuka oleh admin.
+                        </p>
+                    </div>
+                </div>
+            </RequiredAuthLayout>
+        );
+    }
+
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
                 <p className="text-white text-xl">Loading...</p>
             </div>
+        );
+    }
+
+    // Event gagal dimuat: tanpa ini layar tampak menunggu poll selamanya.
+    if (error != null && event == null) {
+        return (
+            <RequiredAuthLayout redirectTo={`/live/${params.slug}/poll`}>
+                <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-6">
+                    <div
+                        role="alert"
+                        className="w-full max-w-md rounded-xl border-2 border-white/20 bg-danger/10 px-4 py-3 text-danger"
+                    >
+                        {error}
+                    </div>
+                </div>
+            </RequiredAuthLayout>
         );
     }
 
@@ -71,6 +105,7 @@ export default function LivePollDisplay({
         : 1;
 
     return (
+        <RequiredAuthLayout redirectTo={`/live/${params.slug}/poll`}>
         <div className="min-h-screen max-h-screen flex flex-col md:flex-row bg-gradient-to-br from-gray-900 to-gray-800">
             {/* Left: QR Code */}
             <div className="w-full md:w-1/4 flex flex-col items-center justify-center p-6 border-r border-white/10">
@@ -229,5 +264,6 @@ export default function LivePollDisplay({
                 )}
             </div>
         </div>
+        </RequiredAuthLayout>
     );
 }

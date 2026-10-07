@@ -51,6 +51,27 @@ export default function OrderTicketsLayout({
     }
   }
 
+  // Gagal memuat pesanan: tampilkan sebabnya, jangan hanya berputar selamanya.
+  if (error != null && order == null) {
+    return (
+      <MainLayout>
+        <CommonHeader
+          title="Daftar Tiket Event"
+          isShowBack={true}
+          isShowTrailing={false}
+        />
+        <div className="yn-container max-w-2xl py-8">
+          <div
+            role="alert"
+            className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+          >
+            <span>{error}</span>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
+
   if (order == null || isLoading) {
     return (
       <MainLayout>
@@ -71,9 +92,9 @@ export default function OrderTicketsLayout({
           isShowBack={true}
           isShowTrailing={false}
         />
-        <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
+        <div className="yn-container max-w-2xl py-8">
           {order.status != "paid" ? (
-            <div className="p-10 px-5 text-black font-bold text-lg">
+            <div className="rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-10 px-5 text-center text-[var(--yn-muted)] font-bold text-lg">
               Selesaikan Transaksi
             </div>
           ) : (
@@ -117,15 +138,15 @@ const Ticket: React.FC<TicketProps> = ({
             <QRCode
               value={ticket?.public_id ?? ""}
               size={300}
-              bgColor="#FACA15"
-              className="p-4 border-2 border-black"
+              bgColor="#FFFFFF"
+              className="p-4 border border-[var(--yn-border)]"
             />
             <div className="flex w-full justify-between py-5 px-6">
-              <p className="text-black font-bold text-lg">Kode Tiket</p>
-              <p className="text-black text-lg">{ticket?.public_id}</p>
+              <p className="text-[var(--yn-foreground)] font-bold text-lg">Kode Tiket</p>
+              <p className="text-[var(--yn-foreground)] text-lg">{ticket?.public_id}</p>
             </div>
             <div className="px-6 w-full">
-              <div className="flex px-4 py-2 bg-pink-500 text-black text-lg w-full rounded-xl">
+              <div className="flex px-4 py-2 bg-[var(--yn-accent-soft)] text-[var(--yn-accent-dark)] text-sm w-full rounded-xl">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -146,11 +167,11 @@ const Ticket: React.FC<TicketProps> = ({
         );
         toggleDialog();
       }}
-      className="relative bg-yellow-300 rounded-lg shadow-custom p-6 w-full mx-auto border-2 border-black"
+      className="relative bg-[var(--yn-surface)] rounded-3xl p-6 w-full mx-auto border border-[var(--yn-border)]"
     >
       {/* Notch */}
-      <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-black w-12 h-4 rounded-b-lg border border-black z-10"></div>
-      <div className="bg-primary text-white rounded-lg -m-6 mb-4 p-4">
+      <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-[var(--yn-foreground)] w-12 h-4 rounded-b-lg z-10"></div>
+      <div className="bg-[var(--yn-accent)] text-white rounded-2xl -m-6 mb-4 p-4">
         <div className="flex items-center gap-2">
           <div>
             <FontAwesomeIcon
@@ -173,22 +194,22 @@ const Ticket: React.FC<TicketProps> = ({
       </div>
       <div className="mt-4">
         <div>
-          <p className="font-sans text-sm text-black">Nama Event</p>
-          <h1 className="font-sans font-semibold text-sm text-black">
+          <p className="font-sans text-sm text-[var(--yn-muted)]">Nama Event</p>
+          <h1 className="font-sans font-semibold text-sm text-[var(--yn-foreground)]">
             {ticket?.event?.title}
           </h1>
         </div>
         <div className="flex justify-between items-center mt-2">
           <div>
-            <p className="font-sans text-sm text-black">Nama Tiket</p>
-            <h1 className="font-sans font-semibold text-sm text-black">
+            <p className="font-sans text-sm text-[var(--yn-muted)]">Nama Tiket</p>
+            <h1 className="font-sans font-semibold text-sm text-[var(--yn-foreground)]">
               {ticket?.ticket?.name}
             </h1>
           </div>
           <QRCode
             value={ticket?.public_id ?? ""}
             size={70}
-            bgColor="#FACA15"
+            bgColor="#FFFFFF"
             className=""
           />
         </div>

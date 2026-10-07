@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { admin_api, ranger_api } from "../api";
 import { RangerPresence } from "@/types/rengerPresence";
 
@@ -69,15 +69,15 @@ export const rPresenceSlice = createSlice({
       state.loading = false;
       state.error = null;
     });
-    builder.addCase(
-      getRangerPresence.pending || getRangersPresence.pending || postRangerPresence.pending,
+    builder.addMatcher(
+      isAnyOf(getRangerPresence.pending, getRangersPresence.pending, postRangerPresence.pending),
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
-    builder.addCase(
-      getRangerPresence.rejected || getRangersPresence.rejected || postRangerPresence.rejected,
+    builder.addMatcher(
+      isAnyOf(getRangerPresence.rejected, getRangersPresence.rejected, postRangerPresence.rejected),
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

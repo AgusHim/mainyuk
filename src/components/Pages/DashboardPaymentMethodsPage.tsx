@@ -1,9 +1,10 @@
 "use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import TablePaymentMethods from "@/components/Tables/TablePaymentMethods";
+import DashboardLoader from "@/components/common/Loader/DashboardLoader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getPaymentMethod } from "@/redux/slices/PaymentMethodSlice";
-import { useEffect, useState, useRef } from "react";
+import { useEffect } from "react";
 
 
 const DashboardPaymentMethodsPage = () => {
@@ -18,10 +19,23 @@ const DashboardPaymentMethodsPage = () => {
     }
   }, []);
 
-  
+  if (isLoading) {
+    return <DashboardLoader />;
+  }
+
   return (
     <>
       <Breadcrumb pageName="Metode Pembayaran" />
+
+      {error ? (
+        <div
+          role="alert"
+          className="mb-5 flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger shadow-bottom"
+        >
+          <span>{error}</span>
+        </div>
+      ) : null}
+
         <TablePaymentMethods />
     </>
   );

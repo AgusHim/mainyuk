@@ -111,16 +111,16 @@ export default function EventDetailPage({
     <RequiredAuthLayout redirectTo={`/events/${params.slug}/qna`}>
       <MainLayout>
         <CommonHeader title="Tanya Jawab" isShowTrailing={true} />
-        <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
+        <div className="yn-container max-w-2xl py-8">
           {presence.data != null && now < startAt ? (
-            <div className="w-full mb-5 p-10 rounded-xl border-2 bg-yellow-300 dark:bg-boxdark border-black shadow-bottom dark:border-black">
-              <div className="flex flex-row justify-between items-center">
-                <p className="text-black dark:text-white">
+            <div className="w-full mb-5 rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-[var(--yn-foreground)]">
                   Konfirmasi kehadiran bisa klik tombol berikut
                 </p>
                 <Button
                   asChild
-                  className="ml-4 h-10 border-2 border-black shadow-[5px_5px_0_0_#000000]"
+                  className="h-10 rounded-full bg-[var(--yn-accent)] px-5 text-white hover:bg-[var(--yn-accent-dark)]"
                 >
                   <a
                     href={getWhatsAppUrl()}
@@ -135,10 +135,10 @@ export default function EventDetailPage({
           ) : (
             <></>
           )}
-          <div className="w-full mb-5 p-5 rounded-xl border-2 bg-yellow-300 border-black shadow-bottom">
+          <div className="w-full mb-5 rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-5">
             <div className="flex flex-row">
               <Image
-                className="w-30 rounded-xl shadow-custom2 border-2 border-black mr-4"
+                className="mr-4 rounded-2xl border border-[var(--yn-border)]"
                 width={100}
                 height={100}
                 alt={`Image ${event.title}`}
@@ -146,13 +146,13 @@ export default function EventDetailPage({
                 unoptimized={true}
               />
               <div className="flex flex-col items-start">
-                <h1 className="justify-center text-lg font-bold text-black">
+                <h1 className="justify-center text-lg font-bold text-[var(--yn-foreground)]">
                   {event.title}
                 </h1>
-                <p className="justify-center text-md text-black">
+                <p className="justify-center text-md text-[var(--yn-muted)]">
                   {event.speaker}
                 </p>
-                <h1 className="text-center text-sm text-black">
+                <h1 className="text-center text-sm text-[var(--yn-muted)]">
                   {formatStrToDateTime(
                     event!.start_at!,
                     "dd MMM yyyy HH:mm",
@@ -162,11 +162,11 @@ export default function EventDetailPage({
               </div>
             </div>
           </div>
-          <div className="w-full flex flex-col mb-5 p-5 rounded-xl border-2 bg-yellow-300 shadow-bottom border-black">
-            <h1 className="mb-2 text-2xl font-bold text-black dark:text-white">
+          <div className="w-full flex flex-col mb-5 rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-5">
+            <h1 className="mb-2 text-2xl font-bold text-[var(--yn-foreground)]">
               Live QnA
             </h1>
-            <p className="mb-5 text-black">
+            <p className="mb-5 text-[var(--yn-muted)]">
               Masukan pertanyaan atau keresahan kamu
             </p>
             <CommentField />

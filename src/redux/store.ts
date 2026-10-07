@@ -17,6 +17,17 @@ import ticketSlice from "./slices/ticketSlice";
 import paymentMethodSlice from "./slices/PaymentMethodSlice";
 import regionSlice from "./slices/RegionSlice";
 import pollSlice from "./slices/pollSlice";
+import communitySlice from "./slices/communitySlice";
+import gamificationSlice from "./slices/gamificationSlice";
+import missionSlice from "./slices/missionSlice";
+import fundraisingSlice from "./slices/fundraisingSlice";
+import campaignAdminSlice from "./slices/campaignAdminSlice";
+import threadSlice from "./slices/threadSlice";
+import moderationSlice from "./slices/moderationSlice";
+import shopSlice from "./slices/shopSlice";
+import shopAdminSlice from "./slices/shopAdminSlice";
+import metricsSlice from "./slices/metricsSlice";
+import userAdminSlice from "./slices/userAdminSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -38,6 +49,17 @@ export const makeStore = () => {
       paymentMethod: paymentMethodSlice,
       region: regionSlice,
       poll: pollSlice,
+      community: communitySlice,
+      gamification: gamificationSlice,
+      mission: missionSlice,
+      fundraising: fundraisingSlice,
+      campaignAdmin: campaignAdminSlice,
+      thread: threadSlice,
+      moderation: moderationSlice,
+      shop: shopSlice,
+      shopAdmin: shopAdminSlice,
+      metrics: metricsSlice,
+      userAdmin: userAdminSlice,
     },
   });
 };

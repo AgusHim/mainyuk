@@ -101,7 +101,6 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
           orderTickets.push({
             ticket_id: ticket.id,
             ticket: ticket,
-            user_id: auth?.id,
             event_id: event?.id,
           });
         }

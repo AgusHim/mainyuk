@@ -1,4 +1,5 @@
 "use client";
+import DashboardLoader from "../common/Loader/DashboardLoader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import {
   deleteAgenda,
@@ -62,11 +63,18 @@ const TableAgenda: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
   }
 
   if (listAgenda == null && isLoading) {
-    return <h1>Loading...</h1>;
+    return <DashboardLoader />;
   }
 
   if (error != null) {
-    return <h1>{error}</h1>;
+    return (
+      <div
+        role="alert"
+        className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger shadow-bottom"
+      >
+        <span>{error}</span>
+      </div>
+    );
   }
 
   const router = useRouter();
@@ -102,6 +110,26 @@ const TableAgenda: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
             </tr>
           </thead>
           <tbody>
+            {isLoading && listAgenda == null ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Memuat…
+                </td>
+              </tr>
+            ) : null}
+            {!isLoading && listAgenda != null && listAgenda.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Belum ada agenda.
+                </td>
+              </tr>
+            ) : null}
             {listAgenda?.map((data, key) => (
               <tr
                 key={key}

@@ -2,9 +2,11 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { logOutUser } from "@/redux/slices/authSlice";
 import {
+  faBullseye,
   faQrcode,
   faReceipt,
   faTicket,
+  faTrophy,
   faUserAstronaut,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,6 +20,30 @@ const ProfileMenuCard = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const menu = [
+    {
+      name: "Misi",
+      icon: (
+        <FontAwesomeIcon
+          icon={faBullseye}
+          width={25}
+          style={{ fontSize: "20px", color: "black" }}
+        />
+      ),
+      href: "/missions",
+      role: "all",
+    },
+    {
+      name: "Leaderboard",
+      icon: (
+        <FontAwesomeIcon
+          icon={faTrophy}
+          width={25}
+          style={{ fontSize: "20px", color: "black" }}
+        />
+      ),
+      href: "/leaderboard",
+      role: "all",
+    },
     {
       name: "Riwayat Transaksi",
       icon: (

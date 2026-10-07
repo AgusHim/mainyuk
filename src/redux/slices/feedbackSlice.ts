@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { api } from "../api";
 import { CreateFeedback, Feedback } from "@/types/feedback";
 
@@ -37,14 +37,26 @@ export const feedbackSlice = createSlice({
       state.data = action.payload as Feedback[];
       state.loading = false;
     });
-    builder.addCase(getFeedback.pending || postFeedback.pending, (state, _) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(getFeedback.rejected || postFeedback.rejected, (state, action) => {
+    builder.addCase(postFeedback.fulfilled, (state, action) => {
+      state.data = [action.payload as Feedback, ...(state.data ?? [])];
       state.loading = false;
-      state.error = action.error.message || "Failed to fetch data";
     });
+    // `a.pending || b.pending` hanya mendaftarkan action pertama (keduanya
+    // objek truthy), sehingga action kedua tidak pernah ditangani.
+    builder.addMatcher(
+      isAnyOf(getFeedback.pending, postFeedback.pending),
+      (state, _) => {
+        state.loading = true;
+        state.error = null;
+      }
+    );
+    builder.addMatcher(
+      isAnyOf(getFeedback.rejected, postFeedback.rejected),
+      (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch data";
+      }
+    );
     
   },
 });

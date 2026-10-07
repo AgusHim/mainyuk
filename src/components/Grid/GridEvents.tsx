@@ -12,7 +12,6 @@ export default function GridEvents() {
   const dispatch = useAppDispatch();
   const eventsData = useAppSelector((state) => state.event.data);
   const isLoading = useAppSelector((state) => state.event.loading);
-  const rectangles = Array(6).fill(null);
   const error = useAppSelector((state) => state.event.error);
 
   useEffect(() => {
@@ -21,96 +20,108 @@ export default function GridEvents() {
     }
   }, []);
 
-  if (eventsData == null || isLoading) {
-    return <Loader></Loader>
+  // Gagal memuat: jelaskan sebabnya. Tanpa ini pemuat berputar selamanya.
+  if (error != null && eventsData == null) {
+    return (
+      <section className="yn-container pb-24 pt-8 md:pb-32">
+        <div
+          role="alert"
+          className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+        >
+          <span>{error}</span>
+        </div>
+      </section>
+    );
   }
-  const events = eventsData?.filter(event => event.isPublished);
+
+  if (eventsData == null || isLoading) {
+    return <Loader></Loader>;
+  }
+  const events = eventsData?.filter((event) => event.isPublished);
   return (
-    <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
-      <div className="grid gap-4">
-        {events?.map((event) => (
-          <Link key={event.id} href={`/events/${event.slug}`}>
-            <div className="flex w-full rounded-xl border-2 border-black bg-yellow-300 shadow-custom hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1">
-              <div className="relative w-2/5">
-                <div className="block overflow-hidden rounded-xl m-2">
+    <section className="yn-container pb-24 pt-8 md:pb-32">
+      {error ? (
+        <div
+          role="alert"
+          className="mb-4 flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+        >
+          <span>{error}</span>
+        </div>
+      ) : null}
+      {events && events.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {events.map((event) => (
+            <Link
+              key={event.id}
+              href={`/events/${event.slug}`}
+              className="group block overflow-hidden rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] transition-all duration-200 hover:-translate-y-1"
+            >
+              <div className="relative aspect-[4/5] w-full overflow-hidden">
+                <img
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                  src={event.image_url}
+                  alt={event.title}
+                  loading="lazy"
+                />
+                <div className="absolute left-4 top-4">
+                  <AllowedGender event={event} />
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 p-5">
+                <div className="flex items-center gap-2 text-xs font-medium text-[var(--yn-muted)]">
+                  <span>
+                    {formatStrToDateTime(
+                      event.start_at!.replace("Z", ""),
+                      "EEEE, dd MMMM yyyy"
+                    )}
+                  </span>
+                </div>
+                <h2 className="text-xl font-semibold leading-snug tracking-tight text-[var(--yn-foreground)] line-clamp-2">
+                  {event.title}
+                </h2>
+                <div className="mt-1 flex items-center gap-2">
                   <img
-                    className="lazy max-w-full entered loaded object-cover"
-                    width={400}
-                    height={500}
-                    src={event.image_url}
+                    className="h-6 w-6 rounded-full object-cover"
+                    src="/images/logo/yn_logo.png"
+                    alt="YukNgaji Solo"
+                    width={24}
+                    height={24}
                   />
+                  <span className="text-sm font-medium text-[var(--yn-muted)]">
+                    YukNgaji Solo
+                  </span>
                 </div>
+                <span className="mt-2 text-sm font-semibold text-[var(--yn-accent)]">
+                  Lihat Detail →
+                </span>
               </div>
-              <div className="flex w-3/5 justify-between p-2">
-                <div className="flex cursor-pointer flex-col text-left">
-                  <div className="flex-1">
-                    <div className="mb-1 line-clamp-2 w-full cursor-pointer">
-                      <h1 className="font-satoshi font-semibold text-md text-black">
-                        {event.title}
-                      </h1>
-                    </div>
-                    <div>
-                      <p className="font-satoshi text-sm text-black">
-                        {formatStrToDateTime(
-                          event.start_at!.replace("Z", ""),
-                          "EEEE, dd MMMM yyyy"
-                        )}
-                      </p>
-                    </div>
-                    <div className="mt-4 flex w-full items-center">
-                      <div className="mr-2">
-                        <div className="size-6">
-                          <img
-                            className="lazy max-w-full entered loaded"
-                            src="/images/logo/yn_logo.png"
-                            width={24}
-                            height={24}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="line-clamp-1">
-                          <p className="font-satoshi font-semibold text-sm text-black">
-                            YukNgaji Solo
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <AllowedGender event={event} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-10 text-center">
+          <p className="text-[var(--yn-muted)]">
+            Belum ada event yang dipublikasikan.
+          </p>
+        </div>
+      )}
+    </section>
   );
 }
 
 const AllowedGender: React.FC<{ event: Event }> = ({ event }) => {
   if (event.allowed_gender == "FEMALE") {
     return (
-      <div className="mb-2 flex items-center gap-1 rounded-xl bg-meta-7 p-2">
-        <div className="flex-1">
-          <h1 className="font-satoshi font-medium text-xs text-black">
-            Female Only
-          </h1>
-        </div>
-      </div>
+      <span className="rounded-full bg-[var(--yn-accent-soft)] px-3 py-1 text-xs font-medium text-[var(--yn-accent-dark)]">
+        Female Only
+      </span>
     );
   }
   if (event.allowed_gender == "MALE") {
     return (
-      <div className="mb-2 flex items-center gap-1 rounded-xl bg-meta-5 p-2">
-        <div className="flex-1">
-          <h1 className="font-satoshi font-medium text-xs text-black">
-            Male Only
-          </h1>
-        </div>
-      </div>
+      <span className="rounded-full bg-[var(--yn-accent-soft)] px-3 py-1 text-xs font-medium text-[var(--yn-accent-dark)]">
+        Male Only
+      </span>
     );
   }
   return <></>;

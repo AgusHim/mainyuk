@@ -13,8 +13,11 @@ export type PollResponse = {
     id?: string;
     poll_id: string;
     poll_option_id?: string | null;
-    user_id: string;
+    // Kosong untuk jawaban tamu — identitas hanya diisi server.
+    user_id?: string | null;
     username: string;
+    // True hanya bila jawaban berasal dari akun terautentikasi.
+    is_verified?: boolean;
     text_response?: string | null;
     rank?: number | null;
     created_at?: string;
@@ -50,9 +53,10 @@ export type UpdatePoll = {
     options?: { text: string; is_correct?: boolean }[];
 };
 
+// Payload jawaban poll. `user_id` sengaja tidak ada: server menentukan
+// identitas dari sesi, sehingga client tidak bisa mengaku sebagai akun lain.
 export type SubmitPollResponse = {
     poll_option_id?: string | null;
-    user_id: string;
     username: string;
     text_response?: string | null;
     rank?: number | null;

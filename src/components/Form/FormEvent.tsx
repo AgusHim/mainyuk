@@ -11,6 +11,7 @@ const FormEvent = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     desc: "",
@@ -28,6 +29,7 @@ const FormEvent = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     var bodyData = {
       title: formData.title,
@@ -54,8 +56,11 @@ const FormEvent = () => {
         }
       })
       .catch((error) => {
-        // Handle errors here if needed
+        // Interceptor API sudah menampilkan galatnya.
         console.error("Error fetching data:", error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
   };
 
@@ -68,10 +73,14 @@ const FormEvent = () => {
             <div className="p-6.5">
               <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                 <div className="w-full xl:w-1/2">
-                  <label className="mb-2.5 block text-black dark:text-white">
+                  <label
+                    htmlFor="event-title"
+                    className="mb-2.5 block text-black dark:text-white"
+                  >
                     Nama Event <span className="text-meta-1">*</span>
                   </label>
                   <input
+                    id="event-title"
                     value={formData["title"]}
                     onChange={handleChange}
                     name="title"
@@ -82,10 +91,14 @@ const FormEvent = () => {
                 </div>
 
                 <div className="w-full xl:w-1/2">
-                  <label className="mb-2.5 block text-black dark:text-white">
+                  <label
+                    htmlFor="event-speaker"
+                    className="mb-2.5 block text-black dark:text-white"
+                  >
                     Pengisi <span className="text-meta-1">*</span>
                   </label>
                   <input
+                    id="event-speaker"
                     value={formData["speaker"]}
                     onChange={handleChange}
                     name="speaker"
@@ -97,10 +110,14 @@ const FormEvent = () => {
               </div>
 
               <div className="mb-6">
-                <label className="mb-2.5 block text-black dark:text-white">
+                <label
+                  htmlFor="event-desc"
+                  className="mb-2.5 block text-black dark:text-white"
+                >
                   Deskripsi <span className="text-meta-1">*</span>
                 </label>
                 <textarea
+                  id="event-desc"
                   value={formData["desc"]}
                   onChange={handleChange}
                   name="desc"
@@ -111,10 +128,14 @@ const FormEvent = () => {
               </div>
 
               <div className="mb-4.5">
-                <label className="mb-2.5 block text-black dark:text-white">
+                <label
+                  htmlFor="event-image-url"
+                  className="mb-2.5 block text-black dark:text-white"
+                >
                   Url Poster <span className="text-meta-1">*</span>
                 </label>
                 <input
+                  id="event-image-url"
                   value={formData["image_url"]}
                   onChange={handleChange}
                   name="image_url"
@@ -125,11 +146,15 @@ const FormEvent = () => {
               </div>
 
               <div className="mb-4.5">
-                <label className="mb-2.5 block text-black dark:text-white">
+                <label
+                  htmlFor="event-divisi-id"
+                  className="mb-2.5 block text-black dark:text-white"
+                >
                   Divisi
                 </label>
                 <div className="relative z-20 bg-transparent">
                   <select
+                    id="event-divisi-id"
                     value={formData["divisi_id"]}
                     onChange={handleChange}
                     name="divisi_id"
@@ -165,10 +190,14 @@ const FormEvent = () => {
 
               <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                 <div className="w-full xl:w-1/2">
-                  <label className="mb-2.5 block text-black dark:text-white">
+                  <label
+                    htmlFor="event-start-at"
+                    className="mb-2.5 block text-black dark:text-white"
+                  >
                     Tanggal Mulai <span className="text-meta-1">*</span>
                   </label>
                   <input
+                    id="event-start-at"
                     value={formData["start_at"]}
                     onChange={handleChange}
                     name="start_at"
@@ -179,10 +208,14 @@ const FormEvent = () => {
                 </div>
 
                 <div className="w-full xl:w-1/2">
-                  <label className="mb-2.5 block text-black dark:text-white">
+                  <label
+                    htmlFor="event-end-at"
+                    className="mb-2.5 block text-black dark:text-white"
+                  >
                     Tanggal Selesai <span className="text-meta-1">*</span>
                   </label>
                   <input
+                    id="event-end-at"
                     value={formData["end_at"]}
                     onChange={handleChange}
                     name="end_at"
@@ -193,10 +226,12 @@ const FormEvent = () => {
                 </div>
               </div>
               <button
-                className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray border-2 border-black"
+                type="submit"
+                disabled={isSubmitting}
+                className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray border-2 border-black disabled:cursor-default disabled:opacity-60"
                 style={{ boxShadow: "0px 5px 0px 0px #000000" }}
               >
-                Simpan
+                {isSubmitting ? "Menyimpan…" : "Simpan"}
               </button>
             </div>
           </form>

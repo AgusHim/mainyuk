@@ -36,6 +36,23 @@ export default function OrderLayout({
     }
   }, []);
 
+  // Gagal memuat pesanan: tampilkan sebabnya, jangan hanya berputar selamanya.
+  if (error != null && order == null) {
+    return (
+      <MainLayout>
+        <CommonHeader title="Detail Transaksi" isShowBack={true} />
+        <div className="yn-container max-w-2xl py-8">
+          <div
+            role="alert"
+            className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+          >
+            <span>{error}</span>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
+
   if (order == null || isLoading) {
     return (
       <MainLayout>
@@ -58,7 +75,7 @@ export default function OrderLayout({
     <>
       <MainLayout>
         <CommonHeader title="Detail Transaksi" isShowBack={true} />
-        <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
+        <div className="yn-container max-w-2xl py-8">
           <div className="mb-8 flex flex-col gap-4">
             {order.status == "paid" ? (
               <div>
@@ -71,7 +88,7 @@ export default function OrderLayout({
                       height={25}
                       style={{ fontSize: "20px", color: "black" }}
                     />
-                    <h1 className="font-semibold text-lg text-black">
+                    <h1 className="font-semibold text-lg text-[var(--yn-foreground)]">
                       Tiket Event
                     </h1>
                   </div>
@@ -95,7 +112,7 @@ export default function OrderLayout({
                   </button>
                 </div>
                 <div>
-                  <div className="flex w-full rounded-xl border-2 border-black bg-yellow-300 shadow-custom">
+                  <div className="flex w-full overflow-hidden rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)]">
                     <div className="relative w-2/5">
                       <div className="absolute bottom-0 grid w-full">
                         {/* <div className="p-1">
@@ -106,7 +123,7 @@ export default function OrderLayout({
                           </div>
                         </div> */}
                       </div>
-                      <div className="block overflow-hidden rounded-xl object-cover">
+                      <div className="block overflow-hidden object-cover">
                         <img
                           src={event?.image_url ?? ""}
                           alt="Poster event"
@@ -120,12 +137,12 @@ export default function OrderLayout({
                       <div className="flex cursor-pointer flex-col text-left">
                         <div className="flex-1">
                           <div className="mb-1 line-clamp-2 w-full cursor-pointer">
-                            <h1 className="font-semibold text-md text-black">
+                            <h1 className="font-semibold text-md text-[var(--yn-foreground)]">
                               {event?.title ?? ""}
                             </h1>
                           </div>
                           <div>
-                            <p className="text-sm text-black">
+                            <p className="text-sm text-[var(--yn-muted)]">
                               {event == null
                                 ? ""
                                 : formatStrToDateTime(
@@ -147,7 +164,7 @@ export default function OrderLayout({
                             </div>
                             <div className="flex items-center">
                               <div className="line-clamp-1">
-                                <p className="text-md text-black">
+                                <p className="text-md text-[var(--yn-muted)]">
                                   YukNgaji Solo
                                 </p>
                               </div>
@@ -173,30 +190,30 @@ export default function OrderLayout({
                   height={25}
                   style={{ fontSize: "20px", color: "black" }}
                 />
-                <h1 className="font-semibold text-lg text-black">
+                <h1 className="font-semibold text-lg text-[var(--yn-foreground)]">
                   Rincian Order
                 </h1>
               </div>
-              <div className="rounded-xl border-2 border-black bg-yellow-300 px-4 py-2 shadow-custom">
+              <div className="rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 py-2">
                 <div className="flex w-full items-center justify-between gap-4 py-2">
-                  <p className="text-md text-black">Order ID</p>
-                  <h1 className="font-semibold text-md text-black">
+                  <p className="text-md text-[var(--yn-muted)]">Order ID</p>
+                  <h1 className="font-semibold text-md text-[var(--yn-foreground)]">
                     #{order?.public_id?.toUpperCase()}
                   </h1>
                 </div>
-                <div className="border-b border-b-black"></div>
+                <div className="border-b border-[var(--yn-border)]"></div>
                 <div className="flex w-full items-center justify-between gap-4 py-2">
-                  <p className="text-md text-black">Tanggal Order</p>
-                  <h1 className="font-semibold text-md text-black">
+                  <p className="text-md text-[var(--yn-muted)]">Tanggal Order</p>
+                  <h1 className="font-semibold text-md text-[var(--yn-foreground)]">
                     {formatStrToDateTime(
                       order?.created_at ?? "",
                       "EEEE, dd MMM yyyy HH:mm"
                     )}
                   </h1>
                 </div>
-                <div className="border-b border-b-black"></div>
+                <div className="border-b border-[var(--yn-border)]"></div>
                 <div className="flex w-full items-center justify-between gap-4 py-2">
-                  <p className="text-md text-black">Status</p>
+                  <p className="text-md text-[var(--yn-muted)]">Status</p>
                   <OrderStatus status={order.status ?? "pending"} />
                 </div>
                 {/* <div className="border-b border-b-black"></div>
@@ -231,25 +248,25 @@ export default function OrderLayout({
                   height={25}
                   style={{ fontSize: "20px", color: "black" }}
                 />
-                <h1 className="font-semibold text-lg text-black">
+                <h1 className="font-semibold text-lg text-[var(--yn-foreground)]">
                   Rincian Harga
                 </h1>
               </div>
-              <div className="rounded-xl border-2 border-black bg-yellow-300 px-4 py-2 shadow-custom">
+              <div className="rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 py-2">
                 <div className="flex w-full justify-between gap-4 py-2">
-                  <p className="text-md text-black">Tiket</p>
-                  <h1 className="font-semibold text-md text-black">
+                  <p className="text-md text-[var(--yn-muted)]">Tiket</p>
+                  <h1 className="font-semibold text-md text-[var(--yn-foreground)]">
                     {order.amount === 1
                       ? "Pay As You Wish"
                       : `Rp ${order.amount?.toLocaleString("id-ID")}`}
                   </h1>
                 </div>
-                <div className="border-b border-b-black"></div>
+                <div className="border-b border-[var(--yn-border)]"></div>
                 {
                   order.admin_fee! > 0 ? (
                     <div className="flex w-full justify-between gap-4 py-2">
-                      <p className="text-md text-black">Biaya Jasa Pembayaran</p>
-                      <h1 className="font-semibold text-md text-black">
+                      <p className="text-md text-[var(--yn-muted)]">Biaya Jasa Pembayaran</p>
+                      <h1 className="font-semibold text-md text-[var(--yn-foreground)]">
                         Rp {order.admin_fee?.toLocaleString("id-ID")}
                       </h1>
                     </div>
@@ -257,10 +274,10 @@ export default function OrderLayout({
                     <></>
                   )
                 }
-                <div className="border-b border-b-black"></div>
+                <div className="border-b border-[var(--yn-border)]"></div>
                 <div className="flex w-full justify-between gap-4 py-2">
-                  <p className="text-md text-black">Total Harga</p>
-                  <h1 className="font-semibold text-md text-green-600">
+                  <p className="text-md text-[var(--yn-muted)]">Total Harga</p>
+                  <h1 className="font-semibold text-md text-[var(--yn-accent)]">
                     {totalPayment() == 1
                       ? "Pay As You Wish"
                       : `Rp ${totalPayment().toLocaleString("id-ID")}`}
@@ -273,7 +290,7 @@ export default function OrderLayout({
                 <Link href={`/orders/${params.public_id}/tickets`}>
                   <button
                     type="button"
-                    className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
+                    className="text-white bg-[var(--yn-accent)] focus:outline-none transition ease-in-out duration-300 rounded-full px-8 py-3 w-full hover:bg-[var(--yn-accent-dark)] active:opacity-90 font-semibold"
                   >
                     <div className="flex items-center justify-center gap-x-2">
                       <FontAwesomeIcon
@@ -290,7 +307,7 @@ export default function OrderLayout({
                 <Link href={getWhatsAppUrl(order, totalPayment())}>
                   <button
                     type="button"
-                    className="text-white bg-primary focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
+                    className="text-white bg-[var(--yn-accent)] focus:outline-none transition ease-in-out duration-300 rounded-full px-8 py-3 w-full hover:bg-[var(--yn-accent-dark)] active:opacity-90 font-semibold"
                   >
                     <div className="flex items-center justify-center gap-x-2">
                       <FontAwesomeIcon
@@ -309,7 +326,7 @@ export default function OrderLayout({
               {order.status == "paid" && order.event?.divisi?.name.includes("Sports") ? <Link href={"https://chat.whatsapp.com/HSRFShOBsjpKUHiyJV49BZ"} target="_blank">
                 <button
                   type="button"
-                  className="text-white bg-success focus:outline-none transition ease-in-out duration-300 rounded-lg px-8 py-3 w-full hover:opacity-80 active:opacity-70 font-bold shadow-custom"
+                  className="text-white bg-[var(--yn-accent-dark)] focus:outline-none transition ease-in-out duration-300 rounded-full px-8 py-3 w-full hover:opacity-90 active:opacity-90 font-semibold"
                 >
                   <div className="flex items-center justify-center gap-x-2">
                     <FontAwesomeIcon
@@ -346,7 +363,7 @@ const OrderStatus: React.FC<{ status: string }> = ({ status }) => {
     );
   }
   return (
-    <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-0.5 text-sm tag-secondary border-theme-border text-black border border-black">
+    <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-0.5 text-sm border border-[var(--yn-border)] bg-[var(--yn-surface-muted)] text-[var(--yn-muted)]">
       Menunggu Pembayaran
     </button>
   );

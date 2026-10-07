@@ -16,13 +16,6 @@ const TableFeedback = () => {
     }
   }, []);
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (error != null) {
-    return <h1>{error}</h1>;
-  }
-
   return (
     <div className="rounded-sm border-2 border-black bg-white px-5 pt-6 pb-2.5 shadow-bottom dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -44,6 +37,37 @@ const TableFeedback = () => {
             </tr>
           </thead>
           <tbody>
+            {error != null ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  role="alert"
+                  className="border-b border-black py-6 px-2 text-center text-danger"
+                >
+                  {error}
+                </td>
+              </tr>
+            ) : null}
+            {error == null && (feedback == null || isLoading) ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Memuat…
+                </td>
+              </tr>
+            ) : null}
+            {feedback != null && !isLoading && feedback.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Belum ada masukan.
+                </td>
+              </tr>
+            ) : null}
             {feedback?.map((data, key) => (
               <tr key={key}>
                 <td className="border-b border-black py-5 px-4 pl-9 xl:pl-11">

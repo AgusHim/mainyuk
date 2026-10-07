@@ -1,7 +1,9 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import Link from "next/link";
 import CardDataStats from "../CardDataStats";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
+import DashboardLoader from "../common/Loader/DashboardLoader";
 import TableUserPresence from "../Tables/TableUserPresence";
 
 export default function DashboardPresencesPage() {
@@ -11,17 +13,29 @@ export default function DashboardPresencesPage() {
   const isLoading = useAppSelector((state) => state.presences.loading);
   const error = useAppSelector((state) => state.presences.error);
 
-  
-  if (presence == null && isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (error != null) {
-    return <h1>{error}</h1>;
+  // Belum ada jawaban dari server: tampilkan pemuat, bukan halaman kosong.
+  if (presence == null && error == null) {
+    return <DashboardLoader />;
   }
 
   return (
     <>
       <Breadcrumb pageName="Riwayat Kehadiran" />
+      <p className="mb-5 text-sm text-black dark:text-white">
+        Ingin melihat peserta yang mendaftar?{" "}
+        <Link href="/peserta" className="font-semibold underline">
+          Buka daftar peserta
+        </Link>
+        .
+      </p>
+      {error != null ? (
+        <div
+          role="alert"
+          className="mb-5 flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger shadow-bottom"
+        >
+          <span>{error}</span>
+        </div>
+      ) : null}
       <div className="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
         <CardDataStats
           title="Total Kehadiran"

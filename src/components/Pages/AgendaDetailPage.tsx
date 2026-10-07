@@ -7,6 +7,7 @@ import { getRangerPresence, getRangerPresenceByAgendaID } from "@/redux/slices/r
 import TableRangerPresence from "../Tables/TableRangerPresence";
 import { formatStrToDateTime } from "@/utils/convert";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
+import DashboardLoader from "../common/Loader/DashboardLoader";
 
 export default function AgendaDetailPage({
   params,
@@ -31,14 +32,24 @@ export default function AgendaDetailPage({
     }
   }, []);
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
+  // Belum ada jawaban dari server: tampilkan pemuat. Sebelumnya kegagalan
+  // memuat dan data kosong sama-sama berakhir sebagai halaman tanpa isi.
+  if (agenda == null && error == null) {
+    return <DashboardLoader />;
   }
-  if (error != null) {
-    return <h1>{error}</h1>;
-  }
+
   if (agenda == null) {
-    return <div></div>;
+    return (
+      <>
+        <Breadcrumb pageName="Detail Agenda" />
+        <div
+          role="alert"
+          className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger shadow-bottom"
+        >
+          <span>{error}</span>
+        </div>
+      </>
+    );
   }
   return (
     <>

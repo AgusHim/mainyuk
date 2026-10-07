@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { api } from "../api";
 import { Comment, CreateComment } from "@/types/comment";
 
@@ -84,12 +84,12 @@ export const qnaSlice = createSlice({
       state.data = action.payload as Comment[];
       state.loading = false;
     });
-    builder.addCase(getComments.pending || postComment.pending, (state, _) => {
+    builder.addMatcher(isAnyOf(getComments.pending, postComment.pending), (state, _) => {
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(
-      getComments.rejected || postComment.rejected,
+    builder.addMatcher(
+      isAnyOf(getComments.rejected, postComment.rejected),
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

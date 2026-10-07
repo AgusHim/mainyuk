@@ -4,8 +4,10 @@ import { usePathname } from "next/navigation";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import Image from "next/image";
 import { useAppSelector } from "@/hooks/hooks";
+import { isMemberRole } from "@/utils/role";
+import { canAccessDashboard } from "@/utils/dashboardAccess";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping, faTicket, faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faBullseye, faCartShopping, faChartSimple, faShieldHalved, faStore, faTicket, faTrophy, faUsers, faWallet } from "@fortawesome/free-solid-svg-icons";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -60,6 +62,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   const user = useAppSelector((state) => state.auth.user);
 
+  // Menu dan akses memakai peta yang sama (`utils/dashboardAccess.ts`), supaya
+  // entri yang disembunyikan di sini tidak bisa dibuka lewat alamat langsung.
+  const boleh = (path: string) => canAccessDashboard(path, user?.role);
+
   return (
     <aside
       ref={sidebar}
@@ -111,7 +117,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
             <ul className="mb-6 flex flex-col gap-1.5">
               {/* <!-- Menu Item Dashboard --> */}
-              {user?.role == "admin" ? (
+              {boleh("/dashboard") ? (
                 <SidebarLinkGroup
                   activeCondition={
                     pathname === "/" || pathname.includes("dashboard")
@@ -204,8 +210,57 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               )}
 
               {/* <!-- Menu Item Dashboard --> */}
+
+              {/* <!-- Menu Item Metrik --> */}
+              {boleh("/dashboard/metrics") ? (
+                <li>
+                  <Link
+                    href="/dashboard/metrics"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname.includes("/dashboard/metrics") &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faChartSimple}
+                      fill="black"
+                      width={25}
+                      height={25}
+                    />
+                    Metrik
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
+              {/* <!-- Menu Item Metrik --> */}
+
+              {/* <!-- Menu Item Teman Hijrah --> */}
+              {boleh("/dashboard/users") ? (
+                <li>
+                  <Link
+                    href="/dashboard/users"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname.includes("/dashboard/users") &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faUsers}
+                      fill="black"
+                      width={25}
+                      height={25}
+                    />
+                    Teman Hijrah
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
+              {/* <!-- Menu Item Teman Hijrah --> */}
+
               {/* <!-- Menu Item Orders --> */}
-              {user?.role == "admin" ? (
+              {boleh("/dashboard/payment_methods") ? (
                 <li>
                   <Link
                     href="/dashboard/payment_methods"
@@ -224,7 +279,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Orders --> */}
 
               {/* <!-- Menu Item Orders --> */}
-              {user?.role == "admin" ? (
+              {boleh("/dashboard/orders") ? (
                 <li>
                   <Link
                     href="/dashboard/orders"
@@ -243,7 +298,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Orders --> */}
 
               {/* <!-- Menu Item Agenda --> */}
-              {user?.role == "admin" || user?.role == "pj" ? (
+              {boleh("/dashboard/agenda") ? (
                 <li>
                   <Link
                     href="/dashboard/agenda"
@@ -274,8 +329,129 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               )}
               {/* <!-- Menu Item Agenda --> */}
 
+              {/* <!-- Menu Item Misi (pengurus) --> */}
+              {boleh("/dashboard/missions") ? (
+                <li>
+                  <Link
+                    href="/dashboard/missions"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname.includes("/dashboard/missions") &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faBullseye}
+                      fill="black"
+                      width={25}
+                      height={25}
+                    />
+                    Misi
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
+              {/* <!-- Menu Item Misi (pengurus) --> */}
+
+              {/* <!-- Menu Item Campaign (pengurus) --> */}
+              {boleh("/dashboard/campaigns") ? (
+                <li>
+                  <Link
+                    href="/dashboard/campaigns"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname.includes("/dashboard/campaigns") &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faBullseye}
+                      fill="black"
+                      width={25}
+                      height={25}
+                    />
+                    Campaign
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
+              {/* <!-- Menu Item Campaign (pengurus) --> */}
+
+              {/* <!-- Menu Item Toko (pengurus) --> */}
+              {/* Gerbangnya sama dengan izin `product:manage` di server: admin dan pj. */}
+              {boleh("/dashboard/shop") ? (
+                <li>
+                  <Link
+                    href="/dashboard/shop"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname.includes("/dashboard/shop") &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faStore}
+                      fill="black"
+                      width={25}
+                      height={25}
+                    />
+                    Toko
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
+              {/* <!-- Menu Item Toko (pengurus) --> */}
+
+              {/* <!-- Menu Item Donasi (pengurus) --> */}
+              {boleh("/dashboard/donations") ? (
+                <li>
+                  <Link
+                    href="/dashboard/donations"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname.includes("/dashboard/donations") &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faBullseye}
+                      fill="black"
+                      width={25}
+                      height={25}
+                    />
+                    Donasi
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
+              {/* <!-- Menu Item Donasi (pengurus) --> */}
+
+              {/* <!-- Menu Item Moderasi (admin, pj, ranger) --> */}
+              {boleh("/dashboard/moderation") ? (
+                <li>
+                  <Link
+                    href="/dashboard/moderation"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname.includes("/dashboard/moderation") &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faShieldHalved}
+                      fill="black"
+                      width={25}
+                      height={25}
+                    />
+                    Moderasi
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
+              {/* <!-- Menu Item Moderasi --> */}
+
               {/* <!-- Menu Item Ranger Card --> */}
-              {user?.role == "ranger" || user?.role == "pj" ? (
+              {boleh("/dashboard/rangers/card") ? (
                 <li>
                   <Link
                     href="/dashboard/rangers/card"
@@ -337,7 +513,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Ranger Card --> */}
 
               {/* <!-- Menu Item Contributions --> */}
-              {user?.role == "ranger" || user?.role == "pj" ? (
+              {boleh("/dashboard/contributions") ? (
                 <li>
                   <Link
                     href="/dashboard/contributions"
@@ -374,7 +550,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Contributions --> */}
 
               {/* <!-- Menu Item Rangers --> */}
-              {user?.role == "admin" || user?.role == "pj" ? (
+              {boleh("/dashboard/rangers") ? (
                 <li>
                   <Link
                     href="/dashboard/rangers"
@@ -439,7 +615,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Rangers --> */}
 
               {/* <!-- Menu Item Event --> */}
-              {user?.role == "admin" ? (
+              {boleh("/dashboard/events") ? (
                 <li>
                   <Link
                     href="/dashboard/events"
@@ -458,7 +634,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Event --> */}
 
               {/* <!-- Menu Item Divisi --> */}
-              {user?.role == "admin" ? (
+              {boleh("/dashboard/divisi") ? (
                 <li>
                   <Link
                     href="/dashboard/divisi"
@@ -490,7 +666,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Divisi --> */}
 
               {/* <!-- Menu Feedback--> */}
-              {user?.role == "admin" ? (
+              {boleh("/dashboard/feedback") ? (
                 <li>
                   <Link
                     href="/dashboard/feedback"
@@ -540,7 +716,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Feedback --> */}
 
               {/* <!-- Menu Item Presence --> */}
-              {user?.role == "jamaah" || user?.role == "user" ? (
+              {boleh("/dashboard/presences") ? (
                 <li>
                   <Link
                     href="/dashboard/presences"
@@ -576,6 +752,50 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               )}
 
               {/* <!-- Menu Item Presence --> */}
+
+              {/* <!-- Menu Item Misi (anggota) --> */}
+              {isMemberRole(user?.role) ? (
+                <li>
+                  <Link
+                    href="/missions"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname === "/missions" &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faBullseye}
+                      fill="black"
+                      width={25}
+                      height={25}
+                    />
+                    Misi
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
+              {/* <!-- Menu Item Misi (anggota) --> */}
+
+              {/* <!-- Menu Item Leaderboard --> */}
+              <li>
+                <Link
+                  href="/leaderboard"
+                  className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                    pathname === "/leaderboard" &&
+                    "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                  }`}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrophy}
+                    fill="black"
+                    width={25}
+                    height={25}
+                  />
+                  Leaderboard
+                </Link>
+              </li>
+              {/* <!-- Menu Item Leaderboard --> */}
             </ul>
           </div>
 

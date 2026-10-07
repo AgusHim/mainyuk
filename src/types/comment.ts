@@ -11,6 +11,5 @@ export type Comment = {
 
 export type CreateComment = {
   event_id: string;
-  user_id: string;
   comment: string;
 };

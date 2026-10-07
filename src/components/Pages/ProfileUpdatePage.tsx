@@ -20,7 +20,7 @@ function UpdateProfilePageInner() {
           isShowBack={true}
           isShowTrailing={false}
         />
-        <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
+        <div className="yn-container bg-yellow-400 p-4">
           <FormProfileUpdate />
         </div>
       </MainLayout>

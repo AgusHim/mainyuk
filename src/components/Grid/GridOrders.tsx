@@ -19,12 +19,46 @@ export default function GridOrders() {
     }
   }, []);
 
+  // Gagal memuat: jelaskan sebabnya. Tanpa ini pemuat berputar selamanya.
+  if (error != null && orders == null) {
+    return (
+      <div className="yn-container p-4 bg-yellow-400">
+        <div
+          role="alert"
+          className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+        >
+          <span>{error}</span>
+        </div>
+      </div>
+    );
+  }
+
   if (orders == null || isLoading) {
     return <Loader></Loader>;
   }
   return (
-    <div className="max-w-layout xs:w-full h-full w-screen p-4 bg-yellow-400">
+    <div className="yn-container p-4 bg-yellow-400">
+      {/* Halaman ini khusus tiket event. Pesanan merchandise tidak pernah
+          muncul di sini, jadi tautannya harus jelas supaya keduanya tidak
+          tertukar. */}
+      <div className="mb-4 rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">
+        <p className="text-sm text-black">
+          Halaman ini untuk tiket event. Pembelian merchandise ada di{" "}
+          <Link href="/shop/orders" className="font-bold underline">
+            pesanan merchandise
+          </Link>
+          .
+        </p>
+      </div>
       <div>
+        {error ? (
+          <div
+            role="alert"
+            className="mb-4 flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+          >
+            <span>{error}</span>
+          </div>
+        ) : null}
         {orders.length == 0 ? (
           <div className="text-black text-md">
             Kamu belum pernah melakukan pembelian

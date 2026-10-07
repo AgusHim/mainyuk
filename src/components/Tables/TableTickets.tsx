@@ -1,4 +1,5 @@
 "use client";
+import DashboardLoader from "../common/Loader/DashboardLoader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { deleteFromTickets, deleteTicket, getTicketsByEventID, setTicket } from "@/redux/slices/ticketSlice";
 import { useEffect, useRef, useState } from "react";
@@ -55,10 +56,17 @@ const TableTickets: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
   }
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <DashboardLoader />;
   }
   if (error != null) {
-    return <h1>{error}</h1>;
+    return (
+      <div
+        role="alert"
+        className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger shadow-bottom"
+      >
+        <span>{error}</span>
+      </div>
+    );
   }
 
   return (
@@ -100,6 +108,26 @@ const TableTickets: React.FC<Props> = ({ toggleDialog, setDialogContent }) => {
             </tr>
           </thead>
           <tbody>
+            {isLoading && tickets == null ? (
+              <tr>
+                <td
+                  colSpan={10}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Memuat…
+                </td>
+              </tr>
+            ) : null}
+            {!isLoading && tickets != null && tickets.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={10}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Belum ada tiket.
+                </td>
+              </tr>
+            ) : null}
             {tickets?.map((data, key) => (
               <tr key={key}>
                 <td className="border-b border-black py-5 px-4 pl-9 xl:pl-11">

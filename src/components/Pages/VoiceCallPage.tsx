@@ -16,9 +16,16 @@ import AgoraRTC, { IAgoraRTCClient } from "agora-rtc-sdk-ng";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import { getSessionUser } from "@/redux/slices/authSlice";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Event } from "@/types/event";
 import { formatStrToDateTime } from "@/utils/convert";
+
+// Panggilan suara hanya untuk yang sudah masuk dan profilnya lengkap — sama
+// seperti halaman anggota lain. Sebelumnya halaman ini tidak memeriksa apa pun.
+const RequiredAuthLayout = dynamic(() => import("@/layout/AuthLayout"), {
+    ssr: false,
+});
 
 const AGORA_APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID || "";
 
@@ -296,17 +303,11 @@ export default function VoiceCallPage({ params }: { params: { id: string } }) {
     // Note: MainLayout should always be rendered if possible, but if we need auth/loading we might wait.
     // However, for consistency with other pages, we can render layout with loading state inside.
 
-    // Determine role. 
+    // Determine role.
     const isGuide = user?.role === "admin" || user?.role === "guide";
 
-    console.log("VoiceCallPage Debug:", {
-        username: user?.username,
-        role: user?.role,
-        isGuide,
-        paramsId: params.id
-    });
-
     return (
+        <RequiredAuthLayout redirectTo={`/s/${params.id}`}>
         <MainLayout>
             <CommonHeader title={event?.title || "City Tour Voice Call"} />
 
@@ -320,5 +321,6 @@ export default function VoiceCallPage({ params }: { params: { id: string } }) {
                 )}
             </div>
         </MainLayout>
+        </RequiredAuthLayout>
     );
 }

@@ -34,9 +34,7 @@ export default function Support() {
             <div className="md:col-span-5 md:pl-8">
               <Reveal delay={200}>
                 <a
-                  href="https://api.whatsapp.com/send/?phone=%2B6281241000056&text=Assalamu'alaikum, Saya ingin support dakwah YN Solo"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/donations"
                   className="flex min-h-[44px] w-full items-center justify-center rounded-full bg-[var(--yn-accent)] px-7 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-[var(--yn-accent-dark)] md:text-base"
                 >
                   Dukung YukNgaji Solo

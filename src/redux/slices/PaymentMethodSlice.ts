@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { admin_api, user_api } from "../api";
 import { PaymentMethod } from "@/types/PaymentMethod";
 
@@ -67,28 +67,22 @@ export const paymentMethodSlice = createSlice({
       state.data = action.payload as PaymentMethod[];
       state.loading = false;
     });
-    builder.addCase(
-      postPaymentMethod.fulfilled || putPaymentMethod.fulfilled,
+    builder.addMatcher(
+      isAnyOf(postPaymentMethod.fulfilled, putPaymentMethod.fulfilled),
       (state, action) => {
         state.paymentMethod = action.payload as PaymentMethod;
         state.loading = false;
       }
     );
-    builder.addCase(
-      getPaymentMethod.pending ||
-        postPaymentMethod.pending ||
-        putPaymentMethod.pending ||
-        deletePaymentMethod.pending,
+    builder.addMatcher(
+      isAnyOf(getPaymentMethod.pending, postPaymentMethod.pending, putPaymentMethod.pending, deletePaymentMethod.pending),
       (state, _) => {
         state.loading = true;
         state.error = null;
       }
     );
-    builder.addCase(
-      getPaymentMethod.rejected ||
-        postPaymentMethod.rejected ||
-        putPaymentMethod.rejected ||
-        deletePaymentMethod.rejected,
+    builder.addMatcher(
+      isAnyOf(getPaymentMethod.rejected, postPaymentMethod.rejected, putPaymentMethod.rejected, deletePaymentMethod.rejected),
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

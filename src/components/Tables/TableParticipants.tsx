@@ -12,6 +12,7 @@ const TableParticipants: React.FC<Props> = ({ filterTicketName }) => {
   const event = useAppSelector((state) => state.event.event);
   const isLoading = useAppSelector((state) => state.presences.loading);
   const participants = useAppSelector((state) => state.event.participants);
+  const error = useAppSelector((state) => state.event.error);
 
   useEffect(() => {
     if (participants == null && event != null) {
@@ -61,6 +62,43 @@ const TableParticipants: React.FC<Props> = ({ filterTicketName }) => {
               </tr>
             </thead>
             <tbody>
+              {error != null ? (
+                <tr>
+                  <td
+                    colSpan={9}
+                    role="alert"
+                    className="border-b border-black py-6 px-2 text-center text-danger"
+                  >
+                    {error}
+                  </td>
+                </tr>
+              ) : null}
+              {error == null && (participants == null || isLoading) ? (
+                <tr>
+                  <td
+                    colSpan={9}
+                    className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                  >
+                    Memuat…
+                  </td>
+                </tr>
+              ) : null}
+              {error == null &&
+              participants != null &&
+              !isLoading &&
+              filteredParticipants != null &&
+              filteredParticipants.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={9}
+                    className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                  >
+                    {filterTicketName && filterTicketName !== "All"
+                      ? "Belum ada peserta pada tiket ini."
+                      : "Belum ada peserta."}
+                  </td>
+                </tr>
+              ) : null}
               {filteredParticipants?.map((ticket, key) => {
                 return (
                   <tr key={key}>

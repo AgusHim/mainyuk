@@ -25,6 +25,21 @@ export default function GridEventsHome() {
           Event Terbaru
         </h1>
       </div>
+      {error ? (
+        <div
+          role="alert"
+          className="mb-4 flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+        >
+          <span>{error}</span>
+        </div>
+      ) : null}
+      {events != null && events.length === 0 ? (
+        <div className="rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-10 text-center">
+          <p className="text-[var(--yn-muted)]">
+            Belum ada event yang dipublikasikan.
+          </p>
+        </div>
+      ) : null}
       <div className="grid grid-cols-2 gap-4">
         {events == null
           ? rectangles.map((_, index) => (

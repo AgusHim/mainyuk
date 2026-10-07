@@ -13,7 +13,8 @@ const TableOrders = () => {
   const dispatch = useAppDispatch();
   const orders = useAppSelector((state) => state.order.orders);
   const isLoading = useAppSelector((state) => state.order.loading);
-  const error = useAppSelector((state) => state.divisi.error);
+  // Dulu membaca state.divisi.error — galat pesanan tidak pernah muncul di sini.
+  const error = useAppSelector((state) => state.order.error);
   const [status, setStatus] = useState<string | null>(null);
   const [event_id, setEventID] = useState<string | null>(null);
 
@@ -176,13 +177,6 @@ const TableOrders = () => {
     toggleDialog();
   }
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (error != null) {
-    return <h1>{error}</h1>;
-  }
-
   return (
     <div>
       <div className="flex flex-row items-center justify-start gap-3 mb-5">
@@ -227,6 +221,39 @@ const TableOrders = () => {
               </tr>
             </thead>
             <tbody>
+              {error != null ? (
+                <tr>
+                  <td
+                    colSpan={10}
+                    role="alert"
+                    className="border-b border-black py-6 px-2 text-center text-danger"
+                  >
+                    {error}
+                  </td>
+                </tr>
+              ) : null}
+              {error == null && (orders == null || isLoading) ? (
+                <tr>
+                  <td
+                    colSpan={10}
+                    className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                  >
+                    Memuat…
+                  </td>
+                </tr>
+              ) : null}
+              {orders != null && !isLoading && orders.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={10}
+                    className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                  >
+                    {status != null || event_id != null
+                      ? "Belum ada pesanan pada filter ini."
+                      : "Belum ada pesanan."}
+                  </td>
+                </tr>
+              ) : null}
               {orders?.map((data, key) => (
                 <tr onClick={() => handleClickTableRow(data)} key={key}>
                   <td className="border-b border-black py-5 px-4 pl-9 xl:pl-11">

@@ -27,6 +27,7 @@ export type CreateOrder = {
   user_tickets: UserTicket[];
   donation: number;
   admin_fee: number;
+  payment_method_id?: string;
 };
 
 export type VerifyOrder = {

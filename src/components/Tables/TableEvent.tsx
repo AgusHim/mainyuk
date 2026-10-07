@@ -29,12 +29,6 @@ const TableThree = () => {
     router.push(`/dashboard/events/${event.slug}`);
   };
   
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (error != null) {
-    return <h1>{error}</h1>;
-  }
   return (
     <div className="rounded-sm border-2 border-black bg-white px-5 pt-6 pb-2.5 shadow-bottom dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -62,6 +56,37 @@ const TableThree = () => {
             </tr>
           </thead>
           <tbody>
+            {error != null ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  role="alert"
+                  className="border-b border-black py-6 px-2 text-center text-danger"
+                >
+                  {error}
+                </td>
+              </tr>
+            ) : null}
+            {error == null && (eventData == null || isLoading) ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Memuat…
+                </td>
+              </tr>
+            ) : null}
+            {eventData != null && !isLoading && eventData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Belum ada event.
+                </td>
+              </tr>
+            ) : null}
             {eventData?.map((data, key) => (
               <tr key={key} onClick={() => clickDetailEvent(data)} className="hover:bg-primary hover:bg-opacity-40">
                 <td className="flex justify-center border-b border-black py-2 ">

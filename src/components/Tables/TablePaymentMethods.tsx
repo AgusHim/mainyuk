@@ -55,13 +55,6 @@ const TablePaymentMethods = () => {
       });
   }
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (error != null) {
-    return <h1>{error}</h1>;
-  }
-
   return (
     <div className="flex flex-col gap-5">
       <button
@@ -105,6 +98,39 @@ const TablePaymentMethods = () => {
               </tr>
             </thead>
             <tbody>
+              {error != null ? (
+                <tr>
+                  <td
+                    colSpan={7}
+                    role="alert"
+                    className="border-b border-black py-6 px-2 text-center text-danger"
+                  >
+                    {error}
+                  </td>
+                </tr>
+              ) : null}
+              {error == null && (paymentMethods == null || isLoading) ? (
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                  >
+                    Memuat…
+                  </td>
+                </tr>
+              ) : null}
+              {paymentMethods != null &&
+              !isLoading &&
+              paymentMethods.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                  >
+                    Belum ada metode pembayaran.
+                  </td>
+                </tr>
+              ) : null}
               {paymentMethods?.map((data, key) => (
                 <tr key={key}>
                    <td className="border-b border-black py-5 px-4 pl-9 xl:pl-11">

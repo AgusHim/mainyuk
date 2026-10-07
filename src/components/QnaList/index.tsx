@@ -16,6 +16,7 @@ import { Like } from "@/types/like";
 import { Comment } from "@/types/comment";
 import EventWebsocket from "../Websocket/EventWebsocket";
 import { formatStrToDateTime } from "@/utils/convert";
+import { toast } from "sonner";
 
 const QnaList = () => {
   const dispatch = useAppDispatch();
@@ -42,11 +43,14 @@ const QnaList = () => {
   };
 
   const handleLike = async (comment: Comment) => {
+    if (!user) {
+      toast.info("Masuk dulu untuk menyukai komentar");
+      return;
+    }
     console.log("Run Handle Like");
     let like: Like;
     like = {
       comment_id: comment.id,
-      user_id: user?.id ?? "",
     };
     if (isLiked(comment.id)) {
       var data = likes?.find((e) => e.comment_id == comment.id);

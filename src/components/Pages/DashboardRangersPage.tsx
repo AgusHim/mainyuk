@@ -56,16 +56,23 @@ export default function DashboardRangersPage() {
       : dialogRef.current.showModal();
   }
 
-  if (rangers == null && isLoading) {
+  // Belum ada jawaban dari server: tampilkan pemuat, bukan halaman kosong.
+  if (rangers == null && error == null) {
     return <DashboardLoader />;
   }
 
-  if (error != null) {
-    return <h1>{error}</h1>;
-  }
-
   if (rangers == null) {
-    return <div></div>;
+    return (
+      <>
+        <Breadcrumb pageName="Rangers" />
+        <div
+          role="alert"
+          className="mb-5 flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger shadow-bottom"
+        >
+          <span>{error}</span>
+        </div>
+      </>
+    );
   }
   return (
     <>

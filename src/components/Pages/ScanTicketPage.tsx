@@ -113,7 +113,7 @@ export default function ScanTicketPage({
             isShowBack={true}
             isShowTrailing={false}
           />
-          <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
+          <div className="yn-container bg-yellow-400 p-4">
             <h1 className="text-4xl text-black font-bold mb-5">
               Scan kehadiran peserta event
             </h1>
@@ -183,10 +183,13 @@ export default function ScanTicketPage({
                   <FontAwesomeIcon
                     icon={faCheckCircle}
                     size="5x"
-                    style={{ color: "green" }}
+                    style={{ color: presence?.already_checked_in ? "orange" : "green" }}
                   />
                   <h1 className="font-bold text-black text-2xl my-5">
-                    Scan QR Berhasil
+                    {presence?.already_checked_in
+                      ? `Sudah check-in hari ini (${presence?.check_in_date})`
+                      : "Scan QR Berhasil"
+                    }
                   </h1>
                   <div className="w-full bg-yellow-200 rounded-lg p-4">
                     <div className="flex flex-row items-center">

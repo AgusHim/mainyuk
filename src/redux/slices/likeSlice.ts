@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
 import { api } from "../api";
 import { Like } from "@/types/like";
 
@@ -57,7 +57,7 @@ export const likeSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(getLikes.rejected || postLike.rejected, (state, action) => {
+    builder.addMatcher(isAnyOf(getLikes.rejected, postLike.rejected), (state, action) => {
       state.loading = false;
       state.error = action.error.message || "Failed to fetch data";
     });

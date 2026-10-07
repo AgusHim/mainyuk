@@ -23,6 +23,21 @@ export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
     }
   }, [eventData]);
 
+  // Gagal memuat event: tampilkan sebabnya. Tanpa ini pengguna hanya
+  // dilempar kembali ke halaman event tanpa penjelasan apa pun.
+  if (error != null && eventData == null) {
+    return (
+      <div className="yn-container py-4">
+        <div
+          role="alert"
+          className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+        >
+          <span>{error}</span>
+        </div>
+      </div>
+    );
+  }
+
   if (eventData == null || isLoading || checkout.length == 0) {
     route.replace(`/events/${slug}`);
     return <Loader></Loader>;
@@ -30,7 +45,7 @@ export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
 
   return (
     <>
-      <div className="grid gap-4 bg-yellow-400 py-4">
+      <div className="yn-container grid gap-4 bg-yellow-400 py-4">
         <div className="grid gap-2 px-8">
           <h1 className="font-semibold text-lg text-black">Informasi Event</h1>
           <div className="grid gap-2 rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">

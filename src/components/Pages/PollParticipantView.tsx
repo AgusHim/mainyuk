@@ -19,21 +19,13 @@ export default function PollParticipantView({
     const activePoll = useAppSelector((state) => state.poll.activePoll);
     const results = useAppSelector((state) => state.poll.results);
     const isLoading = useAppSelector((state) => state.event.loading);
+    const error = useAppSelector((state) => state.event.error);
 
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [textInput, setTextInput] = useState("");
     const [submitted, setSubmitted] = useState(false);
-    const [userId] = useState(
-        () =>
-            typeof window !== "undefined"
-                ? localStorage.getItem("poll_user_id") ||
-                (() => {
-                    const id = crypto.randomUUID();
-                    localStorage.setItem("poll_user_id", id);
-                    return id;
-                })()
-                : "anon"
-    );
+    // Identitas jawaban ditentukan server dari sesi; `poll_user_id` di
+    // localStorage tidak lagi dikirim dan tidak dipercaya sebagai bukti akun.
     const [username, setUsername] = useState(
         () =>
             typeof window !== "undefined"
@@ -91,7 +83,6 @@ export default function PollParticipantView({
             submitResponse({
                 pollId: activePoll.id,
                 data: {
-                    user_id: userId,
                     username: username || "Anonim",
                     text_response: textInput.trim(),
                 },
@@ -110,7 +101,6 @@ export default function PollParticipantView({
             submitResponse({
                 pollId: activePoll.id,
                 data: {
-                    user_id: userId,
                     username: username || "Anonim",
                     poll_option_id: optionId,
                 },
@@ -127,6 +117,20 @@ export default function PollParticipantView({
         return (
             <div className="min-h-screen bg-white flex items-center justify-center">
                 <p className="text-gray-500 text-lg">Memuat...</p>
+            </div>
+        );
+    }
+
+    // Event gagal dimuat: jangan tampilkan "menunggu poll" selamanya.
+    if (error != null && event == null) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center p-6">
+                <div
+                    role="alert"
+                    className="w-full max-w-sm rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
+                >
+                    {error}
+                </div>
             </div>
         );
     }

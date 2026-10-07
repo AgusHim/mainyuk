@@ -4,6 +4,7 @@ import { makeStore } from "../redux/store";
 import "./globals.css";
 import "./data-tables-css.css";
 import "./satoshi.css";
+import "./landing.css";
 import { Toaster } from "@/components/ui/sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleAnalytics } from "@next/third-parties/google";

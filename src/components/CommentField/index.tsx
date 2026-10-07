@@ -22,6 +22,10 @@ const CommentField = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    if (!user) {
+      toast.info("Masuk dulu untuk berkomentar");
+      return;
+    }
     if (formData.comment.length == 0) {
       toast.info("Masukan pertanyaan anda");
       return;
@@ -29,7 +33,6 @@ const CommentField = () => {
     let comment: CreateComment;
     comment = {
       event_id: event?.slug ?? "",
-      user_id: user?.id ?? "",
       comment: formData["comment"],
     };
     dispatch(postComment(comment));

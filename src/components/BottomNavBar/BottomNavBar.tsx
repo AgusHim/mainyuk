@@ -8,7 +8,9 @@ export function BottomNavBar() {
   const isActive = (path: string) => pathname === path;
 
   const linkStyle = (path: string) =>
-    isActive(path) ? "text-black" : "text-slate-200";
+    isActive(path)
+      ? "text-[var(--yn-foreground)]"
+      : "text-[var(--yn-muted)]";
   const menus = [
     {
       name: "Home",
@@ -91,6 +93,51 @@ export function BottomNavBar() {
       path: "/events",
     },
     {
+      name: "Komunitas",
+      icon: (
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3Z"
+            fill="currentColor"
+          />
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M5 20C5 16.6863 8.13401 14 12 14C15.866 14 19 16.6863 19 20V21H5V20Z"
+            fill="currentColor"
+          />
+        </svg>
+      ),
+      path: "/community",
+    },
+    {
+      name: "Toko",
+      icon: (
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M12 2a5 5 0 0 0-5 5v1H5.6a1.6 1.6 0 0 0-1.59 1.79l1.2 10A2 2 0 0 0 7.2 21.6h9.6a2 2 0 0 0 1.99-1.81l1.2-10A1.6 1.6 0 0 0 18.4 8H17V7a5 5 0 0 0-5-5zm3 6V7a3 3 0 1 0-6 0v1h6z"
+          />
+        </svg>
+      ),
+      path: "/shop",
+    },
+    {
       name: "Transaksi",
       icon: (
         <svg
@@ -125,8 +172,8 @@ export function BottomNavBar() {
   ];
   return (
     <>
-      <div className="max-w-layout sticky bottom-0 z-20 mx-auto w-full">
-        <div className="flex justify-around border-t border-black bg-yellow-300 px-4 py-2">
+      <div className="yn-container sticky bottom-0 z-20 mx-auto w-full md:hidden">
+        <div className="flex justify-around border-t border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 py-2">
           {menus.map((menu, index) => (
             <Link
               key={index}

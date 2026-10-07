@@ -98,7 +98,7 @@ export default function SignOTPPage() {
           isShowBack={false}
           isShowTrailing={false}
         />
-        <div className="max-w-layout xs:w-full h-full w-screen bg-yellow-400 p-4">
+        <div className="yn-container bg-yellow-400 p-4">
           {email == null ? (
             <div>
               <h1 className="text-black text-2xl font-bold">Login Akun</h1>

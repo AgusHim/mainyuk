@@ -115,12 +115,18 @@ export default function DashboardAgendaPage() {
         />
       </div>
       <div className="flex flex-col gap-10">
-        <TableAgenda
-          toggleDialog={toggleOnDialog}
-          setDialogContent={() => {
-            setDialogContent(<FormAgenda toggleDialog={toggleOnDialog} />);
-          }}
-        />
+        {agenda && agenda.length === 0 ? (
+          <div className="rounded-sm border-2 border-black bg-white p-6 shadow-bottom dark:bg-boxdark">
+            <p className="text-sm text-black dark:text-white">Belum ada agenda.</p>
+          </div>
+        ) : (
+          <TableAgenda
+            toggleDialog={toggleOnDialog}
+            setDialogContent={() => {
+              setDialogContent(<FormAgenda toggleDialog={toggleOnDialog} />);
+            }}
+          />
+        )}
       </div>
       <Dialog toggleDialog={toggleOnDialog} ref={dialogRef}>
         {dialogContent}

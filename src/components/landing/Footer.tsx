@@ -16,8 +16,8 @@ export default function Footer() {
     },
     {
       label: "Donasi & Support",
-      href: "https://api.whatsapp.com/send/?phone=%2B6281241000056&text=Assalamu'alaikum, Saya ingin support dakwah YN Solo",
-      external: true,
+      href: "/donations",
+      external: false,
     },
   ];
 

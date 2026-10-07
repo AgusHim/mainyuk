@@ -15,13 +15,6 @@ const TableDivisi = () => {
     }
   }, []);
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (error != null) {
-    return <h1>{error}</h1>;
-  }
-
   return (
     <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 shadow-bottom border-2 border-black dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -40,6 +33,37 @@ const TableDivisi = () => {
             </tr>
           </thead>
           <tbody>
+            {error != null ? (
+              <tr>
+                <td
+                  colSpan={3}
+                  role="alert"
+                  className="border-b border-black py-6 px-2 text-center text-danger"
+                >
+                  {error}
+                </td>
+              </tr>
+            ) : null}
+            {error == null && (divisiData == null || isLoading) ? (
+              <tr>
+                <td
+                  colSpan={3}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Memuat…
+                </td>
+              </tr>
+            ) : null}
+            {divisiData != null && !isLoading && divisiData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={3}
+                  className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
+                >
+                  Belum ada divisi.
+                </td>
+              </tr>
+            ) : null}
             {divisiData?.map((data, key) => (
               <tr key={key}>
                 <td className="border-b border-black py-5 px-4 pl-9 xl:pl-11">
