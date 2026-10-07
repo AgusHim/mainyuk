@@ -1,16 +1,8 @@
-import Admin from "@/components/Dashboard/Admin";
-import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Live Event",
-  description: "Live event YukNgaji regional Solo",
-  // other metadata
-};
-
-export default function Event() {
-  return (
-    <>
-      <h1 className="min-h-150 flex items-center justify-center text-3xl text-black dark:text-white font-bold">Event tidak di temukan</h1>     
-    </>
-  );
+// Halaman ini dulu selalu menampilkan "Event tidak di temukan" — tidak pernah
+// membaca apa pun. Live event yang sebenarnya ada di `/live/[slug]`, dan daftar
+// event ada di `/events`. Alamat ini hanya diteruskan ke sana.
+export default function LiveIndex() {
+  redirect("/events");
 }
