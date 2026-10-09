@@ -72,20 +72,30 @@ const attachInterceptors = (instance: AxiosInstance) => {
 };
 
 // Create an axios instance with the dynamically determined baseURL
+//
+// withCredentials wajib: API berada di host terpisah (be.ynsolo.id) dari web
+// (ynsolo.id), jadi permintaan ini lintas-origin. Tanpa opsi ini browser
+// mengabaikan Set-Cookie dan tidak mengirim cookie, sehingga alur OAuth gagal
+// dengan "Invalid oauth state" (cookie oauthstate tidak pernah kembali).
+// Server sudah mengizinkan kredensial lewat CORS (AllowCredentials).
 const api = axios.create({
   baseURL: `${baseURL("jamaah")}`, // Use the dynamically determined host
+  withCredentials: true,
 });
 
 const user_api = axios.create({
   baseURL: `${baseURL("user")}`, // Use the dynamically determined host
+  withCredentials: true,
 });
 
 const admin_api = axios.create({
   baseURL: `${baseURL("admin")}`, // Use the dynamically determined host
+  withCredentials: true,
 });
 
 const ranger_api = axios.create({
   baseURL: `${baseURL("ranger")}`, // Use the dynamically determined host
+  withCredentials: true,
 });
 
 attachInterceptors(api);
