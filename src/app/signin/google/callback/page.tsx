@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const SignIn: React.FC = () => {
   return (
     <>
-      <MainLayout>
+      <MainLayout nav={false}>
         <OAuthGoogleCallback></OAuthGoogleCallback>
       </MainLayout>
     </>

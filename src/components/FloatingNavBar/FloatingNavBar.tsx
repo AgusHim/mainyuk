@@ -3,12 +3,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_ITEMS } from "../navItems";
 
-// Pill navigasi mengambang untuk halaman home (landing).
+// Pill navigasi mengambang aplikasi.
 //
-// Halaman landing tidak memakai BottomNavBar, sehingga modul baru (Komunitas,
-// Toko, Transaksi) tidak punya pintu masuk dari home. Navbar ini menutup celah
-// itu di semua ukuran layar — fixed di tengah bawah, jadi tetap terlihat saat
-// pengunjung menggulir landing.
+// Dipasang sekali lewat MainLayout sehingga semua halaman aplikasi memakai
+// navigasi yang sama; halaman landing (IndexPage) memasangnya langsung karena
+// tidak memakai MainLayout. fixed di tengah bawah, jadi tetap terlihat saat
+// pengunjung menggulir.
 export function FloatingNavBar() {
   const pathname = usePathname();
 

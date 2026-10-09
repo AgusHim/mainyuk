@@ -107,7 +107,7 @@ export default function ScanTicketPage({
   return (
     <>
       <RequiredAuthLayout>
-        <MainLayout>
+        <MainLayout nav={false}>
           <CommonHeader
             title="Scan QR-Code"
             isShowBack={true}

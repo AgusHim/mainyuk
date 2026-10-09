@@ -1,6 +1,5 @@
 "use client";
 import { CommonHeader } from "@/components/Header/CommonHeader";
-import { BottomNavBar } from "@/components/BottomNavBar/BottomNavBar";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { MainLayout } from "@/layout/MainLayout";
 import { addToCart, getProductDetail } from "@/redux/slices/shopSlice";
@@ -274,7 +273,6 @@ const ProductDetailPage = ({ slug }: ProductDetailPageProps) => {
           </div>
         )}
       </div>
-      <BottomNavBar />
     </MainLayout>
   );
 };

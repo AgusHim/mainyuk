@@ -1,6 +1,5 @@
 "use client"
 import React from "react";
-import { BottomNavBar } from "@/components/BottomNavBar/BottomNavBar";
 import GridOrders from "@/components/Grid/GridOrders";
 import { CommonHeader } from "@/components/Header/CommonHeader";
 const RequiredAuthLayout = dynamic(() => import("@/layout/AuthLayout"),{
@@ -16,7 +15,6 @@ export default function OrdersPage() {
       <MainLayout>
         <CommonHeader title="Transaksi" />
         <GridOrders />
-        <BottomNavBar />
       </MainLayout>
     </RequiredAuthLayout>
     </>

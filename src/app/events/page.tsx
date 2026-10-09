@@ -1,4 +1,3 @@
-import { BottomNavBar } from "@/components/BottomNavBar/BottomNavBar";
 import GridEvents from "@/components/Grid/GridEvents";
 import { CommonHeader } from "@/components/Header/CommonHeader";
 import { MainLayout } from "@/layout/MainLayout";
@@ -16,7 +15,6 @@ export default function Event() {
       <MainLayout>
         <CommonHeader title="Events" />
         <GridEvents />
-        <BottomNavBar />
       </MainLayout>
     </>
   );

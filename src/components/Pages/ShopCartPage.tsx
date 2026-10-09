@@ -1,5 +1,4 @@
 "use client";
-import { BottomNavBar } from "@/components/BottomNavBar/BottomNavBar";
 import { CommonHeader } from "@/components/Header/CommonHeader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { MainLayout } from "@/layout/MainLayout";
@@ -313,7 +312,6 @@ const ShopCartPage = () => {
             </div>
           )}
         </div>
-        <BottomNavBar />
       </MainLayout>
     </RequiredAuthLayout>
   );

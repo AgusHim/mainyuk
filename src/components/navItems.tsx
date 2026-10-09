@@ -6,9 +6,9 @@ export interface NavItem {
   icon: ReactNode;
 }
 
-// Daftar menu utama aplikasi — satu sumber untuk BottomNavBar (bilah penuh di
-// dalam halaman) dan FloatingNavBar (pill mengambang di halaman home). Menambah
-// entri di sini otomatis muncul di kedua navigasi, jadi home tidak bisa lagi
+// Daftar menu utama aplikasi — satu sumber untuk FloatingNavBar (pill
+// mengambang) yang dipasang lewat MainLayout. Menambah entri di sini otomatis
+// muncul di semua halaman yang memakai MainLayout, jadi halaman tidak bisa lagi
 // tertinggal dari modul baru (Komunitas, Toko, Transaksi).
 export const NAV_ITEMS: NavItem[] = [
   {

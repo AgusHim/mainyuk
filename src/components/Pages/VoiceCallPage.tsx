@@ -1,6 +1,5 @@
 "use client";
 
-import { BottomNavBar } from "@/components/BottomNavBar/BottomNavBar";
 import { CommonHeader } from "@/components/Header/CommonHeader";
 import { MainLayout } from "@/layout/MainLayout";
 import { useEffect, useState } from "react";
@@ -308,7 +307,7 @@ export default function VoiceCallPage({ params }: { params: { id: string } }) {
 
     return (
         <RequiredAuthLayout redirectTo={`/s/${params.id}`}>
-        <MainLayout>
+        <MainLayout nav={false}>
             <CommonHeader title={event?.title || "City Tour Voice Call"} />
 
             <div className="flex flex-col items-center justify-start p-4">

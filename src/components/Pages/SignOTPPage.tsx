@@ -92,7 +92,7 @@ export default function SignOTPPage() {
 
   return (
     <>
-      <MainLayout>
+      <MainLayout nav={false}>
         <CommonHeader
           title="YukNgaji Solo"
           isShowBack={false}
