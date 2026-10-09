@@ -238,6 +238,12 @@
 .yn-hero-nav-link:hover { background: #edf0f3; color: #061120; }
 .yn-hero-nav-link.is-active { background: #061120; color: #fff; }
 
+.yn-hero-nav.yn-floating-nav {
+  position: fixed;
+  z-index: 40;
+  bottom: max(20px, env(safe-area-inset-bottom));
+}
+
 .yn-hero-donation {
   position: absolute;
   z-index: 1;
@@ -285,4 +291,9 @@
   .yn-hero-nav { bottom: 16px; gap: 0; max-width: calc(100% - 16px); }
   .yn-hero-nav-link { min-height: 38px; flex-direction: column; gap: 2px; padding: 3px 8px; font-size: 9px; }
   .yn-hero-nav-link svg { width: 16px; height: 16px; }
+  .yn-hero-nav.yn-floating-nav { bottom: max(16px, env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 375px) {
+  .yn-hero-nav-link { padding-inline: 5px; font-size: 8px; }
 }

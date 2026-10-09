@@ -95,11 +95,18 @@ export const agendaSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
+    // NOTE: every addCase must come before any addMatcher (Redux Toolkit requirement).
     builder.addCase(getAgenda.fulfilled, (state, action) => {
       state.data = action.payload as Agenda[];
       state.loading = false;
       state.error = null;
     });
+
+    builder.addCase(getAgendaDetail.fulfilled, (state, action) => {
+      state.agenda = action.payload as Agenda;
+      state.loading = false;
+    });
+
     builder.addMatcher(
       isAnyOf(getAgenda.pending, getAgendaDetail.pending, postAgenda.pending, editAgenda.pending, deleteAgenda.pending),
       (state, _) => {
@@ -115,10 +122,6 @@ export const agendaSlice = createSlice({
         state.error = action.error.message || "Failed to fetch data";
       }
     );
-    builder.addCase(getAgendaDetail.fulfilled, (state, action) => {
-      state.agenda = action.payload as Agenda;
-      state.loading = false;
-    });
   },
 });
 

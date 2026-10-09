@@ -80,14 +80,22 @@ export const qnaSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
+    // NOTE: every addCase must come before any addMatcher (Redux Toolkit requirement).
     builder.addCase(getComments.fulfilled, (state, action) => {
       state.data = action.payload as Comment[];
       state.loading = false;
     });
+
+    builder.addCase(postComment.fulfilled, (state, action) => {
+      state.data?.push(action.payload as Comment);
+      state.loading = false;
+    });
+
     builder.addMatcher(isAnyOf(getComments.pending, postComment.pending), (state, _) => {
       state.loading = true;
       state.error = null;
     });
+
     builder.addMatcher(
       isAnyOf(getComments.rejected, postComment.rejected),
       (state, action) => {
@@ -95,10 +103,6 @@ export const qnaSlice = createSlice({
         state.error = action.error.message || "Failed to fetch data";
       }
     );
-    builder.addCase(postComment.fulfilled, (state, action) => {
-      state.data?.push(action.payload as Comment);
-      state.loading = false;
-    });
   },
 });
 

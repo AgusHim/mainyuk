@@ -113,22 +113,32 @@ export const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
+    // NOTE: every addCase must come before any addMatcher (Redux Toolkit requirement).
     builder.addCase(getOrders.fulfilled, (state, action) => {
       state.orders = action.payload as Order[];
       state.loading = false;
     });
+
     builder.addCase(getAdminOrders.fulfilled, (state, action) => {
       state.orders = action.payload as Order[];
       state.loading = false;
     });
+
     builder.addCase(getOrderByPublicID.fulfilled, (state, action) => {
       state.order = action.payload as Order;
       state.isLoadingOrder = false;
     });
+
     builder.addCase(postOrder.fulfilled, (state, action) => {
       state.order = action.payload as Order;
       state.isLoadingOrder = false;
     });
+
+    builder.addCase(postOrder.pending, (state, _) => {
+      state.isLoadingOrder = true;
+      state.error = null;
+    });
+
     builder.addMatcher(
       isAnyOf(getOrders.pending, getOrderByPublicID.pending),
       (state, _) => {
@@ -136,10 +146,7 @@ export const orderSlice = createSlice({
         state.error = null;
       }
     );
-    builder.addCase(postOrder.pending, (state, _) => {
-      state.isLoadingOrder = true;
-      state.error = null;
-    });
+
     builder.addMatcher(
       isAnyOf(getOrders.rejected, postOrder.rejected),
       (state, action) => {

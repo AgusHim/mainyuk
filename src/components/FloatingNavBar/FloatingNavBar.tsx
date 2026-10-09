@@ -1,44 +1,42 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_ITEMS } from "../navItems";
 
-// Pill navigasi mengambang aplikasi.
-//
-// Dipasang sekali lewat MainLayout sehingga semua halaman aplikasi memakai
-// navigasi yang sama; halaman landing (IndexPage) memasangnya langsung karena
-// tidak memakai MainLayout. fixed di tengah bawah, jadi tetap terlihat saat
-// pengunjung menggulir.
-export function FloatingNavBar() {
+interface FloatingNavBarProps {
+  placement?: "hero" | "fixed";
+}
+
+export function FloatingNavBar({ placement = "fixed" }: FloatingNavBarProps) {
   const pathname = usePathname();
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 md:bottom-6">
-      <nav
-        aria-label="Navigasi utama"
-        className="pointer-events-auto flex items-center gap-0.5 rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)]/80 p-1.5 shadow-[0_10px_30px_-8px_rgba(23,23,23,0.25)] backdrop-blur-xl"
-      >
-        {NAV_ITEMS.map((item) => {
-          const active = pathname === item.path;
-          return (
-            <Link
-              key={item.path}
-              href={item.path}
-              aria-current={active ? "page" : undefined}
-              className={`flex min-w-[52px] flex-col items-center justify-center gap-1 rounded-full px-2.5 py-2 text-[10px] font-medium transition-colors md:min-w-[60px] md:text-[11px] ${
-                active
-                  ? "bg-[var(--yn-accent)] text-white"
-                  : "text-[var(--yn-muted)] hover:bg-[var(--yn-surface-muted)] hover:text-[var(--yn-foreground)]"
-              }`}
-            >
-              <span className="flex h-5 items-center justify-center [&_svg]:size-5">
-                {item.icon}
-              </span>
-              <span className="whitespace-nowrap leading-none">{item.name}</span>
-            </Link>
-          );
-        })}
-      </nav>
-    </div>
+    <nav
+      aria-label="Navigasi utama"
+      className={`yn-hero-nav${placement === "fixed" ? " yn-floating-nav" : ""}`}
+    >
+      {NAV_ITEMS.map((item) => {
+        const active =
+          item.path === "/"
+            ? pathname === "/"
+            : item.path.startsWith("/#")
+              ? false
+              : pathname === item.path || pathname.startsWith(`${item.path}/`);
+        const Icon = item.icon;
+
+        return (
+          <Link
+            key={item.path}
+            href={item.path}
+            aria-current={active ? "page" : undefined}
+            className={`yn-hero-nav-link${active ? " is-active" : ""}`}
+          >
+            <Icon size={18} strokeWidth={1.7} aria-hidden="true" />
+            <span>{item.name}</span>
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

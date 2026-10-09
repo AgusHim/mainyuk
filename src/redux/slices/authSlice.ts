@@ -126,6 +126,30 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
+    // NOTE: every addCase must come before any addMatcher (Redux Toolkit requirement).
+    builder.addCase(getAuthGoogleCallback.fulfilled, (state, action) => {
+      state.user = action.payload.user;
+      state.loading = false;
+    });
+
+    builder.addCase(loginGoogle.fulfilled, (state, action) => {
+      state.loadingGoogle = false;
+    });
+
+    builder.addCase(loginGoogle.pending, (state, _) => {
+      state.loadingGoogle = true;
+      state.error = null;
+    });
+
+    builder.addCase(getSessionUser.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.loading = false;
+    });
+
+    builder.addCase(getMe.fulfilled, (state, action) => {
+      state.user = action.payload;
+    });
+
     builder.addMatcher(
       isAnyOf(loginUser.fulfilled, postVerifyOTP.fulfilled),
       (state, action) => {
@@ -133,13 +157,7 @@ export const authSlice = createSlice({
         state.loading = false;
       }
     );
-    builder.addCase(getAuthGoogleCallback.fulfilled, (state, action) => {
-      state.user = action.payload.user;
-      state.loading = false;
-    });
-    builder.addCase(loginGoogle.fulfilled, (state, action) => {
-      state.loadingGoogle = false;
-    });
+
     builder.addMatcher(
       isAnyOf(
         loginUser.pending,
@@ -154,10 +172,7 @@ export const authSlice = createSlice({
         state.error = null;
       }
     );
-    builder.addCase(loginGoogle.pending, (state, _) => {
-      state.loadingGoogle = true;
-      state.error = null;
-    });
+
     builder.addMatcher(
       isAnyOf(loginUser.rejected, getAuthGoogleCallback.rejected, getMe.rejected),
       (state, action) => {
@@ -165,13 +180,6 @@ export const authSlice = createSlice({
         state.error = action.error.message || "Failed to fetch data";
       }
     );
-    builder.addCase(getSessionUser.fulfilled, (state, action) => {
-      state.user = action.payload;
-      state.loading = false;
-    });
-    builder.addCase(getMe.fulfilled, (state, action) => {
-      state.user = action.payload;
-    });
   },
 });
 

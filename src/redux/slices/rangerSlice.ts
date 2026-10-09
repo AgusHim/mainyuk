@@ -109,11 +109,18 @@ export const RangerSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
+    // NOTE: every addCase must come before any addMatcher (Redux Toolkit requirement).
     builder.addCase(getRangers.fulfilled, (state, action) => {
       state.rangers = action.payload as Ranger[];
       state.loading = false;
       state.error = null;
     });
+
+    builder.addCase(getRangerDetail.fulfilled, (state, action) => {
+      state.ranger = action.payload as Ranger;
+      state.loading = false;
+    });
+
     builder.addMatcher(
       isAnyOf(getRangers.pending, getRangerDetail.pending, postRanger.pending, editRanger.pending, deleteRanger.pending),
       (state, _) => {
@@ -121,6 +128,7 @@ export const RangerSlice = createSlice({
         state.error = null;
       }
     );
+
     builder.addMatcher(
       isAnyOf(getRangers.rejected, getRangerDetail.rejected, postRanger.rejected, editRanger.rejected, deleteRanger.rejected),
       (state, action) => {
@@ -128,10 +136,6 @@ export const RangerSlice = createSlice({
         state.error = action.error.message || "Failed to fetch data";
       }
     );
-    builder.addCase(getRangerDetail.fulfilled, (state, action) => {
-      state.ranger = action.payload as Ranger;
-      state.loading = false;
-    });
   },
 });
 

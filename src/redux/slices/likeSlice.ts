@@ -49,18 +49,17 @@ export const likeSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
+    // NOTE: every addCase must come before any addMatcher (Redux Toolkit requirement).
     builder.addCase(getLikes.fulfilled, (state, action) => {
       state.data = action.payload as Like[];
       state.loading = false;
     });
+
     builder.addCase(getLikes.pending, (state, _) => {
       state.loading = true;
       state.error = null;
     });
-    builder.addMatcher(isAnyOf(getLikes.rejected, postLike.rejected), (state, action) => {
-      state.loading = false;
-      state.error = action.error.message || "Failed to fetch data";
-    });
+
     builder.addCase(postLike.fulfilled, (state, action) => {
       const index = state.data?.findIndex(
         (e) => e.comment_id == action.payload.comment_id
@@ -68,6 +67,11 @@ export const likeSlice = createSlice({
       if (index !== undefined) {
         state.data![index].id = action.payload.id;
       }
+    });
+
+    builder.addMatcher(isAnyOf(getLikes.rejected, postLike.rejected), (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || "Failed to fetch data";
     });
   },
 });

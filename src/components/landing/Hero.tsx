@@ -2,24 +2,9 @@
 
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
-import {
-  CalendarDays,
-  CircleUserRound,
-  HandHeart,
-  Home,
-  MessageCircle,
-  Shirt,
-} from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { useState } from "react";
-
-const navItems = [
-  { label: "Home", href: "/", icon: Home },
-  { label: "Events", href: "/events", icon: CalendarDays },
-  { label: "About", href: "#temanbahagia", icon: MessageCircle },
-  { label: "Donasi", href: "/donations", icon: HandHeart },
-  { label: "Merch", href: "/shop", icon: Shirt },
-  { label: "Profile", href: "/profile", icon: CircleUserRound },
-];
+import { FloatingNavBar } from "../FloatingNavBar/FloatingNavBar";
 
 export default function Hero() {
   const [copied, setCopied] = useState(false);
@@ -79,19 +64,7 @@ export default function Hero() {
           Komunitas ngaji terbesar di Solo. Jadwal kajian, event islami, dan silaturahmi.
         </p>
 
-        <nav className="yn-hero-nav" aria-label="Navigasi utama">
-          {navItems.map(({ label, href, icon: Icon }, index) => (
-            <Link
-              className={`yn-hero-nav-link${index === 0 ? " is-active" : ""}`}
-              href={href}
-              key={label}
-              aria-current={index === 0 ? "page" : undefined}
-            >
-              <Icon size={18} strokeWidth={1.7} aria-hidden="true" />
-              <span>{label}</span>
-            </Link>
-          ))}
-        </nav>
+        <FloatingNavBar placement="hero" />
 
         <Link className="yn-hero-donation" href="/donations" aria-label="Donasi Dakwah">
           <QRCodeSVG value="https://ynsolo.id/donations" size={112} />

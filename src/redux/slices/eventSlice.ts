@@ -67,6 +67,17 @@ export const eventSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
+    // NOTE: every addCase must come before any addMatcher (Redux Toolkit requirement).
+    builder.addCase(getEventParticipants.fulfilled, (state, action) => {
+      state.participants = action.payload as UserTicket[];
+      state.loading = false;
+    });
+
+    builder.addCase(getEventsHome.fulfilled, (state, action) => {
+      state.data = action.payload as Event[];
+      state.loading = false;
+    });
+
     builder.addMatcher(
       isAnyOf(getEvents.fulfilled, getEventsHome.fulfilled),
       (state, action) => {
@@ -74,14 +85,7 @@ export const eventSlice = createSlice({
         state.loading = false;
       }
     );
-    builder.addCase(getEventParticipants.fulfilled, (state, action) => {
-      state.participants = action.payload as UserTicket[];
-      state.loading = false;
-    });
-    builder.addCase(getEventsHome.fulfilled, (state, action) => {
-      state.data = action.payload as Event[];
-      state.loading = false;
-    });
+
     builder.addMatcher(
       isAnyOf(getEvents.pending, getEventsHome.pending, getEventDetail.pending, getEventByCode.pending, postEvent.pending, getEventParticipants.pending),
       (state, _) => {
@@ -89,6 +93,7 @@ export const eventSlice = createSlice({
         state.error = null;
       }
     );
+
     builder.addMatcher(
       isAnyOf(getEvents.rejected, getEventsHome.rejected, getEventDetail.rejected, getEventByCode.rejected, postEvent.rejected, getEventParticipants.rejected),
       (state, action) => {
@@ -96,6 +101,7 @@ export const eventSlice = createSlice({
         state.error = action.error.message || "Failed to fetch data";
       }
     );
+
     builder.addMatcher(
       isAnyOf(getEventDetail.fulfilled, getEventByCode.fulfilled),
       (state, action) => {
