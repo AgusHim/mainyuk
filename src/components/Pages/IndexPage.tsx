@@ -8,6 +8,7 @@ import Moments from "../landing/Moments";
 import Support from "../landing/Support";
 import FinalCTA from "../landing/FinalCTA";
 import Footer from "../landing/Footer";
+import { FloatingNavBar } from "../FloatingNavBar/FloatingNavBar";
 
 export default function IndexPage() {
   return (
@@ -24,6 +25,7 @@ export default function IndexPage() {
         <FinalCTA />
       </main>
       <Footer />
+      <FloatingNavBar />
     </div>
   );
 }

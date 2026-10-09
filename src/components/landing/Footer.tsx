@@ -25,8 +25,9 @@ export default function Footer() {
     { label: "Instagram", href: "https://www.instagram.com/solofunsport/" },
   ];
 
+  // pb-32 (bukan pb-12) memberi ruang agar copyright tidak tertutup FloatingNavBar.
   return (
-    <footer className="bg-[#171717] pb-12 pt-4 text-white">
+    <footer className="bg-[#171717] pb-32 pt-4 text-white">
       <div className="yn-container">
         <div className="grid grid-cols-1 gap-10 border-t border-white/10 pt-12 md:grid-cols-12">
           <div className="md:col-span-5">
