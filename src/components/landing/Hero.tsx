@@ -4,7 +4,6 @@ import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 import { MessageCircle } from "lucide-react";
 import { useState } from "react";
-import { FloatingNavBar } from "../FloatingNavBar/FloatingNavBar";
 
 export default function Hero() {
   const [copied, setCopied] = useState(false);
@@ -63,8 +62,6 @@ export default function Hero() {
         <p className="yn-hero-description">
           Komunitas ngaji terbesar di Solo. Jadwal kajian, event islami, dan silaturahmi.
         </p>
-
-        <FloatingNavBar placement="hero" />
 
         <Link className="yn-hero-donation" href="/donations" aria-label="Donasi Dakwah">
           <QRCodeSVG value="https://ynsolo.id/donations" size={112} />

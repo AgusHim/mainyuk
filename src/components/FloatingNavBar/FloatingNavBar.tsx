@@ -4,18 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_ITEMS } from "../navItems";
 
-interface FloatingNavBarProps {
-  placement?: "hero" | "fixed";
-}
-
-export function FloatingNavBar({ placement = "fixed" }: FloatingNavBarProps) {
+export function FloatingNavBar() {
   const pathname = usePathname();
 
   return (
-    <nav
-      aria-label="Navigasi utama"
-      className={`yn-hero-nav${placement === "fixed" ? " yn-floating-nav" : ""}`}
-    >
+    <nav aria-label="Navigasi utama" className="yn-hero-nav">
       {NAV_ITEMS.map((item) => {
         const active =
           item.path === "/"
