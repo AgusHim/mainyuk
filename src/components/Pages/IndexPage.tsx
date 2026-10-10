@@ -1,6 +1,6 @@
 import Hero from "../landing/Hero";
 import TemanBahagia from "../landing/TemanBahagia";
-import CommunityIntro from "../landing/CommunityIntro";
+import EventsShowcase from "../landing/EventsShowcase";
 import Activities from "../landing/Activities";
 import EventsSection from "../landing/EventsSection";
 import Moments from "../landing/Moments";
@@ -14,7 +14,7 @@ export default function IndexPage() {
       <main>
         <Hero />
         <TemanBahagia />
-        <CommunityIntro />
+        <EventsShowcase />
         <Activities />
         <EventsSection />
         <Moments />
