@@ -33,6 +33,11 @@ const nextConfig = {
             hostname: 'be.ynsolo.com',
             port: '',
           },
+          {
+            protocol: 'https',
+            hostname: 'ik.imagekit.io',
+            port: '',
+          },
         ],
       },
 }
