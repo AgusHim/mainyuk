@@ -2,10 +2,7 @@ import Hero from "../landing/Hero";
 import TemanBahagia from "../landing/TemanBahagia";
 import EventsShowcase from "../landing/EventsShowcase";
 import KegiatanBersama from "../landing/KegiatanBersama";
-import EventsSection from "../landing/EventsSection";
-import Moments from "../landing/Moments";
-import Support from "../landing/Support";
-import FinalCTA from "../landing/FinalCTA";
+import LimitedMerch from "../landing/LimitedMerch";
 import Footer from "../landing/Footer";
 import { FloatingNavBar } from "../FloatingNavBar/FloatingNavBar";
 
@@ -18,10 +15,7 @@ export default function IndexPage() {
           <TemanBahagia />
           <EventsShowcase />
           <KegiatanBersama />
-          <EventsSection />
-          <Moments />
-          <Support />
-          <FinalCTA />
+          <LimitedMerch />
         </main>
         <Footer />
       </div>
