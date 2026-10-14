@@ -402,6 +402,43 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               )}
               {/* <!-- Menu Item Toko (pengurus) --> */}
 
+              {/* <!-- Menu Item Instagram (pengurus) --> */}
+              {/* Gerbangnya sama dengan izin `instagram:manage` di server: admin dan pj. */}
+              {boleh("/dashboard/instagram") ? (
+                <li>
+                  <Link
+                    href="/dashboard/instagram"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname.includes("/dashboard/instagram") &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <svg
+                      className="fill-none stroke-current"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.8"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="5.4" />
+                      <circle cx="12" cy="12" r="4.1" />
+                      <circle
+                        cx="17.2"
+                        cy="6.8"
+                        r="1.15"
+                        className="fill-current stroke-none"
+                      />
+                    </svg>
+                    Instagram
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
+              {/* <!-- Menu Item Instagram (pengurus) --> */}
+
               {/* <!-- Menu Item Donasi (pengurus) --> */}
               {boleh("/dashboard/donations") ? (
                 <li>

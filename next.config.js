@@ -14,6 +14,12 @@ const nextConfig = {
             port: '',
           },
           {
+            // Sebagian media_url dari Graph API dilayani dari fbcdn.net.
+            protocol: 'https',
+            hostname: '*.fbcdn.net',
+            port: '',
+          },
+          {
             protocol: 'https',
             hostname: 'i.ibb.co',
             port: '',

@@ -1,7 +1,7 @@
 import Hero from "../landing/Hero";
 import TemanBahagia from "../landing/TemanBahagia";
 import EventsShowcase from "../landing/EventsShowcase";
-import Activities from "../landing/Activities";
+import KegiatanBersama from "../landing/KegiatanBersama";
 import EventsSection from "../landing/EventsSection";
 import Moments from "../landing/Moments";
 import Support from "../landing/Support";
@@ -17,7 +17,7 @@ export default function IndexPage() {
           <Hero />
           <TemanBahagia />
           <EventsShowcase />
-          <Activities />
+          <KegiatanBersama />
           <EventsSection />
           <Moments />
           <Support />

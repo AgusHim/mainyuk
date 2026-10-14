@@ -54,6 +54,8 @@ const ROUTES: Route[] = [
   { prefix: "/dashboard/donations", roles: ADMIN_PJ },
   { prefix: "/dashboard/events", roles: ADMIN },
   { prefix: "/dashboard/feedback", roles: ADMIN },
+  // Server memeriksa izin `instagram:manage`, yang dimiliki admin dan pj.
+  { prefix: "/dashboard/instagram", roles: ADMIN_PJ },
   // Server memeriksa izin `metrics:view`, yang dimiliki admin dan pj.
   { prefix: "/dashboard/metrics", roles: ADMIN_PJ },
   { prefix: "/dashboard/missions", roles: ADMIN_PJ },

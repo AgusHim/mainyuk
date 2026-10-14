@@ -4,7 +4,7 @@ export default function Footer() {
   const navigation = [
     { label: "Home", href: "/" },
     { label: "Events", href: "/events" },
-    { label: "Aktivitas", href: "#aktivitas" },
+    { label: "Kegiatan", href: "#kegiatan" },
     { label: "Tentang", href: "#temanbahagia" },
   ];
 
@@ -21,8 +21,13 @@ export default function Footer() {
     },
   ];
 
+  // Dua tautan Instagram, bukan satu: akun resmi yang dindingnya tampil di
+  // section "Kegiatan Bersama", dan akun Fun Sport yang dulu hanya ada di
+  // section Aktivitas. Section itu sudah digantikan, jadi tautannya dipindah
+  // ke sini supaya tidak hilang.
   const social = [
-    { label: "Instagram", href: "https://www.instagram.com/solofunsport/" },
+    { label: "Instagram YN Solo", href: "https://www.instagram.com/yukngajisolo/" },
+    { label: "Instagram Fun Sport", href: "https://www.instagram.com/solofunsport/" },
   ];
 
   // pb-32 (bukan pb-12) memberi ruang agar copyright tidak tertutup FloatingNavBar.

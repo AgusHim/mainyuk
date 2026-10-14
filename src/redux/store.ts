@@ -28,6 +28,7 @@ import shopSlice from "./slices/shopSlice";
 import shopAdminSlice from "./slices/shopAdminSlice";
 import metricsSlice from "./slices/metricsSlice";
 import userAdminSlice from "./slices/userAdminSlice";
+import instagramSlice from "./slices/instagramSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -60,6 +61,7 @@ export const makeStore = () => {
       shopAdmin: shopAdminSlice,
       metrics: metricsSlice,
       userAdmin: userAdminSlice,
+      instagram: instagramSlice,
     },
   });
 };
