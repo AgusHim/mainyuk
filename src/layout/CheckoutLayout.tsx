@@ -4,9 +4,11 @@ import Loader from "@/components/common/Loader/Loader";
 import { FormCheckoutTickets } from "@/components/Form/FormCheckoutTickets";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getEventDetail } from "@/redux/slices/eventSlice";
+import { setCheckout } from "@/redux/slices/orderSlice";
+import { UserTicket } from "@/types/user_ticket";
 import { formatStrToDateTime } from "@/utils/convert";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
   const route = useRouter();
@@ -16,12 +18,32 @@ export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
   const checkout = useAppSelector((state) => state.order.checkout);
   const isLoading = useAppSelector((state) => state.event.loading);
   const error = useAppSelector((state) => state.event.error);
+  const [checkoutRestored, setCheckoutRestored] = useState(false);
 
   useEffect(() => {
     if (eventData == null || eventData.slug != slug) {
       dispatch(getEventDetail(slug));
     }
-  }, [eventData]);
+  }, [eventData, slug, dispatch]);
+
+  useEffect(() => {
+    if (checkout.length === 0) {
+      try {
+        const saved = sessionStorage.getItem(`event-checkout:${slug}`);
+        if (saved) {
+          const tickets = JSON.parse(saved) as UserTicket[];
+          if (Array.isArray(tickets) && tickets.length > 0) dispatch(setCheckout(tickets));
+        }
+      } catch {
+        sessionStorage.removeItem(`event-checkout:${slug}`);
+      }
+    }
+    setCheckoutRestored(true);
+  }, [dispatch, slug]);
+
+  useEffect(() => {
+    if (checkoutRestored && checkout.length === 0) route.replace(`/events/${slug}#tickets`);
+  }, [checkoutRestored, checkout.length, route, slug]);
 
   // Gagal memuat event: tampilkan sebabnya. Tanpa ini pengguna hanya
   // dilempar kembali ke halaman event tanpa penjelasan apa pun.
@@ -38,8 +60,7 @@ export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
     );
   }
 
-  if (eventData == null || isLoading || checkout.length == 0) {
-    route.replace(`/events/${slug}`);
+  if (eventData == null || isLoading || !checkoutRestored || checkout.length == 0) {
     return <Loader></Loader>;
   }
 

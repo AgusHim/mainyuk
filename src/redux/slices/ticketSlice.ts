@@ -111,6 +111,7 @@ export const ticketSlice = createSlice({
     builder.addMatcher(
       isAnyOf(
         getTicketsByEventID.rejected,
+        getPublicTickets.rejected,
         postTicket.rejected,
         putTicket.rejected,
         deleteTicket.rejected

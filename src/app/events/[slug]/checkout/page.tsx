@@ -18,7 +18,7 @@ export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
   return (
     <>
-      <RequiredAuthLayout redirectTo={`/events/${resolvedParams.slug}`}>
+      <RequiredAuthLayout redirectTo={`/events/${resolvedParams.slug}/checkout`}>
         <MainLayout nav={false}>
           <CommonHeader title="Pembelian Tiket" isShowBack={true} />
           <CheckoutLayout slug={resolvedParams.slug} />

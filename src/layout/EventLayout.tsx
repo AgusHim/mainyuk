@@ -7,6 +7,7 @@ import { getEventDetail } from "@/redux/slices/eventSlice";
 import { Event } from "@/types/event";
 import { formatStrToDateTime } from "@/utils/convert";
 import { useEffect } from "react";
+import Link from "next/link";
 
 export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
   const dispatch = useAppDispatch();
@@ -20,9 +21,13 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
     }
   }, [eventData, slug, dispatch]);
 
-  if (eventData == null || isLoading) {
+  if (error && (eventData == null || eventData.slug !== slug)) {
+    return <div role="alert" className="yn-container py-12 text-sm text-red-700">Event gagal dimuat: {error}</div>;
+  }
+  if (eventData == null || eventData.slug !== slug || isLoading) {
     return <Loader></Loader>;
   }
+  const eventStarted = eventData.start_at && Date.now() >= new Date(eventData.start_at).getTime();
   return (
     <>
       <CommonHeader title={eventData?.title ?? ""} isShowBack />
@@ -51,6 +56,16 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
             <h1 className="mb-4 text-2xl font-semibold tracking-tight text-[var(--yn-foreground)] md:text-3xl">
               {eventData?.title ?? ""}
             </h1>
+            <div className="mb-6 flex flex-wrap items-center gap-3">
+              <span className="rounded-full bg-[var(--yn-accent-soft)] px-3 py-1 text-xs font-semibold text-[var(--yn-accent-dark)]">
+                {eventStarted ? "Event sudah dimulai" : "Event mendatang"}
+              </span>
+              {!eventStarted && eventData.isAllowedToOrder !== false && (
+                <Link href="#tickets" className="rounded-full bg-[var(--yn-accent)] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[var(--yn-accent-dark)]">
+                  Lihat & pilih tiket ↓
+                </Link>
+              )}
+            </div>
             <div className="mb-6 flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <svg

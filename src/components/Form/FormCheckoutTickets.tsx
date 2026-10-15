@@ -162,6 +162,7 @@ export const FormCheckoutTickets: React.FC = () => {
       .unwrap()
       .then((res) => {
         const order = res as Order;
+        if (event?.slug) sessionStorage.removeItem(`event-checkout:${event.slug}`);
         router.replace(`/orders/${order.public_id}`);
       })
       .catch((error) => {
