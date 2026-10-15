@@ -140,7 +140,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
       <section id="tickets" className="rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-8">
         <h2 className="text-xl font-semibold text-[var(--yn-foreground)]">Pendaftaran ditutup</h2>
         <p className="mt-2 text-sm text-[var(--yn-muted)]">Tiket untuk event ini sudah tidak dapat dipesan.</p>
-        {startAt && today > startAt && <Button asChild className="mt-5 rounded-full"><Link href={`/events/${event?.slug}/qna`}>Masuk Q&A</Link></Button>}
+        {startAt && today > startAt && <Button asChild className="mt-5 rounded-full w-full"><Link href={`/events/${event?.slug}/qna`}>Masuk Q&A</Link></Button>}
       </section>
     );
   }
