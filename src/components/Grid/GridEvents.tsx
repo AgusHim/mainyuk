@@ -61,9 +61,8 @@ function EventItemCard({ event, isPast }: { event: Event; isPast: boolean }) {
       {/* Gambar Poster */}
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-100">
         <img
-          className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] ${
-            isPast ? "grayscale-[0.15] group-hover:grayscale-0" : ""
-          }`}
+          className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] ${isPast ? "grayscale-[0.15] group-hover:grayscale-0" : ""
+            }`}
           src={event.image_url || "/images/landing/kegiatan/contoh-1.jpg"}
           alt={event.title || "Event YukNgaji Solo"}
           loading="lazy"
@@ -118,23 +117,22 @@ function EventItemCard({ event, isPast }: { event: Event; isPast: boolean }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <img
-                className="h-6 w-6 rounded-full object-cover"
+                className="h-8 w-8"
                 src="/images/logo/yn_logo.png"
                 alt="YukNgaji Solo"
                 width={24}
                 height={24}
               />
               <span className="text-xs font-semibold text-[var(--yn-muted)]">
-                YukNgaji Solo
+                YN Solo
               </span>
             </div>
 
             <span
-              className={`inline-flex items-center gap-1 text-xs font-bold transition-transform group-hover:translate-x-1 ${
-                isPast
-                  ? "text-neutral-500 group-hover:text-black"
-                  : "text-[var(--yn-accent)]"
-              }`}
+              className={`inline-flex items-center gap-1 text-xs font-bold transition-transform group-hover:translate-x-1 ${isPast
+                ? "text-neutral-500 group-hover:text-black"
+                : "text-[var(--yn-accent)]"
+                }`}
             >
               {isPast ? "Dokumentasi" : "Lihat Detail"}
               <ArrowRight size={13} />
@@ -219,22 +217,20 @@ export default function GridEvents() {
           <button
             type="button"
             onClick={() => setActiveTab("all")}
-            className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${
-              activeTab === "all"
-                ? "bg-[#061120] text-white shadow-sm"
-                : "bg-white text-neutral-600 border border-neutral-200 hover:border-black"
-            }`}
+            className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${activeTab === "all"
+              ? "bg-[#061120] text-white shadow-sm"
+              : "bg-white text-neutral-600 border border-neutral-200 hover:border-black"
+              }`}
           >
             Semua ({allEvents.length})
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("upcoming")}
-            className={`inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${
-              activeTab === "upcoming"
-                ? "bg-[#061120] text-white shadow-sm"
-                : "bg-white text-neutral-600 border border-neutral-200 hover:border-black"
-            }`}
+            className={`inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${activeTab === "upcoming"
+              ? "bg-[#061120] text-white shadow-sm"
+              : "bg-white text-neutral-600 border border-neutral-200 hover:border-black"
+              }`}
           >
             <Sparkles size={14} className="text-amber-500" />
             Terbaru ({upcomingEvents.length})
@@ -242,11 +238,10 @@ export default function GridEvents() {
           <button
             type="button"
             onClick={() => setActiveTab("past")}
-            className={`inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${
-              activeTab === "past"
-                ? "bg-[#061120] text-white shadow-sm"
-                : "bg-white text-neutral-600 border border-neutral-200 hover:border-black"
-            }`}
+            className={`inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${activeTab === "past"
+              ? "bg-[#061120] text-white shadow-sm"
+              : "bg-white text-neutral-600 border border-neutral-200 hover:border-black"
+              }`}
           >
             <History size={14} className="text-neutral-400" />
             Sudah Berjalan ({pastEvents.length})
