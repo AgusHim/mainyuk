@@ -4,6 +4,7 @@ import FormDonation from "@/components/Form/FormDonation";
 import { CommonHeader } from "@/components/Header/CommonHeader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { MainLayout } from "@/layout/MainLayout";
+import { getSessionUser } from "@/redux/slices/authSlice";
 import {
   getCampaignDetail,
   getCampaignDonors,
@@ -20,6 +21,7 @@ import {
   ExternalLink,
   HeartHandshake,
   ImageOff,
+  LoaderCircle,
   Quote,
   RefreshCw,
   ShieldCheck,
@@ -59,6 +61,7 @@ export default function CampaignDetailPage() {
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [relatedReady, setRelatedReady] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isCheckingSession, setIsCheckingSession] = useState(false);
 
   const campaign = storedCampaign?.slug === slug ? storedCampaign : null;
 
@@ -89,17 +92,39 @@ export default function CampaignDetailPage() {
     };
   }, [dispatch, slug]);
 
-  const handleDonateClick = () => {
-    if (!user) {
-      router.push(`/signin?redirectTo=/donations/${slug}`);
-      return;
-    }
+  useEffect(() => {
+    // Halaman campaign dapat dibuka tanpa auth guard. Pulihkan sesi ketika
+    // tersedia agar state Redux tidak kosong setelah refresh atau navigasi.
+    if (user == null) void dispatch(getSessionUser());
+  }, [dispatch, user]);
+
+  const openDonationForm = () => {
     setIsFormOpen(true);
     window.requestAnimationFrame(() => {
       document
         .getElementById("donation-form")
         ?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+  };
+
+  const handleDonateClick = async () => {
+    if (user) {
+      openDonationForm();
+      return;
+    }
+
+    setIsCheckingSession(true);
+    try {
+      const sessionUser = await dispatch(getSessionUser()).unwrap();
+      if (sessionUser) {
+        openDonationForm();
+        return;
+      }
+    } finally {
+      setIsCheckingSession(false);
+    }
+
+    router.push(`/signin?redirectTo=/donations/${slug}`);
   };
 
   const retry = () => {
@@ -288,10 +313,20 @@ export default function CampaignDetailPage() {
                     <button
                       type="button"
                       onClick={handleDonateClick}
-                      className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-6 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[var(--yn-accent-dark)]"
+                      disabled={isCheckingSession}
+                      className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-6 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[var(--yn-accent-dark)] disabled:cursor-wait disabled:opacity-60 disabled:hover:translate-y-0"
                     >
-                      {user ? "Donasi sekarang" : "Masuk untuk berdonasi"}
-                      <ArrowRight aria-hidden="true" className="size-4" />
+                      {isCheckingSession ? (
+                        <>
+                          <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />
+                          Memeriksa sesi…
+                        </>
+                      ) : (
+                        <>
+                          {user ? "Donasi sekarang" : "Mulai donasi"}
+                          <ArrowRight aria-hidden="true" className="size-4" />
+                        </>
+                      )}
                     </button>
                   ) : (
                     <p className="mt-6 rounded-2xl bg-[var(--yn-surface-muted)] px-4 py-3 text-center text-sm text-[var(--yn-muted)]">

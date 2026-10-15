@@ -41,6 +41,9 @@ export type XPRule = {
   source_type: string;
   xp: number;
   description?: string | null;
+  // Jumlah reward yang dapat diberikan dalam satu bulan kalender.
+  // `null` berarti tidak ada batas; saat ini terutama dipakai donasi dan shop.
+  monthly_cap?: number | null;
 };
 
 export type LeaderboardEntry = {
@@ -73,6 +76,7 @@ export type AdjustXP = {
 export type UpdateXPRule = {
   xp: number;
   description?: string | null;
+  monthly_cap?: number | null;
 };
 
 // Label manusiawi untuk jenis sumber XP pada riwayat.

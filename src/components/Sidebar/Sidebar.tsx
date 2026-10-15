@@ -353,6 +353,30 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               )}
               {/* <!-- Menu Item Misi (pengurus) --> */}
 
+              {/* <!-- Menu Item Pengaturan XP (pengurus) --> */}
+              {boleh("/dashboard/xp") ? (
+                <li>
+                  <Link
+                    href="/dashboard/xp"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname.includes("/dashboard/xp") &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faTrophy}
+                      fill="black"
+                      width={25}
+                      height={25}
+                    />
+                    Pengaturan XP
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
+              {/* <!-- Menu Item Pengaturan XP (pengurus) --> */}
+
               {/* <!-- Menu Item Campaign (pengurus) --> */}
               {boleh("/dashboard/campaigns") ? (
                 <li>

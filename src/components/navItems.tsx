@@ -19,6 +19,6 @@ export const NAV_ITEMS: NavItem[] = [
   { name: "Events", path: "/events", icon: CalendarDays },
   { name: "Orders", path: "/orders", icon: RotateCcwClock },
   { name: "Donasi", path: "/donations", icon: HandHeart },
-  { name: "Merch", path: "/shop", icon: Shirt },
+  { name: "Shop", path: "/shop", icon: Shirt },
   { name: "Profile", path: "/profile", icon: CircleUserRound },
 ];

@@ -59,6 +59,8 @@ const ROUTES: Route[] = [
   // Server memeriksa izin `metrics:view`, yang dimiliki admin dan pj.
   { prefix: "/dashboard/metrics", roles: ADMIN_PJ },
   { prefix: "/dashboard/missions", roles: ADMIN_PJ },
+  // Aturan XP memakai izin yang sama dengan pengelolaan misi di server.
+  { prefix: "/dashboard/xp", roles: ADMIN_PJ },
   // Server memeriksa izin `moderation:moderate`, yang juga dimiliki ranger.
   { prefix: "/dashboard/moderation", roles: ADMIN_PJ_RANGER },
   { prefix: "/dashboard/orders", roles: ADMIN },

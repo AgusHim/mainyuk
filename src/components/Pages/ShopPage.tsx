@@ -88,13 +88,13 @@ const ShopPage = () => {
         <section className="grid items-end gap-8 border-b border-[var(--yn-border)] pb-10 md:grid-cols-[minmax(0,1fr)_auto] md:pb-14">
           <div className="max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--yn-accent-dark)]">
-              YukNgaji Solo Shop
+              YN Solo Shop
             </p>
             <h1 className="mt-4 max-w-2xl text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-[var(--yn-foreground)] sm:text-5xl md:text-6xl">
               Bawa semangat baik ke keseharianmu.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-[var(--yn-muted)] md:text-lg">
-              Temukan merchandise resmi YukNgaji Solo, dibuat untuk menemani
+              Temukan merchandise resmi YN Solo, dibuat untuk menemani
               langkah dan cerita baikmu setiap hari.
             </p>
           </div>
@@ -142,11 +142,10 @@ const ShopPage = () => {
                   type="button"
                   onClick={() => setSort(option.value)}
                   aria-pressed={sort === option.value}
-                  className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${
-                    sort === option.value
-                      ? "border-[var(--yn-foreground)] bg-[var(--yn-foreground)] text-[var(--yn-background)]"
-                      : "border-[var(--yn-border)] bg-[var(--yn-surface)] text-[var(--yn-muted)] hover:border-[var(--yn-foreground)] hover:text-[var(--yn-foreground)]"
-                  }`}
+                  className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${sort === option.value
+                    ? "border-[var(--yn-foreground)] bg-[var(--yn-foreground)] text-[var(--yn-background)]"
+                    : "border-[var(--yn-border)] bg-[var(--yn-surface)] text-[var(--yn-muted)] hover:border-[var(--yn-foreground)] hover:text-[var(--yn-foreground)]"
+                    }`}
                 >
                   {option.label}
                 </button>
@@ -199,8 +198,8 @@ const ShopPage = () => {
                   product.min_price === product.max_price
                     ? formatRupiah(product.min_price)
                     : `${formatRupiah(product.min_price)} – ${formatRupiah(
-                        product.max_price
-                      )}`;
+                      product.max_price
+                    )}`;
 
                 return (
                   <Link
@@ -214,9 +213,8 @@ const ShopPage = () => {
                         <img
                           src={product.cover_image_url}
                           alt={product.name}
-                          className={`h-full w-full object-cover transition duration-500 group-hover:scale-[1.03] ${
-                            isSoldOut ? "grayscale" : ""
-                          }`}
+                          className={`h-full w-full object-cover transition duration-500 group-hover:scale-[1.03] ${isSoldOut ? "grayscale" : ""
+                            }`}
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center text-[var(--yn-muted)]">
@@ -226,11 +224,10 @@ const ShopPage = () => {
                       )}
 
                       <span
-                        className={`absolute left-4 top-4 rounded-full px-3 py-1.5 text-xs font-semibold backdrop-blur ${
-                          isSoldOut
-                            ? "bg-[var(--yn-foreground)]/80 text-white"
-                            : "bg-[var(--yn-surface)]/90 text-[var(--yn-foreground)]"
-                        }`}
+                        className={`absolute left-4 top-4 rounded-full px-3 py-1.5 text-xs font-semibold backdrop-blur ${isSoldOut
+                          ? "bg-[var(--yn-foreground)]/80 text-white"
+                          : "bg-[var(--yn-surface)]/90 text-[var(--yn-foreground)]"
+                          }`}
                       >
                         {isSoldOut ? "Stok habis" : `Tersedia ${product.available}`}
                       </span>
