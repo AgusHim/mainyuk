@@ -1,83 +1,54 @@
 "use client";
-import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 
-const CheckoutTicketsCard = () => {
-  const dispatch = useAppDispatch();
+import { useAppSelector } from "@/hooks/hooks";
+import { formatRupiah } from "@/utils/currency";
+import { ReceiptText } from "lucide-react";
+
+function amountLabel(value: number) {
+  if (value === 0) return "Gratis";
+  if (value === 1) return "Bayar seikhlasnya";
+  return formatRupiah(value);
+}
+
+export default function CheckoutTicketsCard() {
   const checkout = useAppSelector((state) => state.order.checkout);
-  const payment_method = useAppSelector((state) => state.order.payment_method);
-  const admin_fee = useAppSelector((state) => state.order.admin_fee);
-  const error = useAppSelector((state) => state.event.error);
-  // Get Unique tickets by ticket_id
-  const uniqueTicketIds = Array.from(
-    new Set(checkout.map((ticket) => ticket.ticket_id))
-  );
-
-  const totalPayment = () => {
-    let total = 0;
-    for (let index in checkout) {
-      const ticket = checkout[index];
-      total = total + (ticket.ticket?.price ?? 0);
-    }
-    return total + admin_fee;
-  };
+  const paymentMethod = useAppSelector((state) => state.order.payment_method);
+  const adminFee = useAppSelector((state) => state.order.admin_fee);
+  const ticketIds = Array.from(new Set(checkout.map((entry) => entry.ticket_id)));
+  const subtotal = checkout.reduce((total, entry) => total + (entry.ticket?.price ?? 0), 0);
+  const total = subtotal + adminFee;
 
   return (
-    <div className="grid space-y-2">
-      <div className="gap-y-1 font-normal"></div>
-      <div>
-        <h1 className="font-semibold text-xl text-black mb-2">
-          Rincian Pembayaran
-        </h1>
-        <div className="mb-4 rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">
-          <div className="grid gap-2 text-sm">
-            {uniqueTicketIds.map((ticket_id, index) => {
-              const filteredTickets = checkout.filter(
-                (ticket) => ticket.ticket_id === ticket_id
-              );
-              return (
-                <div
-                  key={index}
-                  className="grid grid-cols-3 items-center gap-4"
-                >
-                  <p className="col-span-2 text-lg text-black">
-                    <span>{filteredTickets.length}</span>
-                    <span className="mx-1">x</span>
-                    {filteredTickets[0].ticket?.name ?? ""}
-                  </p>
-                  <p className="col-span-1 text-right text-lg text-black">
-                    {(
-                      filteredTickets.length * (filteredTickets[0].ticket?.price ?? 0)
-                    ).toLocaleString("id-ID")}
-                  </p>
-                </div>
-              );
-            })}
-            {payment_method != null && admin_fee != 0 ? (
-              <div className="grid grid-cols-3 items-center gap-4">
-                <p className="col-span-2 text-lg text-black">
-                  {payment_method?.type.toLowerCase() === "bank"
-                    ? "Kode Unik"
-                    : "Biaya Payment Gateway"}
-                </p>
-                <p className="col-span-1 text-right text-lg text-black">
-                  {admin_fee.toLocaleString("id-ID")}
-                </p>
-              </div>
-            ) : (
-              <></>
-            )}
-            <hr className="border-b border-[0.5px] border-black" />
-            <div className="flex items-center justify-between gap-4">
-              <h1 className="text-xl font-bold text-black">Total Bayar</h1>
-              <p className="text-xl font-bold text-black">
-                {totalPayment() === 1 ? "Pay As You Wish" : "Rp " + totalPayment().toLocaleString("id-ID")}
-              </p>
-            </div>
-          </div>
-        </div>
+    <section className="rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-5 sm:p-6">
+      <div className="flex items-center gap-3">
+        <ReceiptText aria-hidden="true" className="h-5 w-5 text-[var(--yn-accent)]" />
+        <h2 className="text-lg font-semibold text-[var(--yn-foreground)]">Ringkasan pembayaran</h2>
       </div>
-    </div>
-  );
-};
 
-export default CheckoutTicketsCard;
+      <dl className="mt-5 space-y-4">
+        {ticketIds.map((ticketId) => {
+          const entries = checkout.filter((entry) => entry.ticket_id === ticketId);
+          const unitPrice = entries[0]?.ticket?.price ?? 0;
+          return (
+            <div key={ticketId ?? entries[0]?.ticket?.name} className="flex items-start justify-between gap-4">
+              <dt className="text-sm text-[var(--yn-muted)]"><span className="font-medium text-[var(--yn-foreground)]">{entries.length}×</span> {entries[0]?.ticket?.name ?? "Tiket"}</dt>
+              <dd className="shrink-0 text-sm font-semibold text-[var(--yn-foreground)]">{amountLabel(entries.length * unitPrice)}</dd>
+            </div>
+          );
+        })}
+
+        {paymentMethod && adminFee > 0 && (
+          <div className="flex items-start justify-between gap-4">
+            <dt className="text-sm text-[var(--yn-muted)]">{paymentMethod.type.toLowerCase() === "bank" ? "Kode unik" : "Biaya pembayaran"}</dt>
+            <dd className="shrink-0 text-sm font-semibold text-[var(--yn-foreground)]">{formatRupiah(adminFee)}</dd>
+          </div>
+        )}
+      </dl>
+
+      <div className="mt-5 flex items-end justify-between gap-4 border-t border-[var(--yn-border)] pt-5">
+        <div><p className="text-xs text-[var(--yn-muted)]">Total pembayaran</p><p className="mt-1 text-xl font-bold text-[var(--yn-foreground)]">{amountLabel(total)}</p></div>
+        <span className="text-xs text-[var(--yn-muted)]">{checkout.length} tiket</span>
+      </div>
+    </section>
+  );
+}

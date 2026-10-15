@@ -126,6 +126,7 @@ export const orderSlice = createSlice({
 
     builder.addCase(getOrderByPublicID.fulfilled, (state, action) => {
       state.order = action.payload as Order;
+      state.loading = false;
       state.isLoadingOrder = false;
     });
 
@@ -148,7 +149,7 @@ export const orderSlice = createSlice({
     );
 
     builder.addMatcher(
-      isAnyOf(getOrders.rejected, postOrder.rejected),
+      isAnyOf(getOrders.rejected, getOrderByPublicID.rejected, postOrder.rejected),
       (state, action) => {
         state.loading = false;
         state.isLoadingOrder = false;

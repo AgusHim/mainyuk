@@ -1,30 +1,30 @@
 "use client";
-import Loader from "@/components/common/Loader/Loader";
 
 import { FormCheckoutTickets } from "@/components/Form/FormCheckoutTickets";
+import Loader from "@/components/common/Loader/Loader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getEventDetail } from "@/redux/slices/eventSlice";
 import { setCheckout } from "@/redux/slices/orderSlice";
 import { UserTicket } from "@/types/user_ticket";
-import { formatStrToDateTime } from "@/utils/convert";
+import { CalendarDays, CircleAlert, UserRound } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
-  const route = useRouter();
+  const router = useRouter();
   const dispatch = useAppDispatch();
-  const auth = useAppSelector((state) => state.auth.user);
-  const eventData = useAppSelector((state) => state.event.event);
+  const user = useAppSelector((state) => state.auth.user);
+  const event = useAppSelector((state) => state.event.event);
   const checkout = useAppSelector((state) => state.order.checkout);
   const isLoading = useAppSelector((state) => state.event.loading);
   const error = useAppSelector((state) => state.event.error);
   const [checkoutRestored, setCheckoutRestored] = useState(false);
+  const isCurrentEvent = event?.slug === slug;
 
   useEffect(() => {
-    if (eventData == null || eventData.slug != slug) {
-      dispatch(getEventDetail(slug));
-    }
-  }, [eventData, slug, dispatch]);
+    if (!isCurrentEvent) dispatch(getEventDetail(slug));
+  }, [dispatch, isCurrentEvent, slug]);
 
   useEffect(() => {
     if (checkout.length === 0) {
@@ -42,103 +42,58 @@ export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
   }, [dispatch, slug]);
 
   useEffect(() => {
-    if (checkoutRestored && checkout.length === 0) route.replace(`/events/${slug}#tickets`);
-  }, [checkoutRestored, checkout.length, route, slug]);
+    if (checkoutRestored && checkout.length === 0) router.replace(`/events/${slug}#tickets`);
+  }, [checkoutRestored, checkout.length, router, slug]);
 
-  // Gagal memuat event: tampilkan sebabnya. Tanpa ini pengguna hanya
-  // dilempar kembali ke halaman event tanpa penjelasan apa pun.
-  if (error != null && eventData == null) {
+  if (error && !isCurrentEvent) {
     return (
-      <div className="yn-container py-4">
-        <div
-          role="alert"
-          className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
-        >
-          <span>{error}</span>
+      <main className="yn-container py-12">
+        <div role="alert" className="mx-auto max-w-xl rounded-3xl border border-red-200 bg-red-50 p-7 text-red-800">
+          <CircleAlert aria-hidden="true" className="h-6 w-6" />
+          <h1 className="mt-4 text-xl font-semibold">Checkout belum bisa dimuat</h1>
+          <p className="mt-2 text-sm">Data event gagal dimuat. Silakan coba kembali dari halaman event.</p>
+          <Link href={`/events/${slug}`} className="mt-5 inline-flex rounded-full bg-red-800 px-5 py-2.5 text-sm font-semibold text-white">Kembali ke event</Link>
         </div>
-      </div>
+      </main>
     );
   }
 
-  if (eventData == null || isLoading || !checkoutRestored || checkout.length == 0) {
-    return <Loader></Loader>;
-  }
+  if (!isCurrentEvent || isLoading || !checkoutRestored || checkout.length === 0) return <Loader />;
+
+  const eventStart = event.start_at ? new Date(event.start_at) : null;
+  const eventDate = eventStart && !Number.isNaN(eventStart.getTime())
+    ? new Intl.DateTimeFormat("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).format(eventStart)
+    : "Jadwal akan diumumkan";
 
   return (
-    <>
-      <div className="yn-container grid gap-4 bg-yellow-400 py-4">
-        <div className="grid gap-2 px-8">
-          <h1 className="font-semibold text-lg text-black">Informasi Event</h1>
-          <div className="grid gap-2 rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">
-            <div className="flex w-full gap-4 px-0 -mb-0">
-              <div className="relative w-2/5">
-                <div className="block overflow-hidden rounded-xl border-2 border-black">
-                  <img
-                    className="lazy max-w-full entered loaded w-30"
-                    src={eventData.image_url}
-                  />
-                </div>
-              </div>
-              <div className="flex w-3/5 justify-between">
-                <div className="flex flex-col pb-3 text-left">
-                  <div className="flex justify-between">
-                    <div className="mb-3 line-clamp-2 w-full cursor-pointer text-base font-semibold text-neutral-700">
-                      {eventData.title ?? ""}
-                    </div>
-                  </div>
-                  <div className="cursor-pointer">
-                    <div className="mb-2 text-sm font-normal text-black">
-                      {new Date(eventData.start_at!).toLocaleString("id-ID", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </div>
-                    <div className="flex w-full items-center">
-                      <div className="mr-2">
-                        <div className="size-6">
-                          <img
-                            className="lazy max-w-full entered loaded"
-                            src="/images/logo/yn_logo.png"
-                            width={24}
-                            height={24}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="flex items-center">
-                          <p className="line-clamp-1 text-sm font-normal text-black">
-                            YukNgaji Solo
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <main className="yn-container pb-28 pt-10 md:pb-36 md:pt-16">
+      <div className="mx-auto max-w-5xl">
+        <header className="max-w-2xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--yn-accent)]">Checkout tiket</p>
+          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--yn-foreground)] sm:text-5xl">Lengkapi pesananmu.</h1>
+          <p className="mt-4 text-base leading-relaxed text-[var(--yn-muted)]">Periksa event dan isi data setiap peserta sebelum membuat pesanan.</p>
+        </header>
+
+        <section className="mt-10 overflow-hidden rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)]">
+          <div className="grid sm:grid-cols-[150px_1fr_auto] sm:items-center">
+            <div className="aspect-[16/8] overflow-hidden bg-[var(--yn-surface-muted)] sm:aspect-square sm:h-full">
+              {event.image_url && <img src={event.image_url} alt={`Poster ${event.title ?? "event"}`} className="h-full w-full object-cover" />}
+            </div>
+            <div className="p-5 sm:p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--yn-accent)]">Event pilihanmu</p>
+              <h2 className="mt-2 text-xl font-semibold text-[var(--yn-foreground)]">{event.title}</h2>
+              <p className="mt-3 flex items-start gap-2 text-sm text-[var(--yn-muted)]"><CalendarDays aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />{eventDate} WIB</p>
+            </div>
+            <div className="border-t border-[var(--yn-border)] p-5 sm:border-l sm:border-t-0 sm:p-6">
+              <p className="flex items-center gap-2 text-xs text-[var(--yn-muted)]"><UserRound aria-hidden="true" className="h-4 w-4" />Pemesan</p>
+              <p className="mt-2 max-w-48 truncate text-sm font-semibold text-[var(--yn-foreground)]">{user?.name ?? "Pengguna"}</p>
+              <p className="mt-1 max-w-48 truncate text-xs text-[var(--yn-muted)]">{user?.email}</p>
             </div>
           </div>
-        </div>
-        <div className="px-8">
-          <div>
-            <h1 className="font-semibold text-xl text-black mb-2">
-              Data Pemesan
-            </h1>
-          </div>
-          <div>
-            <div className="rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">
-              <h1 className="font-semibold text-lg text-black">
-                {auth?.name ?? "name"}
-              </h1>
-              <p className="text-lg text-black">{auth?.email ?? "email"}</p>
-            </div>
-          </div>
-        </div>
+        </section>
+
         <FormCheckoutTickets />
       </div>
-    </>
+    </main>
   );
 };

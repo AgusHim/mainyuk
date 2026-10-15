@@ -1,17 +1,22 @@
 "use client";
+
 import CheckoutPaymentMethodCard from "@/components/Card/CheckoutPaymentMethodCard";
 import CheckoutTicketsCard from "@/components/Card/CheckoutTicketsCard";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import {
-  postOrder,
-  setAuthToUserTicket,
-  setUserTicket,
-} from "@/redux/slices/orderSlice";
+import { postOrder, setAuthToUserTicket, setUserTicket } from "@/redux/slices/orderSlice";
 import { CreateOrder, Order } from "@/types/order";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { ValidateField } from "@/utils/Validation/Validation";
+import { ArrowRight, Check, LoaderCircle, ShieldCheck, UserRound } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+
+type FieldValue = string | boolean;
+type FormValues = Record<string, FieldValue>;
+type FormErrors = Record<string, string | undefined>;
+
+const inputClass =
+  "mt-2 h-12 w-full rounded-xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 text-sm text-[var(--yn-foreground)] outline-none transition placeholder:text-[var(--yn-muted)] focus:border-[var(--yn-accent)] focus:ring-2 focus:ring-[var(--yn-accent-soft)] read-only:bg-[var(--yn-surface-muted)] read-only:text-[var(--yn-muted)]";
 
 export const FormCheckoutTickets: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -19,436 +24,197 @@ export const FormCheckoutTickets: React.FC = () => {
   const user = useAppSelector((state) => state.auth.user);
   const event = useAppSelector((state) => state.event.event);
   const checkout = useAppSelector((state) => state.order.checkout);
-  const payment_method = useAppSelector((state) => state.order.payment_method);
-  const admin_fee = useAppSelector((state) => state.order.admin_fee);
+  const paymentMethod = useAppSelector((state) => state.order.payment_method);
+  const adminFee = useAppSelector((state) => state.order.admin_fee);
   const isLoadingOrder = useAppSelector((state) => state.order.isLoadingOrder);
 
-  const totalPayment = () => {
-    let total = 0;
-    for (let index in checkout) {
-      const ticket = checkout[index];
-      total = total + (ticket.ticket?.price ?? 0);
-    }
-    return total + admin_fee;
-  };
+  const [formData, setFormData] = useState<FormValues>(() => {
+    const initial: FormValues = {};
+    checkout.forEach((entry, index) => {
+      initial[`${index}_name`] = entry.user_name ?? "";
+      initial[`${index}_email`] = entry.user_email ?? "";
+      initial[`${index}_gender`] = entry.user_gender ?? "male";
+      initial[`${index}_isUseAuth`] = false;
+    });
+    return initial;
+  });
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<{ [key: string]: any }>({});
-  const [formErrors, setFormErrors] = useState<{
-    [key: string]: string | undefined;
-  }>({});
-  
-  const messageError= Object.values(formErrors).find(
-    (error) => error !== undefined && error !== ""
-  );
+  const ticketSubtotal = checkout.reduce((total, entry) => total + (entry.ticket?.price ?? 0), 0);
+  const totalPayment = ticketSubtotal + adminFee;
+  const needsPayment = ticketSubtotal > 0;
 
-  useEffect(() => {
-    let form: { [key: string]: any } = {};
-    for (let index in checkout) {
-      form[`${index}_name`] = "";
-      form[`${index}_email`] = "";
-      form[`${index}_gender`] = "male";
-      form[`${index}_isUseAuth`] = false;
-    }
-    setFormData(form);
-  }, [setFormData]);
+  function ticketGender(index: number) {
+    return checkout[index]?.ticket?.gender_allowed?.toLowerCase() ?? "both";
+  }
 
-  const setAsOrder = (event: any) => {
-    const { name, value } = event.target;
-    var id = name as string;
-    const index = parseFloat(id.split("_")[0]);
-    const ticket = checkout[index].ticket;
-    const gender_allowed = ticket?.gender_allowed.toLowerCase();
-    const user_gender = user!.gender!.toLowerCase();
-    if (user_gender != gender_allowed && gender_allowed != "both") {
-      toast.info(
-        `Tiket khusus untuk ${
-          gender_allowed == "male" ? "Laki-laki" : "Perempuan"
-        }`
-      );
+  function useAccountData(index: number, checked: boolean) {
+    const allowed = ticketGender(index);
+    const gender = user?.gender?.toLowerCase() ?? "";
+
+    if (checked && gender !== allowed && allowed !== "both") {
+      toast.info(`Tiket ini khusus untuk ${allowed === "male" ? "laki-laki" : "perempuan"}.`);
       return;
     }
 
-    let isUseAuth = false;
-    if (value == "on") {
-      isUseAuth = true;
-    }
-
-    setFormErrors((prevErrors) => ({
-      ...prevErrors,
+    const updates: FormValues = {
+      [`${index}_isUseAuth`]: checked,
+      [`${index}_name`]: checked ? user?.name ?? "" : "",
+      [`${index}_email`]: checked ? user?.email ?? "" : "",
+      [`${index}_gender`]: checked ? user?.gender?.toLowerCase() ?? "male" : "male",
+    };
+    setFormData((previous) => ({ ...previous, ...updates }));
+    setFormErrors((previous) => ({
+      ...previous,
       [`${index}_name`]: undefined,
       [`${index}_email`]: undefined,
       [`${index}_gender`]: undefined,
     }));
-    setFormData({
-      ...formData,
-      [name]: isUseAuth,
-      [`${index}_name`]: user?.name,
-      [`${index}_email`]: user?.email,
-      [`${index}_gender`]: user?.gender,
+
+    if (checked) {
+      dispatch(setAuthToUserTicket({ index, auth: { name: user?.name ?? "", email: user?.email ?? "", gender: gender || "male" } }));
+    } else {
+      dispatch(setUserTicket({ index, type: "name", value: "" }));
+      dispatch(setUserTicket({ index, type: "email", value: "" }));
+      dispatch(setUserTicket({ index, type: "gender", value: "male" }));
+    }
+  }
+
+  function updateField(index: number, field: "name" | "email" | "gender", value: string) {
+    const key = `${index}_${field}`;
+    const error = ValidateField(field, value, ticketGender(index));
+    setFormData((previous) => ({ ...previous, [key]: value }));
+    setFormErrors((previous) => ({ ...previous, [key]: error }));
+    dispatch(setUserTicket({ index, type: field, value }));
+  }
+
+  function validateForm() {
+    const nextErrors: FormErrors = {};
+    checkout.forEach((_, index) => {
+      (["name", "email", "gender"] as const).forEach((field) => {
+        const key = `${index}_${field}`;
+        nextErrors[key] = ValidateField(field, String(formData[key] ?? ""), ticketGender(index));
+      });
     });
+    setFormErrors(nextErrors);
+    const firstInvalid = Object.entries(nextErrors).find(([, value]) => Boolean(value));
+    if (firstInvalid) {
+      document.getElementById(firstInvalid[0])?.focus();
+      toast.info(firstInvalid[1]);
+      return false;
+    }
+    return true;
+  }
 
-    dispatch(
-      setAuthToUserTicket({
-        index: index,
-        auth: {
-          name: user?.name,
-          email: user?.email,
-          gender: user?.gender,
-        },
-      })
-    );
-  };
-
-  const handleChange = (event: any) => {
-    const { name, value } = event.target;
-    var id = name as string;
-    const index = parseFloat(id.split("_")[0]);
-    const type = id.split("_")[1];
-    const ticket = checkout[index].ticket;
-    const gender_allowed = ticket?.gender_allowed.toLowerCase();
-   
-    setFormData({ ...formData, [name]: value });
-
-    // Validate the field dynamically
-    const error = ValidateField(type, value, gender_allowed);
-    setFormErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: error,
-    }));
-
-    dispatch(
-      setUserTicket({
-        index: index,
-        type: type,
-        value: value,
-      })
-    );
-  };
-
-  const validateErrors = (): boolean => {
-    Object.entries(formData).forEach(([key, value]) => {
-      const index = parseFloat(key.split("_")[0]);
-      const name = key.split("_")[1];
-      const ticket = checkout[index].ticket;
-      const error = ValidateField(name, value, ticket?.gender_allowed.toLowerCase());
-      let prev = formErrors;
-      prev[key]=error;
-      setFormErrors(prev);
-    });
-    return messageError == undefined;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    validateErrors();
-    if (totalPayment() >0 && payment_method ==null) {
-      toast.info("Mohon pilih metode pembayaran");
+  async function handleSubmit(eventSubmit: React.FormEvent<HTMLFormElement>) {
+    eventSubmit.preventDefault();
+    setSubmitError(null);
+    if (!validateForm()) return;
+    if (needsPayment && !paymentMethod) {
+      document.getElementById("payment-methods")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      toast.info("Pilih metode pembayaran untuk melanjutkan.");
       return;
     }
-  
-    if (messageError != undefined) {
-      toast.info(messageError);
+    if (!event?.slug || checkout.length === 0) {
+      toast.error("Data checkout tidak lengkap. Pilih tiket kembali.");
       return;
     }
-    var bodyData = {
+
+    const body: CreateOrder = {
       donation: 0,
-      event_id: event?.slug,
-      admin_fee: admin_fee,
+      event_id: event.slug,
+      admin_fee: adminFee,
       user_tickets: checkout,
-      payment_method_id: payment_method?.id ?? "",
+      payment_method_id: paymentMethod?.id ?? "",
     };
 
-    dispatch(postOrder(bodyData as CreateOrder))
-      .unwrap()
-      .then((res) => {
-        const order = res as Order;
-        if (event?.slug) sessionStorage.removeItem(`event-checkout:${event.slug}`);
-        router.replace(`/orders/${order.public_id}`);
-      })
-      .catch((error) => {
-        // Handle errors here if needed
-        console.error("Error fetching data:", error);
-      });
-  };
+    try {
+      const result = (await dispatch(postOrder(body)).unwrap()) as Order;
+      sessionStorage.removeItem(`event-checkout:${event.slug}`);
+      router.replace(`/orders/${result.public_id}`);
+    } catch {
+      setSubmitError("Pesanan belum berhasil dibuat. Periksa data lalu coba lagi.");
+      toast.error("Pesanan belum berhasil dibuat. Periksa data lalu coba lagi.");
+    }
+  }
 
   return (
-    <div className="px-8">
-      <form className="grid gap-4" onSubmit={handleSubmit}>
-        <div className="grid space-y-2">
-          <div className="gap-y-1 font-normal"></div>
-          <div className="mb-5">
-            <h1 className="font-semibold text-xl text-black">
-              Detail Pemilik Tiket
-            </h1>
-            <p className="text-md text-black">
-              Data diri untuk setiap pemilik tiket
-            </p>
+    <form onSubmit={handleSubmit} noValidate className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,.8fr)] lg:items-start">
+      <div className="space-y-6">
+        <section className="rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-5 sm:p-7">
+          <div className="flex items-start gap-3">
+            <UserRound aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-[var(--yn-accent)]" />
+            <div>
+              <h2 className="text-xl font-semibold text-[var(--yn-foreground)]">Pemilik tiket</h2>
+              <p className="mt-1 text-sm leading-relaxed text-[var(--yn-muted)]">Isi data sesuai identitas setiap peserta. Tiket akan dikirim ke email yang tercantum.</p>
+            </div>
           </div>
-          <div className="grid gap-4">
-            {checkout.map((e, index) => (
-              <div className="grid gap-4 mb-2 rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">
-                <div key={index} className="flex items-center gap-2 text-black">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    className="size-5"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                  <h1 className="font-semibold text-lg text-black">
-                    Pemesan {index + 1} ({e.ticket?.name ?? ""})
-                  </h1>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <button
-                      name={`${index}_isUseAuth`}
-                      type="button"
-                      role="checkbox"
-                      aria-checked={formData[`${index}_isUseAuth`]} // Reflect true/false state
-                      value={
-                        (formData[`${index}_isUseAuth`] as boolean) == false
-                          ? "on"
-                          : "off"
-                      }
-                      className={`hover:bg-violet3 flex size-[25px] appearance-none items-center justify-center rounded-[4px] border border-black bg-yellow-200 outline-none`}
-                      id={`${index}_isUseAuth`}
-                      onClick={setAsOrder} // Toggle the state correctly
-                    >
-                      {formData[`${index}_isUseAuth`] ? (
-                        <span
-                          data-state="checked"
-                          className="flex items-center justify-center rounded-[4px] bg-black"
-                          style={{ pointerEvents: "none" }}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                            className="size-5 text-white"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            ></path>
-                          </svg>
-                        </span>
-                      ) : (
-                        <></>
-                      )}
-                    </button>
 
-                    <input
-                      className="absolute bg-yellow-200"
-                      type="checkbox"
-                      aria-hidden="true"
-                      tabIndex={-1}
-                      checked={formData[`${index}_isUseAuth`]}
-                      style={{
-                        transform: "translateX(-100%)",
-                        pointerEvents: "none",
-                        opacity: 0,
-                        margin: "0px",
-                        width: "25px",
-                        height: "25px",
-                      }}
-                      readOnly // Make it readonly since the button controls it
-                    />
-                    <label
-                      className="pl-[15px] text-md leading-none text-black"
-                      htmlFor={`${index}_isUseAuth`}
-                    >
-                      Sama dengan pemesan
+          <div className="mt-7 space-y-5">
+            {checkout.map((entry, index) => {
+              const usesAccount = Boolean(formData[`${index}_isUseAuth`]);
+              const allowedGender = ticketGender(index);
+              return (
+                <fieldset key={`${entry.ticket_id}-${index}`} className="rounded-2xl border border-[var(--yn-border)] p-4 sm:p-5">
+                  <legend className="px-2 text-sm font-semibold text-[var(--yn-foreground)]">Peserta {index + 1} · {entry.ticket?.name ?? "Tiket event"}</legend>
+
+                  <label className="mt-1 flex cursor-pointer items-center gap-3 rounded-xl bg-[var(--yn-surface-muted)] p-3 text-sm text-[var(--yn-foreground)]">
+                    <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${usesAccount ? "border-[var(--yn-accent)] bg-[var(--yn-accent)] text-white" : "border-[var(--yn-border)] bg-[var(--yn-surface)]"}`}>
+                      {usesAccount && <Check aria-hidden="true" className="h-3.5 w-3.5" />}
+                    </span>
+                    <input type="checkbox" checked={usesAccount} onChange={(event) => useAccountData(index, event.target.checked)} className="sr-only" />
+                    Gunakan data akun saya
+                  </label>
+
+                  <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                    <label className="text-sm font-medium text-[var(--yn-foreground)]">
+                      Nama lengkap
+                      <input id={`${index}_name`} name={`${index}_name`} type="text" autoComplete="name" placeholder="Nama sesuai identitas" value={String(formData[`${index}_name`] ?? "")} onChange={(event) => updateField(index, "name", event.target.value)} readOnly={usesAccount} aria-invalid={Boolean(formErrors[`${index}_name`])} aria-describedby={formErrors[`${index}_name`] ? `${index}_name-error` : undefined} className={inputClass} />
+                      {formErrors[`${index}_name`] && <span id={`${index}_name-error`} className="mt-1.5 block text-xs font-medium text-red-600">{formErrors[`${index}_name`]}</span>}
+                    </label>
+
+                    <label className="text-sm font-medium text-[var(--yn-foreground)]">
+                      Email
+                      <input id={`${index}_email`} name={`${index}_email`} type="email" autoComplete="email" inputMode="email" placeholder="nama@email.com" value={String(formData[`${index}_email`] ?? "")} onChange={(event) => updateField(index, "email", event.target.value)} readOnly={usesAccount} aria-invalid={Boolean(formErrors[`${index}_email`])} aria-describedby={formErrors[`${index}_email`] ? `${index}_email-error` : undefined} className={inputClass} />
+                      {formErrors[`${index}_email`] && <span id={`${index}_email-error`} className="mt-1.5 block text-xs font-medium text-red-600">{formErrors[`${index}_email`]}</span>}
                     </label>
                   </div>
-                </div>
-                <div>
-                  <p className="mb-2 text-lg text-black">Nama Lengkap</p>
-                  <div className="flex flex-col">
-                    <input
-                      id={`${index}_name`}
-                      placeholder="Nama Lengkap"
-                      type="text"
-                      className="py-3 px-4 w-full rounded-lg	border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg font-normal text-black placeholder-black flex items-center border-black bg-yellow-200"
-                      name={`${index}_name`}
-                      value={formData[`${index}_name`]}
-                      onChange={handleChange}
-                      readOnly={formData[`${index}_isUseAuth`]}
-                    />
-                    {formErrors[`${index}_name`] && (
-                      <p className="mt-1 text-danger text-sm font-semibold">
-                        {formErrors[`${index}_name`]}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <p className="mb-2 text-lg text-black">Email</p>
-                  <div className="flex flex-col">
-                    <input
-                      id={`${index}_email`}
-                      placeholder="Email"
-                      type="text"
-                      className="py-3 px-4 w-full rounded-lg	border border-solid h-[42px] focus-visible:border-primary-600 focus-visible:outline-none text-lg font-normal text-black placeholder-black flex items-center border-black bg-yellow-200"
-                      name={`${index}_email`}
-                      value={formData[`${index}_email`]}
-                      onChange={handleChange}
-                      readOnly={formData[`${index}_isUseAuth`]}
-                    />
-                    {formErrors[`${index}_email`] && (
-                      <p className="mt-1 text-danger text-sm font-semibold">
-                        {formErrors[`${index}_email`]}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <p className="mb-2 text-lg text-black">Jenis Kelamin</p>
-                  <div
-                    role="radiogroup"
-                    aria-required="false"
-                    dir="ltr"
-                    className="focus-visible:border-primary-600 w-full items-center font-normal placeholder:text-black focus-visible:outline-none grid gap-4 rounded-lg border border-black px-2 py-3 text-sm bg-yellow-200"
-                    aria-label="View density"
-                    tabIndex={-1}
-                    style={{ outline: "none" }}
-                    data-disabled=""
-                  >
-                    <div className="flex cursor-pointer items-center">
-                      <button
-                        type="button"
-                        role="radio"
-                        aria-checked="true"
-                        data-state="checked"
-                        value="male"
-                        className="hover:bg-violet3 size-[25px] rounded-full border border-black bg-yellow-300 outline-none focus:shadow-[0_0_0_2px]"
-                        id={`${index}_gender`}
-                        name={`${index}_gender`}
-                        tabIndex={-1}
-                        data-radix-collection-item=""
-                        data-disabled=""
-                        disabled={formData[`${index}_isUseAuth`]}
-                        onClick={handleChange}
-                      >
-                        {formData[`${index}_gender`] == "male" ? (
-                          <span
-                            data-state="checked"
-                            className="relative flex size-full items-center justify-center after:block after:size-[11px] after:rounded-[50%] after:bg-black after:content-['']"
-                            data-disabled=""
-                          ></span>
-                        ) : (
-                          <></>
-                        )}
-                      </button>
-                      <input
-                        type="radio"
-                        aria-hidden="true"
-                        tabIndex={-1}
-                        value="male"
-                        checked={formData[`${index}_gender`] == "male"}
-                        style={{
-                          transform: "translateX(-100%)",
-                          position: "absolute",
-                          pointerEvents: "none",
-                          opacity: 0,
-                          margin: "0px",
-                          width: "25px",
-                          height: "25px",
-                        }}
-                        disabled={formData[`${index}_isUseAuth`]}
-                      />
-                      <label
-                        className="flex-1 cursor-pointer pl-2 text-sm leading-none text-black"
-                        htmlFor={`${index}_male`}
-                      >
-                        Laki-laki
-                      </label>
+
+                  <div className="mt-5">
+                    <p className="text-sm font-medium text-[var(--yn-foreground)]">Jenis kelamin</p>
+                    <div className="mt-2 grid grid-cols-2 gap-3">
+                      {(["male", "female"] as const).map((gender) => {
+                        const selected = formData[`${index}_gender`] === gender;
+                        const unavailable = allowedGender !== "both" && allowedGender !== gender;
+                        return (
+                          <label key={gender} className={`flex min-h-12 items-center gap-3 rounded-xl border px-4 text-sm transition ${selected ? "border-[var(--yn-accent)] bg-[var(--yn-accent-soft)] text-[var(--yn-accent-dark)]" : "border-[var(--yn-border)] text-[var(--yn-muted)]"} ${(usesAccount || unavailable) ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-[var(--yn-accent)]"}`}>
+                            <input id={selected ? `${index}_gender` : undefined} type="radio" name={`${index}_gender`} value={gender} checked={selected} disabled={usesAccount || unavailable} onChange={(event) => updateField(index, "gender", event.target.value)} className="h-4 w-4 accent-[var(--yn-accent)]" />
+                            {gender === "male" ? "Laki-laki" : "Perempuan"}
+                          </label>
+                        );
+                      })}
                     </div>
-                    <div className="flex cursor-pointer items-center">
-                      <button
-                        type="button"
-                        role="radio"
-                        aria-checked="false"
-                        data-state="unchecked"
-                        value="female"
-                        className="hover:bg-violet3 size-[25px] rounded-full border border-black bg-yellow-300 outline-none focus:shadow-[0_0_0_2px]"
-                        id={`${index}_gender`}
-                        name={`${index}_gender`}
-                        tabIndex={-1}
-                        data-radix-collection-item=""
-                        disabled={formData[`${index}_isUseAuth`]}
-                        onClick={handleChange}
-                      >
-                        {formData[`${index}_gender`] == "female" ? (
-                          <span
-                            data-state="checked"
-                            className="relative flex size-full items-center justify-center after:block after:size-[11px] after:rounded-[50%] after:bg-black after:content-['']"
-                            data-disabled=""
-                          ></span>
-                        ) : (
-                          <></>
-                        )}
-                      </button>
-                      <input
-                        type="radio"
-                        aria-hidden="true"
-                        tabIndex={-1}
-                        value="female"
-                        checked={formData[`${index}_gender`] == "female"}
-                        style={{
-                          transform: "translateX(-100%)",
-                          position: "absolute",
-                          pointerEvents: "none",
-                          opacity: 0,
-                          margin: "0px",
-                          width: "25px",
-                          height: "25px",
-                        }}
-                        disabled={formData[`${index}_isUseAuth`]}
-                      />
-                      <label
-                        className="flex-1 cursor-pointer pl-2 text-sm leading-none text-black"
-                        htmlFor={`${index}_female`}
-                      >
-                        Perempuan
-                      </label>
-                    </div>
+                    {allowedGender !== "both" && <p className="mt-2 text-xs text-[var(--yn-muted)]">Tiket ini khusus untuk {allowedGender === "male" ? "laki-laki" : "perempuan"}.</p>}
+                    {formErrors[`${index}_gender`] && <span className="mt-1.5 block text-xs font-medium text-red-600">{formErrors[`${index}_gender`]}</span>}
                   </div>
-                  {formErrors[`${index}_gender`] && (
-                    <p className="mt-1 text-danger text-sm font-semibold">
-                      {formErrors[`${index}_gender`]}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
+                </fieldset>
+              );
+            })}
           </div>
-        </div>
+        </section>
+
         <CheckoutPaymentMethodCard />
+      </div>
+
+      <aside className="space-y-4 lg:sticky lg:top-28">
         <CheckoutTicketsCard />
-        <div className="grid space-y-2">
-          <div className="gap-y-1 font-normal"></div>
-          {isLoadingOrder ? (
-            <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
-          ) : (
-            <button
-              type="submit"
-              className="grid w-full place-items-center rounded-lg border-2 border-black shadow-custom p-3 text-lg font-bold bg-primary text-white"
-            >
-              Konfirmasi Pembelian
-            </button>
-          )}
-          <div className="mt-2"></div>
-        </div>
-      </form>
-    </div>
+        {submitError && <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{submitError}</div>}
+        <button type="submit" disabled={isLoadingOrder} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-[var(--yn-accent-dark)] disabled:cursor-not-allowed disabled:opacity-60">
+          {isLoadingOrder ? <><LoaderCircle aria-hidden="true" className="h-4 w-4 animate-spin" /> Membuat pesanan…</> : <>Konfirmasi pembelian <ArrowRight aria-hidden="true" className="h-4 w-4" /></>}
+        </button>
+        <p className="flex items-start justify-center gap-2 px-3 text-center text-xs leading-relaxed text-[var(--yn-muted)]"><ShieldCheck aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />Data peserta hanya digunakan untuk penerbitan tiket dan informasi event.</p>
+      </aside>
+    </form>
   );
 };

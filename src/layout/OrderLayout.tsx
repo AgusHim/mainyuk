@@ -1,399 +1,262 @@
 "use client";
-import { CommonHeader } from "@/components/Header/CommonHeader";
-import { MainLayout } from "@/layout/MainLayout";
-import {
-  faCartShopping,
-  faComment,
-  faReceipt,
-  faTicket,
-  faUserGroup,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { formatStrToDateTime } from "@/utils/convert";
-import { useEffect } from "react";
-import Loader from "@/components/common/Loader/Loader";
-import { getOrderByPublicID } from "@/redux/slices/orderSlice";
-import OrderPaymentMethodCard from "@/components/Card/OrderPaymentMethodCard";
-import Link from "next/link";
-import { Order } from "@/types/order";
 
-export default function OrderLayout({
-  params,
-}: {
+import OrderPaymentMethodCard from "@/components/Card/OrderPaymentMethodCard";
+import Loader from "@/components/common/Loader/Loader";
+import { CommonHeader } from "@/components/Header/CommonHeader";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { MainLayout } from "@/layout/MainLayout";
+import { getOrderByPublicID } from "@/redux/slices/orderSlice";
+import { Order } from "@/types/order";
+import { formatRupiah } from "@/utils/currency";
+import {
+  ArrowRight,
+  CalendarDays,
+  CircleAlert,
+  Clock3,
+  MapPin,
+  MessageCircle,
+  ReceiptText,
+  Ticket,
+  Users,
+} from "lucide-react";
+import Link from "next/link";
+import { useEffect } from "react";
+
+type OrderLayoutProps = {
   params: { public_id: string };
-}) {
-  const route = useRouter();
+};
+
+const sectionClass =
+  "rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-5 sm:p-7";
+
+function formatDate(value?: string, includeTime = true) {
+  if (!value) return "Belum tersedia";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Belum tersedia";
+
+  return new Intl.DateTimeFormat("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    ...(includeTime ? { hour: "2-digit", minute: "2-digit" } : {}),
+    timeZone: "Asia/Jakarta",
+  }).format(date);
+}
+
+function amountLabel(value: number) {
+  if (value === 0) return "Gratis";
+  if (value === 1) return "Bayar seikhlasnya";
+  return formatRupiah(value);
+}
+
+function statusCopy(status?: string) {
+  switch (status) {
+    case "paid":
+      return { label: "Pembayaran diterima", note: "Tiketmu sudah siap digunakan.", className: "bg-[var(--yn-accent-soft)] text-[var(--yn-accent-dark)]" };
+    case "expired":
+      return { label: "Kedaluwarsa", note: "Batas waktu pembayaran telah berakhir.", className: "bg-red-50 text-red-700" };
+    case "cancelled":
+      return { label: "Dibatalkan", note: "Transaksi ini telah dibatalkan.", className: "bg-red-50 text-red-700" };
+    case "rejected":
+      return { label: "Pembayaran ditolak", note: "Hubungi admin jika kamu sudah melakukan pembayaran.", className: "bg-red-50 text-red-700" };
+    default:
+      return { label: "Menunggu pembayaran", note: "Selesaikan pembayaran agar tiket dapat diterbitkan.", className: "bg-amber-50 text-amber-800" };
+  }
+}
+
+function DetailRow({ label, value, accent = false }: { label: string; value: React.ReactNode; accent?: boolean }) {
+  return (
+    <div className="flex items-start justify-between gap-5 border-b border-[var(--yn-border)] py-3.5 last:border-0">
+      <dt className="text-sm text-[var(--yn-muted)]">{label}</dt>
+      <dd className={`max-w-[65%] text-right text-sm font-semibold ${accent ? "text-[var(--yn-accent)]" : "text-[var(--yn-foreground)]"}`}>
+        {value}
+      </dd>
+    </div>
+  );
+}
+
+export default function OrderLayout({ params }: OrderLayoutProps) {
   const dispatch = useAppDispatch();
   const order = useAppSelector((state) => state.order.order);
   const isLoading = useAppSelector((state) => state.order.loading);
   const error = useAppSelector((state) => state.order.error);
+  const isCurrentOrder = order?.public_id === params.public_id;
 
   useEffect(() => {
-    if (order == null || order.public_id != params.public_id) {
-      dispatch(getOrderByPublicID(params.public_id));
-    }
-  }, []);
+    if (!isCurrentOrder) dispatch(getOrderByPublicID(params.public_id));
+  }, [dispatch, isCurrentOrder, params.public_id]);
 
-  // Gagal memuat pesanan: tampilkan sebabnya, jangan hanya berputar selamanya.
-  if (error != null && order == null) {
+  if (error && !isCurrentOrder) {
     return (
       <MainLayout>
-        <CommonHeader title="Detail Transaksi" isShowBack={true} />
-        <div className="yn-container max-w-2xl py-8">
-          <div
-            role="alert"
-            className="flex h-auto w-full items-center gap-3 rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
-          >
-            <span>{error}</span>
+        <CommonHeader title="Detail Transaksi" isShowBack />
+        <main className="yn-container py-12 md:py-20">
+          <div role="alert" className="mx-auto max-w-xl rounded-3xl border border-red-200 bg-red-50 p-7 text-red-800">
+            <CircleAlert aria-hidden="true" className="h-7 w-7" />
+            <h1 className="mt-4 text-xl font-semibold">Detail transaksi belum bisa dimuat</h1>
+            <p className="mt-2 text-sm leading-relaxed">Pastikan kamu masuk dengan akun yang melakukan pemesanan ini, lalu coba kembali.</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button type="button" onClick={() => dispatch(getOrderByPublicID(params.public_id))} className="rounded-full bg-red-800 px-5 py-2.5 text-sm font-semibold text-white">
+                Coba lagi
+              </button>
+              <Link href="/orders" className="rounded-full border border-red-200 px-5 py-2.5 text-sm font-semibold">
+                Kembali ke riwayat
+              </Link>
+            </div>
           </div>
-        </div>
+        </main>
       </MainLayout>
     );
   }
 
-  if (order == null || isLoading) {
+  if (!isCurrentOrder || isLoading) {
     return (
       <MainLayout>
-        <CommonHeader title="Detail Transaksi" isShowBack={true} />
-        <Loader></Loader>
+        <CommonHeader title="Detail Transaksi" isShowBack />
+        <Loader />
       </MainLayout>
     );
   }
 
-  const totalPayment = () => {
-    const amount = order?.amount ?? 0;
-    const donation = order?.donation ?? 0;
-    const admin_fee = order?.admin_fee ?? 0;
-    return amount + donation + admin_fee;
-  };
-
-  const event = order?.event;
+  const event = order.event;
+  const status = statusCopy(order.status);
+  const ticketAmount = order.amount ?? 0;
+  const donation = order.donation ?? 0;
+  const adminFee = order.admin_fee ?? 0;
+  const total = ticketAmount + donation + adminFee;
+  const ticketCount = order.user_tickets?.length ?? 0;
+  const canConfirm = !["paid", "expired", "cancelled"].includes(order.status ?? "pending");
+  const groupUrl = event?.wa_group_url || (event?.divisi?.name?.includes("Sports") ? "https://chat.whatsapp.com/HSRFShOBsjpKUHiyJV49BZ" : null);
 
   return (
-    <>
-      <MainLayout>
-        <CommonHeader title="Detail Transaksi" isShowBack={true} />
-        <div className="yn-container max-w-2xl py-8">
-          <div className="mb-8 flex flex-col gap-4">
-            {order.status == "paid" ? (
-              <div>
-                <div className="mb-4 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2">
-                    <FontAwesomeIcon
-                      icon={faTicket}
-                      fill="black"
-                      width={25}
-                      height={25}
-                      style={{ fontSize: "20px", color: "black" }}
-                    />
-                    <h1 className="font-semibold text-lg text-[var(--yn-foreground)]">
-                      Tiket Event
-                    </h1>
-                  </div>
-                  <button type="button" className="ml-auto flex items-center">
-                    <p className="text-primary text-lg font-bold">
-                      Lihat tiket
-                    </p>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                      className="size-5 text-primary"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                  </button>
-                </div>
-                <div>
-                  <div className="flex w-full overflow-hidden rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)]">
-                    <div className="relative w-2/5">
-                      <div className="absolute bottom-0 grid w-full">
-                        {/* <div className="p-1">
-                          <div className="w-full rounded-md bg-black/40 py-1 backdrop-blur-md">
-                            <p className="text-center text-xs text-white">
-                              Draft
-                            </p>
-                          </div>
-                        </div> */}
-                      </div>
-                      <div className="block overflow-hidden object-cover">
-                        <img
-                          src={event?.image_url ?? ""}
-                          alt="Poster event"
-                          className="lazy max-w-full entered loaded"
-                          width={200}
-                          height={350}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex w-3/5 justify-between p-4">
-                      <div className="flex cursor-pointer flex-col text-left">
-                        <div className="flex-1">
-                          <div className="mb-1 line-clamp-2 w-full cursor-pointer">
-                            <h1 className="font-semibold text-md text-[var(--yn-foreground)]">
-                              {event?.title ?? ""}
-                            </h1>
-                          </div>
-                          <div>
-                            <p className="text-sm text-[var(--yn-muted)]">
-                              {event == null
-                                ? ""
-                                : formatStrToDateTime(
-                                  event?.start_at ?? "",
-                                  "EEEE, dd MMM yyyy HH:mm"
-                                )}
-                            </p>
-                          </div>
-                          <div className="mt-3 flex w-full items-center">
-                            <div className="mr-2">
-                              <div className="size-6">
-                                <img
-                                  className="lazy max-w-full entered loaded"
-                                  src="/images/logo/yn_logo.png"
-                                  width={24}
-                                  height={24}
-                                />
-                              </div>
-                            </div>
-                            <div className="flex items-center">
-                              <div className="line-clamp-1">
-                                <p className="text-md text-[var(--yn-muted)]">
-                                  YukNgaji Solo
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex gap-2"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <OrderPaymentMethodCard />
-            )}
+    <MainLayout>
+      <CommonHeader title="Detail Transaksi" isShowBack />
+      <main className="yn-container pb-28 pt-10 md:pb-36 md:pt-16">
+        <div className="mx-auto max-w-5xl">
+          <header className="max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--yn-accent)]">Order #{order.public_id?.toUpperCase()}</p>
+            <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--yn-foreground)] sm:text-5xl">Detail pesanan tiketmu.</h1>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <span className={`rounded-full px-4 py-2 text-sm font-semibold ${status.className}`}>{status.label}</span>
+              <p className="text-sm text-[var(--yn-muted)]">{status.note}</p>
+            </div>
+          </header>
 
-            <div className="mt-4">
-              <div className="mb-4 flex items-center gap-2">
-                <FontAwesomeIcon
-                  icon={faCartShopping}
-                  fill="black"
-                  width={25}
-                  height={25}
-                  style={{ fontSize: "20px", color: "black" }}
-                />
-                <h1 className="font-semibold text-lg text-[var(--yn-foreground)]">
-                  Rincian Order
-                </h1>
-              </div>
-              <div className="rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 py-2">
-                <div className="flex w-full items-center justify-between gap-4 py-2">
-                  <p className="text-md text-[var(--yn-muted)]">Order ID</p>
-                  <h1 className="font-semibold text-md text-[var(--yn-foreground)]">
-                    #{order?.public_id?.toUpperCase()}
-                  </h1>
-                </div>
-                <div className="border-b border-[var(--yn-border)]"></div>
-                <div className="flex w-full items-center justify-between gap-4 py-2">
-                  <p className="text-md text-[var(--yn-muted)]">Tanggal Order</p>
-                  <h1 className="font-semibold text-md text-[var(--yn-foreground)]">
-                    {formatStrToDateTime(
-                      order?.created_at ?? "",
-                      "EEEE, dd MMM yyyy HH:mm"
+          <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,.75fr)] lg:items-start">
+            <div className="space-y-6">
+              <section className={`${sectionClass} overflow-hidden p-0`}>
+                <div className="grid sm:grid-cols-[180px_1fr]">
+                  <div className="aspect-[4/3] overflow-hidden bg-[var(--yn-surface-muted)] sm:aspect-auto sm:min-h-64">
+                    {event?.image_url ? (
+                      <img src={event.image_url} alt={`Poster ${event.title ?? "event"}`} className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="flex h-full min-h-44 items-center justify-center text-[var(--yn-muted)]"><Ticket aria-hidden="true" className="h-10 w-10" /></div>
                     )}
-                  </h1>
-                </div>
-                <div className="border-b border-[var(--yn-border)]"></div>
-                <div className="flex w-full items-center justify-between gap-4 py-2">
-                  <p className="text-md text-[var(--yn-muted)]">Status</p>
-                  <OrderStatus status={order.status ?? "pending"} />
-                </div>
-                {/* <div className="border-b border-b-black"></div>
-                <div className="flex w-full items-center justify-between gap-4 py-2">
-                  <p className="text-md text-black">Bukti Pembayaran</p>
-                  <button
-                    type="button"
-                    className="text-white bg-[#080C16]  focus:outline-none transition ease-in-out duration-300 rounded-lg px-2 py-1 text-xs hover:opacity-80 active:opacity-70 font-bold"
-                  >
-                    <div className="flex items-center justify-center gap-x-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                        className="size-3 text-neutral-400"
-                      >
-                        <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z"></path>
-                      </svg>
-                      <span>Download</span>
+                  </div>
+                  <div className="p-5 sm:p-7">
+                    <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--yn-accent)]">Event</p>
+                    <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[var(--yn-foreground)]">{event?.title || "Event YukNgaji Solo"}</h2>
+                    <div className="mt-5 space-y-3 text-sm text-[var(--yn-muted)]">
+                      <p className="flex items-start gap-3"><CalendarDays aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--yn-accent)]" /><span>{formatDate(event?.start_at)}</span></p>
+                      {event?.location_desc?.[0] && <p className="flex items-start gap-3"><MapPin aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--yn-accent)]" /><span>{event.location_desc[0]}</span></p>}
+                      <p className="flex items-start gap-3"><Users aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--yn-accent)]" /><span>{ticketCount > 0 ? `${ticketCount} tiket dalam pesanan` : "Tiket event"}</span></p>
                     </div>
-                  </button>
-                </div> */}
-              </div>
-            </div>
-            <div className="mt-4">
-              <div className="mb-4 flex items-center gap-2">
-                <FontAwesomeIcon
-                  icon={faReceipt}
-                  fill="black"
-                  width={25}
-                  height={25}
-                  style={{ fontSize: "20px", color: "black" }}
-                />
-                <h1 className="font-semibold text-lg text-[var(--yn-foreground)]">
-                  Rincian Harga
-                </h1>
-              </div>
-              <div className="rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 py-2">
-                <div className="flex w-full justify-between gap-4 py-2">
-                  <p className="text-md text-[var(--yn-muted)]">Tiket</p>
-                  <h1 className="font-semibold text-md text-[var(--yn-foreground)]">
-                    {order.amount === 1
-                      ? "Pay As You Wish"
-                      : `Rp ${order.amount?.toLocaleString("id-ID")}`}
-                  </h1>
+                  </div>
                 </div>
-                <div className="border-b border-[var(--yn-border)]"></div>
-                {
-                  order.admin_fee! > 0 ? (
-                    <div className="flex w-full justify-between gap-4 py-2">
-                      <p className="text-md text-[var(--yn-muted)]">Biaya Jasa Pembayaran</p>
-                      <h1 className="font-semibold text-md text-[var(--yn-foreground)]">
-                        Rp {order.admin_fee?.toLocaleString("id-ID")}
-                      </h1>
-                    </div>
-                  ) : (
-                    <></>
-                  )
-                }
-                <div className="border-b border-[var(--yn-border)]"></div>
-                <div className="flex w-full justify-between gap-4 py-2">
-                  <p className="text-md text-[var(--yn-muted)]">Total Harga</p>
-                  <h1 className="font-semibold text-md text-[var(--yn-accent)]">
-                    {totalPayment() == 1
-                      ? "Pay As You Wish"
-                      : `Rp ${totalPayment().toLocaleString("id-ID")}`}
-                  </h1>
-                </div>
-              </div>
-            </div>
-            <div className="mt-5 grid gap-4">
-              {order.status == "paid" ? (
-                <Link href={`/orders/${params.public_id}/tickets`}>
-                  <button
-                    type="button"
-                    className="text-white bg-[var(--yn-accent)] focus:outline-none transition ease-in-out duration-300 rounded-full px-8 py-3 w-full hover:bg-[var(--yn-accent-dark)] active:opacity-90 font-semibold"
-                  >
-                    <div className="flex items-center justify-center gap-x-2">
-                      <FontAwesomeIcon
-                        icon={faTicket}
-                        width={25}
-                        height={25}
-                        style={{ fontSize: "20px", color: "white" }}
-                      />
-                      <span>Lihat Tiket</span>
-                    </div>
-                  </button>
-                </Link>
-              ) : (
-                <Link href={getWhatsAppUrl(order, totalPayment())}>
-                  <button
-                    type="button"
-                    className="text-white bg-[var(--yn-accent)] focus:outline-none transition ease-in-out duration-300 rounded-full px-8 py-3 w-full hover:bg-[var(--yn-accent-dark)] active:opacity-90 font-semibold"
-                  >
-                    <div className="flex items-center justify-center gap-x-2">
-                      <FontAwesomeIcon
-                        icon={faComment}
-                        width={25}
-                        height={25}
-                        style={{ fontSize: "20px", color: "white" }}
-                      />
-                      <span>Konfirmasi Pembayaran</span>
-                    </div>
-                  </button>
-                </Link>
+              </section>
+
+              {order.status === "pending" && <OrderPaymentMethodCard />}
+
+              {ticketCount > 0 && (
+                <section className={sectionClass}>
+                  <div className="flex items-center gap-3">
+                    <Ticket aria-hidden="true" className="h-5 w-5 text-[var(--yn-accent)]" />
+                    <h2 className="text-lg font-semibold text-[var(--yn-foreground)]">Pemilik tiket</h2>
+                  </div>
+                  <div className="mt-5 divide-y divide-[var(--yn-border)]">
+                    {order.user_tickets?.map((ticket, index) => (
+                      <div key={ticket.id ?? `${ticket.user_email}-${index}`} className="flex items-start justify-between gap-4 py-4 first:pt-0 last:pb-0">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-[var(--yn-foreground)]">{ticket.user_name || `Peserta ${index + 1}`}</p>
+                          <p className="mt-1 truncate text-xs text-[var(--yn-muted)]">{ticket.user_email || "Email belum tersedia"}</p>
+                        </div>
+                        <span className="shrink-0 rounded-full bg-[var(--yn-surface-muted)] px-3 py-1 text-xs text-[var(--yn-muted)]">{ticket.ticket?.name || "Tiket"}</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
               )}
             </div>
-            <div className="mt-2 grid gap-4">
-              {order.status == "paid" && order.event?.divisi?.name.includes("Sports") ? <Link href={"https://chat.whatsapp.com/HSRFShOBsjpKUHiyJV49BZ"} target="_blank">
-                <button
-                  type="button"
-                  className="text-white bg-[var(--yn-accent-dark)] focus:outline-none transition ease-in-out duration-300 rounded-full px-8 py-3 w-full hover:opacity-90 active:opacity-90 font-semibold"
-                >
-                  <div className="flex items-center justify-center gap-x-2">
-                    <FontAwesomeIcon
-                      icon={faComment}
-                      width={25}
-                      height={25}
-                      style={{ fontSize: "20px", color: "white" }}
-                    />
-                    <span>Grup WhatsApp</span>
-                  </div>
-                </button>
-              </Link> : <></>}
-            </div>
+
+            <aside className="space-y-6 lg:sticky lg:top-28">
+              <section className={sectionClass}>
+                <div className="flex items-center gap-3">
+                  <ReceiptText aria-hidden="true" className="h-5 w-5 text-[var(--yn-accent)]" />
+                  <h2 className="text-lg font-semibold text-[var(--yn-foreground)]">Ringkasan transaksi</h2>
+                </div>
+                <dl className="mt-4">
+                  <DetailRow label="Order ID" value={`#${order.public_id?.toUpperCase()}`} />
+                  <DetailRow label="Dibuat" value={formatDate(order.created_at)} />
+                  <DetailRow label="Tiket" value={amountLabel(ticketAmount)} />
+                  {donation > 0 && <DetailRow label="Donasi" value={formatRupiah(donation)} />}
+                  {adminFee > 0 && <DetailRow label="Biaya pembayaran" value={formatRupiah(adminFee)} />}
+                  <DetailRow label="Total" value={amountLabel(total)} accent />
+                </dl>
+              </section>
+
+              <div className="grid gap-3">
+                {order.status === "paid" && (
+                  <Link href={`/orders/${params.public_id}/tickets`} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-[var(--yn-accent-dark)]">
+                    <Ticket aria-hidden="true" className="h-4 w-4" /> Lihat tiket <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                  </Link>
+                )}
+                {canConfirm && (
+                  <a href={getWhatsAppUrl(order, total)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-[var(--yn-accent-dark)]">
+                    <MessageCircle aria-hidden="true" className="h-4 w-4" /> Konfirmasi pembayaran
+                  </a>
+                )}
+                {order.status === "paid" && groupUrl && (
+                  <a href={groupUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)] px-6 py-3 text-sm font-semibold text-[var(--yn-foreground)] transition hover:bg-[var(--yn-surface-muted)]">
+                    <Users aria-hidden="true" className="h-4 w-4" /> Gabung grup WhatsApp
+                  </a>
+                )}
+                <Link href="/orders" className="inline-flex min-h-11 items-center justify-center gap-2 px-5 py-2 text-sm font-semibold text-[var(--yn-muted)] hover:text-[var(--yn-foreground)]">
+                  Kembali ke riwayat transaksi
+                </Link>
+              </div>
+
+              {order.status === "pending" && order.expired_at && (
+                <p className="flex items-start gap-2 px-2 text-xs leading-relaxed text-[var(--yn-muted)]">
+                  <Clock3 aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" /> Pembayaran berlaku sampai {formatDate(order.expired_at)}.
+                </p>
+              )}
+            </aside>
           </div>
         </div>
-      </MainLayout>
-    </>
+      </main>
+    </MainLayout>
   );
 }
 
-const OrderStatus: React.FC<{ status: string }> = ({ status }) => {
-  if (status == "paid") {
-    return (
-      <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-0.5 text-sm tag-secondary border-theme-border text-success border border-success">
-        Sudah Bayar
-      </button>
-    );
-  }
-  if (status == "expired") {
-    return (
-      <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-0.5 text-sm tag-secondary border-theme-border text-danger border border-danger">
-        Expired
-      </button>
-    );
-  }
-  return (
-    <button className="h-full whitespace-nowrap rounded-full font-medium px-2 py-0.5 text-sm border border-[var(--yn-border)] bg-[var(--yn-surface-muted)] text-[var(--yn-muted)]">
-      Menunggu Pembayaran
-    </button>
-  );
-};
-
 const phoneNumber = "+6282262448523";
-const phoneKey = "+6285642555555";
 const phoneKeysFemale = "+6285772149565";
 const phoneSports = "+6287872721044";
 
-const getWhatsAppUrl = (order: Order, total: number) => {
-  const message = `Konfirmasi Pembayaran%0A%0A*${order?.event?.title}*%0A%0AOrder ID:${order?.public_id}%0ANama Event:${order?.event?.title}%0AMetode Pembayaran:${order.payment_method?.name}%0ATotal Transfer:${total}%0ANama Pemesan:${order.user?.name}%0A`;
-
-  const isMobile = /Android/i.test(navigator.userAgent);
+function getWhatsAppUrl(order: Order, total: number) {
   let phone = phoneNumber;
-  if (order.event?.divisi?.name?.includes("KEY")) {
-    if (order.user?.gender == "male") {
-      phone = phoneNumber;
-    } else {
-      phone = phoneKeysFemale;
-    }
-  }
-  if (order.event?.divisi?.name.includes("Sports")) {
-    phone = phoneSports;
-  }
-  if (isMobile) {
-    // Use intent for Android
-    return `intent://send/?phone=${phone}&text=${message}#Intent;scheme=whatsapp;package=com.whatsapp;end;`;
-  } else {
-    // Use wa.me for web and desktop
-    return `https://wa.me/${phone}?text=${message}`;
-  }
-};
+  if (order.event?.divisi?.name?.includes("KEY") && order.user?.gender !== "male") phone = phoneKeysFemale;
+  if (order.event?.divisi?.name?.includes("Sports")) phone = phoneSports;
+
+  const message = [
+    "Konfirmasi Pembayaran",
+    "",
+    `Order ID: ${order.public_id ?? "-"}`,
+    `Nama Event: ${order.event?.title ?? "-"}`,
+    `Metode Pembayaran: ${order.payment_method?.name ?? "-"}`,
+    `Total Transfer: ${amountLabel(total)}`,
+    `Nama Pemesan: ${order.user?.name ?? "-"}`,
+  ].join("\n");
+
+  return `https://wa.me/${phone.replace("+", "")}?text=${encodeURIComponent(message)}`;
+}
