@@ -116,10 +116,19 @@ export default function GridOrders() {
   const shopHasMore = useAppSelector((state) => state.shop.ordersHasMore);
 
   const [activeTab, setActiveTab] = useState<Tab>("tickets");
+  const [queryReady, setQueryReady] = useState(false);
   const [loaded, setLoaded] = useState<Record<Tab, boolean>>({ tickets: false, donations: false, shop: false });
   const [loading, setLoading] = useState<Record<Tab, boolean>>({ tickets: false, donations: false, shop: false });
   const [errors, setErrors] = useState<Record<Tab, string | null>>({ tickets: null, donations: null, shop: null });
   const [pages, setPages] = useState({ donations: 0, shop: 0 });
+
+  useEffect(() => {
+    const requestedTab = new URLSearchParams(window.location.search).get("tab");
+    if (requestedTab === "tickets" || requestedTab === "donations" || requestedTab === "shop") {
+      setActiveTab(requestedTab);
+    }
+    setQueryReady(true);
+  }, []);
 
   const load = useCallback(async (tab: Tab, page = 1) => {
     setLoading((previous) => ({ ...previous, [tab]: true }));
@@ -138,8 +147,8 @@ export default function GridOrders() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!loaded[activeTab] && !loading[activeTab] && !errors[activeTab]) void load(activeTab);
-  }, [activeTab, loaded, loading, errors, load]);
+    if (queryReady && !loaded[activeTab] && !loading[activeTab] && !errors[activeTab]) void load(activeTab);
+  }, [activeTab, loaded, loading, errors, load, queryReady]);
 
   const current = tabs.find((tab) => tab.id === activeTab)!;
   const empty = activeTab === "tickets" ? ticketOrders?.length === 0 : activeTab === "donations" ? donations.length === 0 : shopOrders?.length === 0;

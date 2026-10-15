@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import ProductDetailPage from "@/components/Pages/ProductDetailPage";
 
 export const metadata: Metadata = {
-  title: "Detail Produk",
-  description: "Detail merchandise resmi YukNgaji Solo",
-  // other metadata
+  title: "Detail Produk | YukNgaji Solo",
+  description:
+    "Lihat detail, pilihan varian, harga, dan ketersediaan merchandise resmi YukNgaji Solo.",
 };
 
 interface PageProps {
