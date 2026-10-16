@@ -3,10 +3,97 @@
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 import { MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+const SURAKARTA_TIME_ZONE = "Asia/Jakarta";
+
+const PRAYERS = [
+  { key: "fajr", label: "Subuh" },
+  { key: "dhuhr", label: "Zuhur" },
+  { key: "asr", label: "Asar" },
+  { key: "maghrib", label: "Magrib" },
+  { key: "isha", label: "Isya" },
+] as const;
+
+type PrayerKey = (typeof PRAYERS)[number]["key"];
+type PrayerTimes = Record<PrayerKey, string>;
+
+function getSurakartaMinutes(date: Date) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: SURAKARTA_TIME_ZONE,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)?.value ?? 0);
+
+  return value("hour") * 60 + value("minute");
+}
+
+function getMinutes(time: string) {
+  const [hour, minute] = time.split(":").map(Number);
+  return hour * 60 + minute;
+}
 
 export default function Hero() {
   const [copied, setCopied] = useState(false);
+  const [now, setNow] = useState<Date | null>(null);
+  const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
+  const [prayerTimesUnavailable, setPrayerTimesUnavailable] = useState(false);
+
+  useEffect(() => {
+    setNow(new Date());
+    const clock = window.setInterval(() => setNow(new Date()), 1000);
+
+    return () => window.clearInterval(clock);
+  }, []);
+
+  useEffect(() => {
+    async function loadPrayerTimes() {
+      try {
+        const response = await fetch("/api/prayer-times", { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error("Prayer times are unavailable");
+        }
+
+        const data = (await response.json()) as { timings: PrayerTimes };
+        setPrayerTimes(data.timings);
+        setPrayerTimesUnavailable(false);
+      } catch {
+        setPrayerTimesUnavailable(true);
+      }
+    }
+
+    void loadPrayerTimes();
+    const refresh = window.setInterval(loadPrayerTimes, 30 * 60 * 1000);
+
+    return () => window.clearInterval(refresh);
+  }, []);
+
+  const clockLabel = useMemo(
+    () =>
+      now
+        ? new Intl.DateTimeFormat("id-ID", {
+            timeZone: SURAKARTA_TIME_ZONE,
+            hour: "2-digit",
+            minute: "2-digit",
+            hourCycle: "h23",
+          }).format(now)
+        : "--:--",
+    [now],
+  );
+
+  const nextPrayer = useMemo(() => {
+    if (!prayerTimes || !now) return null;
+
+    const currentMinutes = getSurakartaMinutes(now);
+    return (
+      PRAYERS.find(({ key }) => getMinutes(prayerTimes[key]) > currentMinutes) ?? null
+    );
+  }, [now, prayerTimes]);
 
   async function sharePage() {
     const data = { title: "Yuk Ngaji Solo", url: window.location.href };
@@ -26,9 +113,19 @@ export default function Hero() {
   return (
     <section className="yn-hero" aria-labelledby="yn-hero-title">
       <div className="yn-hero-announcement">
-        <span className="yn-hero-clock">01:35</span>
-        <span className="yn-hero-prayer">
-          Jadwal sholat dzuhur kota solo <strong>11:35</strong>
+        <span className="yn-hero-clock">{clockLabel}</span>
+        <span className="yn-hero-prayer" aria-live="polite">
+          {nextPrayer && prayerTimes ? (
+            <>
+              Salat berikutnya di Surakarta <strong>{`${nextPrayer.label} ${prayerTimes[nextPrayer.key]} WIB`}</strong>
+            </>
+          ) : prayerTimes ? (
+            <>Jadwal salat Surakarta hari ini telah selesai</>
+          ) : prayerTimesUnavailable ? (
+            <>Jadwal salat Surakarta belum tersedia</>
+          ) : (
+            <>Memuat jadwal salat Surakarta…</>
+          )}
         </span>
         <button className="yn-hero-share" type="button" onClick={sharePage}>
           {copied ? "Copied!" : "Share"}
