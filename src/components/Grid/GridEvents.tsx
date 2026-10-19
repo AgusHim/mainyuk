@@ -117,7 +117,7 @@ function EventItemCard({ event, isPast }: { event: Event; isPast: boolean }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <img
-                className="h-8 w-8"
+                className="h-8 w-auto"
                 src="/images/logo/yn_logo.png"
                 alt="YukNgaji Solo"
                 width={24}

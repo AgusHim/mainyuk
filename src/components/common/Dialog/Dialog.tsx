@@ -48,7 +48,7 @@ const Dialog = forwardRef<HTMLDialogElement, Props>(
         <DialogContent
           className={
             contentClassName ??
-            "border-2 border-black bg-white p-6 shadow-[8px_8px_0_0_#000000] dark:border-strokedark dark:bg-boxdark-2 sm:max-w-lg"
+            "max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain border-2 border-black bg-white p-6 pr-12 shadow-[8px_8px_0_0_#000000] dark:border-strokedark dark:bg-boxdark-2 sm:max-w-lg"
           }
           style={{ boxShadow: "8px 8px 0px #000000" }}
         >
