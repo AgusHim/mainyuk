@@ -6,7 +6,22 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
-const CommentField = () => {
+type ReplyTarget = {
+  id: string;
+  username: string;
+};
+
+type CommentFieldProps = {
+  discussionMode?: boolean;
+  replyTo?: ReplyTarget | null;
+  onCancelReply?: () => void;
+};
+
+const CommentField = ({
+  discussionMode = false,
+  replyTo = null,
+  onCancelReply,
+}: CommentFieldProps) => {
   const dispatch = useAppDispatch();
   const event = useAppSelector((state) => state.event.event);
   const user = useAppSelector((state) => state.auth.user);
@@ -26,43 +41,61 @@ const CommentField = () => {
       toast.info("Masuk dulu untuk berkomentar");
       return;
     }
-    if (formData.comment.length == 0) {
-      toast.info("Masukan pertanyaan anda");
+    const body = formData.comment.trim();
+    if (body.length === 0) {
+      toast.info(discussionMode ? "Tanggapan belum diisi" : "Pertanyaan belum diisi");
       return;
     }
     let comment: CreateComment;
     comment = {
       event_id: event?.slug ?? "",
-      comment: formData["comment"],
+      // API komentar event belum memiliki parent_comment_id. Menyebut penanya
+      // pada isi komentar menjaga konteks jawaban tanpa mengirim field yang
+      // belum didukung server.
+      comment: replyTo ? `↳ Menjawab @${replyTo.username}\n${body}` : body,
     };
-    dispatch(postComment(comment));
-    setFormData({ ...formData, ["comment"]: "" });
+    try {
+      await dispatch(postComment(comment)).unwrap();
+      setFormData({ comment: "" });
+      onCancelReply?.();
+    } catch {
+      // Pesan galat dari interceptor API tetap ditampilkan ke pengguna.
+    }
   };
 
   return (
-    <div className="w-full flex flex-col md:flex-row items-end md:items-center md:justify-center">
-      <textarea
-        onChange={handleChange}
-        name="comment"
-        value={formData["comment"]}
-        className="w-full max-h-14 focus:max-h-40 rounded-lg border-2 focus:border-4 border-black bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-black dark:bg-boxdark dark:focus:border-primary resize-none placeholder-black"
-        rows={5}
-        cols={50}
-        maxLength={500}
-        placeholder="Tulis Pertanyaan ..."
-      />
-      {isLoading ? (
-        <div className="ml-2 h-8 w-8 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>
-      ) : (
+    <div className="rounded-2xl border border-[var(--yn-border)] bg-[var(--yn-surface-muted)] p-3 sm:p-4">
+      {replyTo ? (
+        <div className="mb-3 flex items-center justify-between gap-3 text-sm">
+          <p className="text-[var(--yn-muted)]">
+            Menanggapi <span className="font-semibold text-[var(--yn-foreground)]">@{replyTo.username}</span>
+          </p>
+          <button type="button" onClick={onCancelReply} className="shrink-0 text-xs font-semibold text-[var(--yn-accent)] hover:underline">
+            Batal
+          </button>
+        </div>
+      ) : null}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <textarea
+          onChange={handleChange}
+          name="comment"
+          value={formData.comment}
+          className="min-h-24 w-full resize-y rounded-xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 py-3 text-sm text-[var(--yn-foreground)] outline-none transition placeholder:text-[var(--yn-muted)] focus:border-[var(--yn-accent)] focus:ring-2 focus:ring-[var(--yn-accent-soft)]"
+          rows={3}
+          maxLength={500}
+          placeholder={discussionMode ? "Bagikan jawaban atau sudut pandangmu…" : "Tulis pertanyaanmu…"}
+          aria-label={discussionMode ? "Tulis tanggapan" : "Tulis pertanyaan"}
+        />
         <Button
           type="button"
           onClick={handleSubmit}
-          className="mt-3 ml-0 h-11 w-30 rounded-md border-2 border-black p-2 md:mt-0 md:ml-4 lg:w-40"
-          style={{ boxShadow: "5px 5px 0px 0px #000000" }}
+          disabled={isLoading}
+          className="h-11 shrink-0 rounded-full bg-[var(--yn-accent)] px-5 text-white hover:bg-[var(--yn-accent-dark)] disabled:cursor-wait"
         >
-          Kirim
+          {isLoading ? "Mengirim…" : discussionMode ? "Kirim tanggapan" : "Kirim pertanyaan"}
         </Button>
-      )}
+      </div>
+      <p className="mt-2 text-right text-xs text-[var(--yn-muted)]">{formData.comment.length}/500</p>
     </div>
   );
 };

@@ -2,9 +2,8 @@ import { Metadata } from "next";
 import EventDetailPage from "@/components/Pages/EventDetail";
 
 export const metadata: Metadata = {
-  title: "Event - YukNgaji Solo",
-  description: "Detail event YukNgaji Solo",
-  // other metadata
+  title: "Tanya Jawab Event - YukNgaji Solo",
+  description: "Ruang tanya jawab dan diskusi lanjutan event YukNgaji Solo.",
 };
 
 interface PageProps {

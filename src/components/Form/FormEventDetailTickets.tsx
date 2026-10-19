@@ -203,7 +203,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
                           ticketStatus(e) ? (
                             <button
                               type="button"
-                              className="cursor-not-allowed rounded-full bg-neutral-200 px-4 py-2 text-xs font-semibold text-neutral-600"
+                              className="cursor-not-allowed rounded-full border border-[var(--yn-disabled-border)] bg-[var(--yn-disabled-background)] px-4 py-2 text-xs font-semibold text-[var(--yn-disabled-foreground)]"
                               disabled
                             >
                               {ticketStatus(e)}
@@ -286,7 +286,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
               <div className="mt-5 flex items-center justify-between gap-x-4 border-t border-[var(--yn-border)] pt-5 text-[var(--yn-foreground)]">
                 <p className="font-medium text-sm">Total harga</p>
                 <p className="font-bold text-xl">
-                  {totalPayment() === 0 && tickets.length > 0 ? "Gratis" : totalPayment() === 1 ? "Bayar seikhlasnya" : `Rp${totalPayment().toLocaleString("id-ID")}`}
+                  {checkAllValuesAreZero() ? "Gratis" : totalPayment() === 1 ? "Bayar seikhlasnya" : `Rp${totalPayment().toLocaleString("id-ID")}`}
                 </p>
               </div>
             </div>
@@ -295,7 +295,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
               <button
                 type="submit"
                 disabled={checkAllValuesAreZero()}
-                className={`grid w-full place-items-center rounded-full p-3 text-base font-semibold ${checkAllValuesAreZero() ? "cursor-not-allowed bg-neutral-200 text-neutral-500" : "bg-[var(--yn-accent)] text-white hover:bg-[var(--yn-accent-dark)]"}`}
+                className={`grid w-full place-items-center rounded-full border p-3 text-base font-semibold ${checkAllValuesAreZero() ? "cursor-not-allowed border-[var(--yn-disabled-border)] bg-[var(--yn-disabled-background)] text-[var(--yn-disabled-foreground)]" : "border-transparent bg-[var(--yn-accent)] text-white hover:bg-[var(--yn-accent-dark)]"}`}
               >
                 Lanjutkan booking →
               </button>

@@ -26,6 +26,7 @@ import { MainLayout } from "@/layout/MainLayout";
 import { CommonHeader } from "../Header/CommonHeader";
 import RequiredAuthLayout from "@/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
+import { Comment } from "@/types/comment";
 
 export default function EventDetailPage({
   params,
@@ -43,6 +44,7 @@ export default function EventDetailPage({
   const errorPresence = useAppSelector((state) => state.presences.error);
 
   const [isInit, setIsInit] = useState(true);
+  const [replyTo, setReplyTo] = useState<{ id: string; username: string } | null>(null);
 
   const getInitState = useCallback(() => {
     dispatch(getSessionUser())
@@ -92,6 +94,8 @@ export default function EventDetailPage({
       ? new Date(event?.end_at!.replace("Z", ""))
       : new Date(event?.close_at!.replace("Z", ""));
   const startAt = new Date(event?.start_at!.replace("Z", ""));
+  const endAt = new Date(event?.end_at!.replace("Z", ""));
+  const isDiscussionOpen = now >= endAt;
 
   const phoneNumber = "+6281241000056";
   const message = `Konfirmasi Pendaftaran%0A%0A*${event?.title}*%0A%0ANama:${presence.data?.user?.name}%0AUsia:${presence.data?.user?.age}%0ADomisili:${presence.data?.user?.address}%0ANo HP:${presence.data?.user?.phone}%0APekerjaan:${presence.data?.user?.activity}%0A`;
@@ -162,21 +166,30 @@ export default function EventDetailPage({
               </div>
             </div>
           </div>
-          <div className="w-full flex flex-col mb-5 rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-5">
-            <h1 className="mb-2 text-2xl font-bold text-[var(--yn-foreground)]">
-              Live QnA
-            </h1>
-            <p className="mb-5 text-[var(--yn-muted)]">
-              Masukan pertanyaan atau keresahan kamu
-            </p>
-            <CommentField />
+          <section className="mb-5 overflow-hidden rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)]">
+            <div className="border-b border-[var(--yn-border)] bg-[var(--yn-surface-muted)] px-5 py-7 sm:px-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--yn-accent)]">{isDiscussionOpen ? "Ruang lanjutan" : "Tanya jawab"}</p>
+              <h1 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--yn-foreground)] sm:text-3xl">
+                {isDiscussionOpen ? "Lanjutkan percakapannya." : "Apa yang ingin kamu tanyakan?"}
+              </h1>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--yn-muted)]">
+                {isDiscussionOpen ? "Ada pertanyaan yang belum sempat dijawab saat acara? Bagikan jawaban, pengalaman, atau sudut pandangmu dengan tetap saling menghargai." : "Tulis pertanyaan atau keresahanmu. Pertanyaan dengan dukungan terbanyak lebih mudah terlihat saat acara berlangsung."}
+              </p>
+            </div>
+            <div className="p-5 sm:p-8">
+            <CommentField discussionMode={isDiscussionOpen} replyTo={replyTo} onCancelReply={() => setReplyTo(null)} />
             <div className="mt-5">
-              <div className="mb-5">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h2 className="text-sm font-semibold text-[var(--yn-foreground)]">{isDiscussionOpen ? "Percakapan komunitas" : "Pertanyaan dari peserta"}</h2>
                 <DropdownFilter isLivePage={false} />
               </div>
-              <QnaList />
+              <QnaList discussionMode={isDiscussionOpen} onReply={(comment: Comment) => {
+                setReplyTo({ id: comment.id, username: comment.user?.username ?? "teman" });
+                requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>("textarea[name='comment']")?.focus());
+              }} />
             </div>
-          </div>
+            </div>
+          </section>
           <FeedbackField></FeedbackField>
         </div>
         {presence.data != null ? <DialogSuccesRegistered event={event} /> : <></>}

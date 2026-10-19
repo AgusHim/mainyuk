@@ -9,6 +9,15 @@
   --yn-accent-dark: #174f43;
   --yn-accent-soft: #e5f0ec;
   --yn-muted: #6f6d66;
+  --yn-disabled-background: #e4e2da;
+  --yn-disabled-foreground: #6f6d66;
+  --yn-disabled-border: #d2d0c8;
+}
+
+.dark {
+  --yn-disabled-background: #333a48;
+  --yn-disabled-foreground: #aeb7c0;
+  --yn-disabled-border: #4a5568;
 }
 
 .yn-landing {
