@@ -10,44 +10,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '*.cdninstagram.com',
-        port: '',
+        hostname: '**',
       },
       {
-        // Sebagian media_url dari Graph API dilayani dari fbcdn.net.
-        protocol: 'https',
-        hostname: '*.fbcdn.net',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.ibb.co',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.ibb.co.com',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'yukngaji.vercel.app',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'be.ynsolo.com',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'ik.imagekit.io',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'img.magnific.com',
-        port: '',
+        protocol: 'http',
+        hostname: '**',
       },
     ],
   },
