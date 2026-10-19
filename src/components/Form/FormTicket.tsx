@@ -41,6 +41,7 @@ const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
     description: ticket?.description ?? "",
     visibility: ticket?.visibility ?? "public",
     price: ticket?.price ?? 0,
+    original_price: ticket?.original_price ?? "",
     min_order_pax: ticket?.min_order_pax ?? 1,
     max_order_pax: ticket?.max_order_pax ?? 1,
     max_pax: ticket?.max_pax ?? 1,
@@ -73,6 +74,7 @@ const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
       name: formData.name,
       description: formData.description,
       price: parseInt(formData.price.toString()),
+      original_price: formData.original_price === "" ? undefined : parseInt(formData.original_price.toString()),
       visibility: formData.visibility,
       gender_allowed: formData.gender_allowed,
       access_mode: formData.access_mode,
@@ -237,6 +239,19 @@ const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
             className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
             required
           />
+        </div>
+        <div className="my-2 space-y-1.5">
+          <Label htmlFor="original_price" className="font-bold text-black dark:text-white">Harga sebelum diskon <span className="font-normal text-body dark:text-bodydark">(opsional)</span></Label>
+          <Input
+            value={formData["original_price"]}
+            onChange={handleChange}
+            type="number"
+            min="0"
+            name="original_price"
+            placeholder="Contoh: 50000"
+            className="h-11 rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"
+          />
+          <p className="text-xs text-body dark:text-bodydark">Isi lebih tinggi dari harga tiket agar harga coret tampil.</p>
         </div>
         {/* End of Price */}
 

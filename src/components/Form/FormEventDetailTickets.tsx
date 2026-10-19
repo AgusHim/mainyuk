@@ -187,13 +187,18 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
                         </p>
                       </div>
                       <div className="mt-auto flex items-center justify-between gap-4 border-t border-dashed border-[var(--yn-border)] px-4 py-3">
-                        <p className="font-semibold text-sm text-[var(--yn-foreground)]">
-                          {e.price == 0
-                            ? "Gratis"
-                            : e.price == 1
-                              ? "Pay As You Wish"
-                              : `Rp${e.price.toLocaleString("id-ID")}`}
-                        </p>
+                        <div>
+                          {e.original_price != null && e.original_price > e.price && (
+                            <p className="text-xs text-[var(--yn-muted)] line-through">Rp{e.original_price.toLocaleString("id-ID")}</p>
+                          )}
+                          <p className="font-semibold text-sm text-[var(--yn-foreground)]">
+                            {e.price == 0
+                              ? "Gratis"
+                              : e.price == 1
+                                ? "Pay As You Wish"
+                                : `Rp${e.price.toLocaleString("id-ID")}`}
+                          </p>
+                        </div>
                         {formData[`${e.id}_qty`] == 0 ? (
                           ticketStatus(e) ? (
                             <button

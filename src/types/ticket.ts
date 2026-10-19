@@ -4,6 +4,7 @@ export type Ticket = {
   name: string;
   description: string;
   price: number;
+  original_price?: number | null;
   event_id: string;
   start_at: string;
   end_at: string;
