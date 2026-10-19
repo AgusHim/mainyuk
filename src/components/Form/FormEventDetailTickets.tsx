@@ -286,7 +286,7 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
               <div className="mt-5 flex items-center justify-between gap-x-4 border-t border-[var(--yn-border)] pt-5 text-[var(--yn-foreground)]">
                 <p className="font-medium text-sm">Total harga</p>
                 <p className="font-bold text-xl">
-                  {totalPayment() === 0 && Object.keys(formData).length > 0 ? "Gratis" : totalPayment() === 1 ? "Bayar seikhlasnya" : `Rp${totalPayment().toLocaleString("id-ID")}`}
+                  {totalPayment() === 0 && tickets.length > 0 ? "Gratis" : totalPayment() === 1 ? "Bayar seikhlasnya" : `Rp${totalPayment().toLocaleString("id-ID")}`}
                 </p>
               </div>
             </div>

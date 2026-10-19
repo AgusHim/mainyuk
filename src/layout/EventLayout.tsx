@@ -44,8 +44,12 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
           <div className="overflow-hidden rounded-3xl border border-[var(--yn-border)]">
             <img
               className="lazy max-w-full w-full entered loaded h-auto object-cover"
-              src={eventData?.image_url ?? ""}
+              src={eventData.image_url}
               alt={eventData?.title ?? "Poster event"}
+              onError={(image) => {
+                if (image.currentTarget.src.endsWith("/images/logo/yn_logo.png")) return;
+                image.currentTarget.src = "/images/logo/yn_logo.png";
+              }}
             />
           </div>
 
