@@ -2,6 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect, useState } from "react";
+import { admin_api } from "@/redux/api";
 import { format } from "date-fns";
 import {
   putTicket,
@@ -25,6 +26,8 @@ type Props = {
   toggleDialog: () => void;
 };
 
+type EpisodeOption = { id: string; position: number; title: string };
+
 const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
   const dispatch = useAppDispatch();
 
@@ -45,7 +48,17 @@ const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
     start_at: ticket?.start_at!.replace("Z", ""),
     end_at: ticket?.end_at!.replace("Z", ""),
     gender_allowed: ticket?.gender_allowed ?? "both",
+    access_mode: ticket?.access_mode ?? "all",
+    episode_ids: ticket?.episode_ids ?? ([] as string[]),
   });
+  const [episodes, setEpisodes] = useState<EpisodeOption[]>([]);
+
+  useEffect(() => {
+    if (!event?.id) return;
+    admin_api.get(`/event_episodes?event_id=${event.id}`)
+      .then((response) => setEpisodes(response.data as EpisodeOption[]))
+      .catch(() => setEpisodes([]));
+  }, [event?.id]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
@@ -62,6 +75,8 @@ const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
       price: parseInt(formData.price.toString()),
       visibility: formData.visibility,
       gender_allowed: formData.gender_allowed,
+      access_mode: formData.access_mode,
+      episode_ids: formData.access_mode === "selected" ? formData.episode_ids : [],
       max_pax: parseInt(formData.max_pax.toString()),
       min_order_pax: parseInt(formData.min_order_pax.toString()),
       max_order_pax: parseInt(formData.max_order_pax.toString()),
@@ -224,6 +239,32 @@ const FormTicket: React.FC<Props> = ({ toggleDialog }) => {
           />
         </div>
         {/* End of Price */}
+
+        <div className="my-5 rounded-xl border border-[var(--yn-border)] bg-[var(--yn-surface-muted)] p-4">
+          <Label className="font-bold text-black dark:text-white">Akses materi dan rekaman</Label>
+          <p className="mt-1 text-sm text-[var(--yn-muted)]">Tiket episode membuka sesi yang dipilih. Tiket bundle pilih beberapa sesi.</p>
+          <Select
+            value={formData.access_mode}
+            onValueChange={(value) => setFormData({ ...formData, access_mode: value as "all" | "selected" })}
+          >
+            <SelectTrigger className="mt-3 h-11 w-full rounded-lg border-2 border-black bg-white px-4 font-medium dark:border-strokedark dark:bg-boxdark"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua episode</SelectItem>
+              <SelectItem value="selected">Episode tertentu / bundle</SelectItem>
+            </SelectContent>
+          </Select>
+          {formData.access_mode === "selected" && (
+            <div className="mt-3 space-y-2">
+              {episodes.length ? episodes.map((episode) => {
+                const checked = formData.episode_ids.includes(episode.id);
+                return <label key={episode.id} className="flex cursor-pointer items-center gap-3 rounded-lg bg-white p-3 text-sm dark:bg-boxdark">
+                  <input type="checkbox" checked={checked} onChange={() => setFormData({ ...formData, episode_ids: checked ? formData.episode_ids.filter((id) => id !== episode.id) : [...formData.episode_ids, episode.id] })} />
+                  <span>Episode {episode.position}: {episode.title}</span>
+                </label>;
+              }) : <p className="text-sm text-[var(--yn-muted)]">Buat episode terlebih dahulu sebelum membuat tiket bundle.</p>}
+            </div>
+          )}
+        </div>
 
         {/* Max Pax & Pax Multiplier */}
         <div className="-mx-3 mb-2 flex flex-wrap">

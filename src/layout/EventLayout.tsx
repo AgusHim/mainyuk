@@ -65,6 +65,9 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
                   Lihat & pilih tiket ↓
                 </Link>
               )}
+              <Link href={`/events/${slug}/learning`} className="rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)] px-5 py-2.5 text-sm font-semibold text-[var(--yn-foreground)] hover:border-[var(--yn-accent)]">
+                Materi peserta
+              </Link>
             </div>
             <div className="mb-6 flex flex-col gap-2">
               <div className="flex items-center gap-2">

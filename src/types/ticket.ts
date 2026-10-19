@@ -13,6 +13,8 @@ export type Ticket = {
   max_pax: number | null;
   sold_pax?: number;
   gender_allowed: string;
+  access_mode?: "all" | "selected";
+  episode_ids?: string[];
   isFull: boolean;
   created_at: string;
 };
