@@ -16,16 +16,16 @@ const PLACEHOLDER: Event[] = Array.from({ length: 5 }).map((_, index) => ({
 /* Status bar drawn over the phone screen (mirrors the mockup's 9:41 chrome). */
 function StatusBar() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between px-3 pt-[7px] sm:px-4 sm:pt-2.5">
-      <span className="text-[8px] font-semibold tracking-tight text-[#111] sm:text-[10px]">
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between px-[10%] pt-[9px] sm:pt-[11px]">
+      <span className="text-[9px] font-semibold tracking-tight text-[#07111f] sm:text-[12px]">
         9:41
       </span>
-      <span className="flex items-center gap-1 text-[#111]">
+      <span className="flex items-center gap-1 text-[#07111f]">
         <svg
           viewBox="0 0 18 12"
           fill="currentColor"
           aria-hidden="true"
-          className="h-[7px] w-auto sm:h-[9px]"
+          className="h-[8px] w-auto sm:h-[10px]"
         >
           <rect x="0" y="8" width="3" height="4" rx="1" />
           <rect x="4.5" y="5.5" width="3" height="6.5" rx="1" />
@@ -36,7 +36,7 @@ function StatusBar() {
           viewBox="0 0 16 12"
           fill="currentColor"
           aria-hidden="true"
-          className="h-[7px] w-auto sm:h-[9px]"
+          className="h-[8px] w-auto sm:h-[10px]"
         >
           <path d="M8 11.4 5.4 8.6a3.6 3.6 0 0 1 5.2 0L8 11.4Z" />
           <path
@@ -48,8 +48,8 @@ function StatusBar() {
             opacity=".8"
           />
         </svg>
-        <span className="relative inline-block h-[7px] w-[14px] rounded-[2px] border border-[#111]/50 sm:h-[9px] sm:w-[18px]">
-          <span className="absolute inset-[1px] right-[5px] rounded-[1px] bg-[#111] sm:right-[7px]" />
+        <span className="relative inline-block h-[8px] w-[15px] rounded-[2px] border border-[#07111f]/60 sm:h-[10px] sm:w-[19px]">
+          <span className="absolute inset-[1px] right-[5px] rounded-[1px] bg-[#07111f] sm:right-[7px]" />
         </span>
       </span>
     </div>
@@ -58,10 +58,13 @@ function StatusBar() {
 
 function PhoneFrame({ event }: { event?: Event }) {
   return (
-    <div className="relative aspect-[3/5] w-full rounded-[1.9rem] border-[3px] border-[#07111f] bg-white p-[4px] shadow-[0_32px_72px_-38px_rgba(7,17,31,0.45)] sm:rounded-[2.4rem] sm:border-4 sm:p-[5px] lg:rounded-[2.9rem] lg:p-[6px]">
-      <div className="relative h-full w-full overflow-hidden rounded-[1.5rem] bg-white sm:rounded-[1.9rem] lg:rounded-[2.3rem]">
+    <div className="relative aspect-[1/2] w-full rounded-[30px] border-[4px] border-[#07111f] bg-white p-[2px] shadow-[20px_38px_64px_-32px_rgba(7,17,31,0.45)] sm:rounded-[38px] sm:border-[5px] sm:p-[3px] lg:rounded-[44px] lg:border-[6px] lg:p-[4px]">
+      <span aria-hidden="true" className="absolute -left-[6px] top-[14%] h-[5%] w-[5px] rounded-l bg-[#07111f] sm:-left-[7px] sm:w-[6px]" />
+      <span aria-hidden="true" className="absolute -left-[6px] top-[23%] h-[9%] w-[5px] rounded-l bg-[#07111f] sm:-left-[7px] sm:w-[6px]" />
+      <span aria-hidden="true" className="absolute -right-[6px] top-[24%] h-[10%] w-[5px] rounded-r bg-[#07111f] sm:-right-[7px] sm:w-[6px]" />
+      <div className="relative h-full w-full overflow-hidden rounded-[24px] bg-white sm:rounded-[30px] lg:rounded-[34px]">
         {/* The screen poster has the same top edge and ratio as the side posters. */}
-        <div className="absolute left-[2%] right-[2%] top-[20%] aspect-[3/4] overflow-hidden rounded-[10px]">
+        <div className="absolute left-[2%] right-[2%] top-[16%] aspect-[3/4] overflow-hidden rounded-[12px]">
           {event?.image_url ? (
             <Image
               src={event.image_url}
@@ -75,7 +78,7 @@ function PhoneFrame({ event }: { event?: Event }) {
           )}
         </div>
         <StatusBar />
-        <div className="absolute left-1/2 top-[6px] z-20 h-[13px] w-[52px] -translate-x-1/2 rounded-full bg-black sm:top-2 sm:h-[18px] sm:w-[70px]" />
+        <div aria-hidden="true" className="absolute left-1/2 top-[4px] z-20 h-[16px] w-[54px] -translate-x-1/2 rounded-full bg-[#07111f] sm:top-[5px] sm:h-[22px] sm:w-[72px] lg:h-[28px] lg:w-[94px]" />
       </div>
     </div>
   );
@@ -248,7 +251,7 @@ export default function EventsShowcase() {
             ref={scrollRef}
             onScroll={recompute}
             aria-label="Geser untuk melihat event lainnya"
-            className="absolute inset-x-0 bottom-0 top-[20%] z-0 flex snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="absolute inset-x-0 bottom-0 top-[17%] z-0 flex snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             <div className="flex w-max gap-7 px-[calc(50%_-_80px)] sm:gap-9 sm:px-[calc(50%_-_102px)] lg:gap-[52px] lg:px-[calc(50%_-_142px)]">
               {rendered.map((event, index) => (
