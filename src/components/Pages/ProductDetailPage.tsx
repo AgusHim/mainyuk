@@ -274,7 +274,7 @@ const ProductDetailPage = ({ slug }: ProductDetailPageProps) => {
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={image.image_url}
-                          alt=""
+                          alt={`Foto ${index + 1} ${product.name}`}
                           className="h-full w-full rounded-[0.8rem] object-cover"
                         />
                       </button>

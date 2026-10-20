@@ -145,24 +145,24 @@ export default function EventDetailPage({
                 className="mr-4 rounded-2xl border border-[var(--yn-border)]"
                 width={100}
                 height={100}
-                alt={`Image ${event.title}`}
+                alt={`Poster event ${event.title ?? "YukNgaji Solo"}`}
                 src={event.image_url ?? ""}
                 unoptimized={true}
               />
               <div className="flex flex-col items-start">
-                <h1 className="justify-center text-lg font-bold text-[var(--yn-foreground)]">
+                <h2 className="justify-center text-lg font-bold text-[var(--yn-foreground)]">
                   {event.title}
-                </h1>
+                </h2>
                 <p className="justify-center text-md text-[var(--yn-muted)]">
                   {event.speaker}
                 </p>
-                <h1 className="text-center text-sm text-[var(--yn-muted)]">
+                <p className="text-center text-sm text-[var(--yn-muted)]">
                   {formatStrToDateTime(
                     event!.start_at!,
                     "dd MMM yyyy HH:mm",
                     true
                   )}
-                </h1>
+                </p>
               </div>
             </div>
           </div>

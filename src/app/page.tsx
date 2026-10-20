@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     description:
       "Komunitas dakwah pemuda Surakarta / Solo. #TemanBahagia",
   },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function Index() {
