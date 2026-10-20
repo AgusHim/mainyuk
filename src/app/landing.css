@@ -136,7 +136,7 @@
   position: relative;
   min-height: min(860px, calc(100svh - 40px));
   overflow: hidden;
-  background: #513a32 url('/images/landing/hero-community.png') center center / cover no-repeat;
+  background: #513a32 url('/images/landing/hero-community.webp') left center / cover no-repeat;
 }
 
 .yn-hero-shade {
