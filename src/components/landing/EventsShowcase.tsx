@@ -58,18 +58,17 @@ function StatusBar() {
 
 function PhoneFrame({ event }: { event?: Event }) {
   return (
-    <div className="relative aspect-[3/5] w-full rounded-[1.9rem] border-[3px] border-[#161616] bg-white p-[4px] shadow-[0_40px_80px_-42px_rgba(23,23,23,0.6)] sm:rounded-[2.4rem] sm:border-4 sm:p-[5px] lg:rounded-[2.9rem] lg:p-[6px]">
-      {/* White screen: the poster sits inside it whole (never cropped), the way the mockup shows it. */}
-      <div className="relative flex h-full w-full flex-col overflow-hidden rounded-[1.5rem] bg-white sm:rounded-[1.9rem] lg:rounded-[2.3rem]">
-        <div className="h-[10%] shrink-0" />
-        <div className="relative mx-[4%] mb-[4%] flex-1 overflow-hidden">
+    <div className="relative aspect-[3/5] w-full rounded-[1.9rem] border-[3px] border-[#07111f] bg-white p-[4px] shadow-[0_32px_72px_-38px_rgba(7,17,31,0.45)] sm:rounded-[2.4rem] sm:border-4 sm:p-[5px] lg:rounded-[2.9rem] lg:p-[6px]">
+      <div className="relative h-full w-full overflow-hidden rounded-[1.5rem] bg-white sm:rounded-[1.9rem] lg:rounded-[2.3rem]">
+        {/* The screen poster has the same top edge and ratio as the side posters. */}
+        <div className="absolute left-[2%] right-[2%] top-[20%] aspect-[3/4] overflow-hidden rounded-[10px]">
           {event?.image_url ? (
             <Image
               src={event.image_url}
               alt={event.title ?? "Event YukNgaji Solo"}
               fill
               sizes="(min-width: 1024px) 284px, (min-width: 640px) 204px, 160px"
-              className="object-contain"
+              className="object-cover"
             />
           ) : (
             <div className="absolute inset-0 animate-pulse rounded-[8px] bg-[var(--yn-surface-muted)]" />
@@ -90,7 +89,7 @@ function PosterCard({
   placeholder?: boolean;
 }) {
   const className =
-    "group relative block w-[160px] shrink-0 snap-center overflow-hidden rounded-[18px] bg-[var(--yn-surface-muted)] shadow-[0_26px_54px_-32px_rgba(23,23,23,0.55)] sm:w-[204px] sm:rounded-[22px] lg:w-[284px] lg:rounded-[26px]";
+    "group relative block w-[160px] shrink-0 snap-center overflow-hidden rounded-[12px] bg-[var(--yn-surface-muted)] shadow-[0_24px_54px_-32px_rgba(23,23,23,0.48)] sm:w-[204px] lg:w-[284px]";
 
   const content = (
     <>
@@ -224,15 +223,15 @@ export default function EventsShowcase() {
   return (
     <section
       id="gabung-event"
-      className="yn-section overflow-hidden border-t border-[var(--yn-border)]"
+      className="relative overflow-hidden bg-[#f1f1f1] pt-20 sm:pt-24"
     >
       <div className="yn-container">
         <Reveal>
           <h2
             className="mx-auto text-center font-semibold"
             style={{
-              fontSize: "clamp(2rem, 7vw, 5rem)",
-              lineHeight: 1.06,
+              fontSize: "clamp(2.25rem, 4vw, 3.125rem)",
+              lineHeight: 0.98,
               letterSpacing: "-0.045em",
             }}
           >
@@ -243,18 +242,15 @@ export default function EventsShowcase() {
       </div>
 
       <Reveal delay={140}>
-        <div className="relative mt-10 md:mt-14">
-          {/* Phone defines the row height and stays centred; posters scroll behind it. */}
-          <div className="pointer-events-none relative z-20 mx-auto w-[170px] sm:w-[216px] lg:w-[304px]">
-            <PhoneFrame event={activeEvent} />
-          </div>
-
+        <div className="relative mt-16 sm:mt-20">
+          {/* The centre lane masks the moving poster underneath the phone. */}
           <div
             ref={scrollRef}
             onScroll={recompute}
-            className="absolute inset-0 flex items-end overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            aria-label="Geser untuk melihat event lainnya"
+            className="absolute inset-x-0 bottom-0 top-[20%] z-0 flex snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            <div className="flex w-max snap-x snap-mandatory gap-7 px-[calc(50%_-_80px)] sm:gap-9 sm:px-[calc(50%_-_102px)] lg:gap-12 lg:px-[calc(50%_-_142px)]">
+            <div className="flex w-max gap-7 px-[calc(50%_-_80px)] sm:gap-9 sm:px-[calc(50%_-_102px)] lg:gap-[52px] lg:px-[calc(50%_-_142px)]">
               {rendered.map((event, index) => (
                 <PosterCard
                   key={`${index}-${event.slug ?? event.id ?? index}`}
@@ -264,6 +260,21 @@ export default function EventsShowcase() {
               ))}
             </div>
           </div>
+          <div className="pointer-events-none absolute inset-y-0 left-1/2 z-10 w-[196px] -translate-x-1/2 bg-[#f1f1f1] sm:w-[244px] lg:w-[332px]" aria-hidden="true" />
+          {activeEvent?.slug ? (
+            <Link
+              href={`/events/${activeEvent.slug}`}
+              aria-label={`Lihat detail ${activeEvent.title ?? "event YukNgaji Solo"}`}
+              className="relative z-20 mx-auto block w-[180px] rounded-[2.9rem] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--yn-accent)] sm:w-[228px] lg:w-[316px]"
+            >
+              <PhoneFrame event={activeEvent} />
+            </Link>
+          ) : (
+            <div className="pointer-events-none relative z-20 mx-auto w-[180px] sm:w-[228px] lg:w-[316px]">
+              <PhoneFrame event={activeEvent} />
+            </div>
+          )}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-20 bg-gradient-to-b from-transparent to-white sm:h-28 lg:h-36" aria-hidden="true" />
         </div>
       </Reveal>
 
