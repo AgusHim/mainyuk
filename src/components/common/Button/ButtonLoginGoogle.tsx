@@ -30,7 +30,8 @@ const ButtonLoginGoogle: React.FC = () => {
 
   return (
     <button
-      className="mb-5 flex items-center justify-center w-full px-4 py-3 space-x-2 text-black rounded-lg bg-white hover:shadow-none transition-all hover:translate-x-1 hover:translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-black shadow-custom"
+      type="button"
+      className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 text-sm font-semibold text-[var(--yn-foreground)] transition hover:bg-[var(--yn-surface-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--yn-accent-soft)]"
       onClick={login}
     >
       <svg
@@ -56,7 +57,7 @@ const ButtonLoginGoogle: React.FC = () => {
         />
         <path fill="none" d="M0 0h48v48H0z" />
       </svg>
-      <span>Login dengan Google</span>
+      <span>Lanjut dengan Google</span>
     </button>
   );
 };

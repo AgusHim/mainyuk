@@ -37,7 +37,7 @@ const AllowedGender: React.FC<{ event: Event }> = ({ event }) => {
   }
   if (event.allowed_gender === "MALE") {
     return (
-      <span className="rounded-full bg-blue-500/15 px-3 py-1 text-xs font-semibold text-blue-700 shadow-sm backdrop-blur-md border border-blue-500/20">
+      <span className="rounded-full bg-[var(--yn-accent-soft)] px-3 py-1 text-xs font-medium text-[var(--yn-accent-dark)]">
         Male Only
       </span>
     );

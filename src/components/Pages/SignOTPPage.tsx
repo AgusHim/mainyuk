@@ -2,7 +2,8 @@
 import { CommonHeader } from "@/components/Header/CommonHeader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { MainLayout } from "@/layout/MainLayout";
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useState } from "react";
 import {
   loginUser,
   postRequestOTP,
@@ -91,141 +92,80 @@ export default function SignOTPPage() {
   };
 
   return (
-    <>
-      <MainLayout nav={false}>
-        <CommonHeader
-          title="YukNgaji Solo"
-          isShowBack={false}
-          isShowTrailing={false}
-        />
-        <div className="yn-container bg-yellow-400 p-4">
-          {email == null ? (
+    <MainLayout nav={false}>
+      <CommonHeader title="YukNgaji Solo" isShowBack={false} isShowTrailing={false} />
+      <main className="min-h-[calc(100svh-4rem)] bg-[var(--yn-background)] py-8 sm:py-14">
+        <div className="yn-container grid max-w-5xl overflow-hidden rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] md:grid-cols-[0.9fr_1.1fr]">
+          <aside className="hidden flex-col justify-between bg-[var(--yn-accent)] p-10 text-white md:flex">
             <div>
-              <h1 className="text-black text-2xl font-bold">Login Akun</h1>
-              <div className="mb-2">
-                <label className="mt-5 mb-2.5 block font-bold text-black text-lg">
-                  Email
-                </label>
-                <div className="relative">
-                  <input
-                    value={formData["email"]}
-                    onChange={handleChange}
-                    name="email"
-                    type="email"
-                    placeholder="Masukan email kamu"
-                    className="w-full rounded-lg border text-black border-black bg-yellow-200 py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary placeholder:text-black"
-                    required
-                  />
-
-                  <span className="absolute right-4 top-4">
-                    <svg
-                      className="fill-current"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g opacity="0.5">
-                        <path
-                          d="M19.2516 3.30005H2.75156C1.58281 3.30005 0.585938 4.26255 0.585938 5.46567V16.6032C0.585938 17.7719 1.54844 18.7688 2.75156 18.7688H19.2516C20.4203 18.7688 21.4172 17.8063 21.4172 16.6032V5.4313C21.4172 4.26255 20.4203 3.30005 19.2516 3.30005ZM19.2516 4.84692C19.2859 4.84692 19.3203 4.84692 19.3547 4.84692L11.0016 10.2094L2.64844 4.84692C2.68281 4.84692 2.71719 4.84692 2.75156 4.84692H19.2516ZM19.2516 17.1532H2.75156C2.40781 17.1532 2.13281 16.8782 2.13281 16.5344V6.35942L10.1766 11.5157C10.4172 11.6875 10.6922 11.7563 10.9672 11.7563C11.2422 11.7563 11.5172 11.6875 11.7578 11.5157L19.8016 6.35942V16.5688C19.8703 16.9125 19.5953 17.1532 19.2516 17.1532Z"
-                          fill=""
-                        />
-                      </g>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              {loading ? (
-                <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
-              ) : (
-                <Button
-                  type="button"
-                  onClick={handleRequestOTP}
-                  className="mt-5 h-11 w-full border-2 border-black shadow-custom transition-all hover:translate-x-1 hover:translate-y-1 hover:bg-primary/90 hover:shadow-none"
-                >
-                  LANJUTKAN
-                </Button>
-              )}
-
-              {isWebView() ? (
-                <></>
-              ) : (
-                <div>
-                  <div className="my-5 flex items-center gap-3">
-                    <div className="h-px flex-1 bg-black/20" />
-                    <span className="text-black">ATAU</span>
-                    <div className="h-px flex-1 bg-black/20" />
-                  </div>
-                  {loadingGoogle ? (
-                    <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
-                  ) : (
-                    <ButtonLoginGoogle />
-                  )}
-                </div>
-              )}
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">YukNgaji Solo</p>
+              <h1 className="mt-5 max-w-sm text-4xl font-semibold leading-tight tracking-tight">Teman untuk tumbuh dan bahagia bersama.</h1>
             </div>
-          ) : (
-            <div>
-              <h1 className="text-black text-2xl font-bold">Masukan OTP</h1>
-              <p className="mt-2 text-black text-lg">
-                Kode OTP yang sudah dikirim ke email kamu{" "}
-                <span className="font-bold">{email}</span>
-              </p>
-              <div className="mb-4">
-                <label className="mt-5 mb-2.5 block font-bold text-black text-lg">
-                  OTP
-                </label>
-                <div className="relative">
-                  <input
-                    value={formData["otp"]}
-                    onChange={handleChange}
-                    name="otp"
-                    type="text"
-                    placeholder="Masukan kode OTP "
-                    className="w-full rounded-lg border text-black border-black bg-yellow-200 py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary placeholder:text-black"
-                    required
-                  />
-                </div>
-              </div>
-              {loading ? (
-                <div className="mt-10 mx-auto h-10 w-10 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
-              ) : (
-                <Button
-                  type="button"
-                  onClick={handleLoginOTP}
-                  className="mt-5 h-11 w-full border-2 border-black shadow-custom transition-all hover:translate-x-1 hover:translate-y-1 hover:bg-primary/90 hover:shadow-none"
-                >
-                  LOGIN
-                </Button>
-              )}
+            <p className="max-w-xs text-sm leading-6 text-white/80">Masuk untuk ikut event, berdiskusi, dan terhubung dengan teman-teman YukNgaji Solo.</p>
+          </aside>
+          <section className="p-6 sm:p-10 md:p-12">
+            {email == null ? (
+              <form onSubmit={handleRequestOTP} noValidate>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--yn-accent)]">Selamat datang</p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--yn-foreground)]">Masuk ke akunmu</h2>
+                <p className="mt-2 max-w-md text-sm leading-6 text-[var(--yn-muted)]">Kami akan mengirim kode sekali pakai ke emailmu. Tidak perlu mengingat password.</p>
 
-              <div
-                className="flex flex-row w-full justify-center items-center mt-4 text-black text-sm"
-                onClick={handleChangeEmail}
-              >
-                <span className="mr-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    className="size-3 cursor-pointer"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                </span>
-                Ganti Email
-              </div>
-            </div>
-          )}
+                <label htmlFor="email" className="mt-8 block text-sm font-semibold text-[var(--yn-foreground)]">Email</label>
+                <input
+                  id="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  name="email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  autoFocus
+                  placeholder="nama@email.com"
+                  className="mt-2 h-12 w-full rounded-xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 text-[var(--yn-foreground)] outline-none transition placeholder:text-[var(--yn-muted)] focus:border-[var(--yn-accent)] focus:ring-2 focus:ring-[var(--yn-accent-soft)]"
+                  required
+                />
+                <Button type="submit" disabled={loading} className="mt-5 h-12 w-full rounded-full bg-[var(--yn-accent)] text-white hover:bg-[var(--yn-accent-dark)] disabled:cursor-wait">
+                  {loading ? "Mengirim kode…" : "Lanjut dengan email"}
+                </Button>
+
+                {!isWebView() ? <>
+                  <div className="my-6 flex items-center gap-3" aria-hidden="true"><div className="h-px flex-1 bg-[var(--yn-border)]" /><span className="text-xs font-medium uppercase tracking-widest text-[var(--yn-muted)]">atau</span><div className="h-px flex-1 bg-[var(--yn-border)]" /></div>
+                  {loadingGoogle ? <div className="mx-auto size-6 animate-spin rounded-full border-2 border-[var(--yn-accent)] border-t-transparent" aria-label="Memuat" /> : <ButtonLoginGoogle />}
+                </> : null}
+                <p className="mt-7 text-center text-xs leading-5 text-[var(--yn-muted)]">Dengan melanjutkan, kamu menyetujui penggunaan akun untuk aktivitas YukNgaji Solo.</p>
+              </form>
+            ) : (
+              <form onSubmit={handleLoginOTP} noValidate>
+                <button type="button" onClick={handleChangeEmail} className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--yn-accent)] hover:underline">← Ganti email</button>
+                <p className="mt-7 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--yn-accent)]">Verifikasi email</p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--yn-foreground)]">Masukkan kode OTP</h2>
+                <p className="mt-2 text-sm leading-6 text-[var(--yn-muted)]">Kami mengirim kode ke <span className="font-semibold text-[var(--yn-foreground)]">{email}</span>.</p>
+                <label htmlFor="otp" className="mt-8 block text-sm font-semibold text-[var(--yn-foreground)]">Kode OTP</label>
+                <input
+                  id="otp"
+                  value={formData.otp}
+                  onChange={handleChange}
+                  name="otp"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  autoFocus
+                  maxLength={8}
+                  placeholder="Masukkan kode"
+                  className="mt-2 h-14 w-full rounded-xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 text-center text-xl font-semibold tracking-[0.35em] text-[var(--yn-foreground)] outline-none transition placeholder:font-normal placeholder:tracking-normal placeholder:text-[var(--yn-muted)] focus:border-[var(--yn-accent)] focus:ring-2 focus:ring-[var(--yn-accent-soft)]"
+                  required
+                />
+                <Button type="submit" disabled={loading} className="mt-5 h-12 w-full rounded-full bg-[var(--yn-accent)] text-white hover:bg-[var(--yn-accent-dark)] disabled:cursor-wait">
+                  {loading ? "Memverifikasi…" : "Masuk"}
+                </Button>
+                <p className="mt-6 text-center text-sm text-[var(--yn-muted)]">Belum menerima kode? Periksa folder spam atau gunakan email lain.</p>
+              </form>
+            )}
+            <Link href="/" className="mt-8 block text-center text-sm font-semibold text-[var(--yn-accent)] hover:underline">Kembali ke beranda</Link>
+          </section>
         </div>
-      </MainLayout>
-    </>
+      </main>
+    </MainLayout>
   );
 }
 

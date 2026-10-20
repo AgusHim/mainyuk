@@ -150,7 +150,7 @@ export default function Hero() {
               <MessageCircle size={20} strokeWidth={1.8} aria-hidden="true" />
               Join Komunitas YN
             </a>
-            <Link className="yn-hero-action yn-hero-action-circle" href="/community">
+            <Link className="yn-hero-action yn-hero-action-circle" href="/events">
               Join Circle YN
             </Link>
           </div>
@@ -160,10 +160,10 @@ export default function Hero() {
           Komunitas ngaji terbesar di Solo. Jadwal kajian, event islami, dan silaturahmi.
         </p>
 
-        <Link className="yn-hero-donation" href="/donations" aria-label="Donasi Dakwah">
+        {/* <Link className="yn-hero-donation" href="/donations" aria-label="Donasi Dakwah">
           <QRCodeSVG value="https://ynsolo.id/donations" size={112} />
           <span>Donasi Dakwah</span>
-        </Link>
+        </Link> */}
       </div>
     </section>
   );
