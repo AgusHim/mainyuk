@@ -2,6 +2,7 @@ import { PaymentMethod } from "./PaymentMethod";
 import { User } from "./user";
 import { UserTicket } from "./user_ticket";
 import { Event } from "./event";
+import { Charge } from "./shop";
 
 export type Order ={
   id?: string;
@@ -20,6 +21,7 @@ export type Order ={
   expired_at?: string | null;
   created_at?: string;
   updated_at?: string;
+  charge?: Charge | null;
 }
 
 export type CreateOrder = {

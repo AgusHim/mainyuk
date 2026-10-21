@@ -46,6 +46,8 @@ const DonationPaymentCard = ({
   charge,
 }: DonationPaymentCardProps) => {
   const instructions = charge?.instructions ?? [];
+  const payableAmount = charge?.amount ?? donation.amount;
+  const hasShopeeQRIS = charge?.provider === "shopee_qris" && charge.qris_payload;
 
   return (
     <section
@@ -75,15 +77,23 @@ const DonationPaymentCard = ({
         </p>
         <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
           <p className="text-2xl font-semibold tracking-tight text-[var(--yn-foreground)]">
-            {formatRupiah(donation.amount)}
+            {formatRupiah(payableAmount)}
           </p>
-          <CopyButton value={`${donation.amount}`} label="Nominal" />
+          <CopyButton value={`${payableAmount}`} label="Nominal" />
         </div>
         <p className="mt-3 flex items-start gap-2 text-xs leading-5 text-[var(--yn-muted)]">
           <Info aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
-          Transfer tepat sesuai nominal di atas untuk membantu proses pencocokan.
+          {charge?.unique_code ? `Kode unik ${charge.unique_code} sudah termasuk pada nominal. Transfer tepat sesuai nominal agar mutasi tervalidasi otomatis.` : "Transfer tepat sesuai nominal di atas untuk membantu proses pencocokan."}
         </p>
       </div>
+
+      {hasShopeeQRIS ? (
+        <div className="mt-4 flex flex-col items-center rounded-2xl border border-[var(--yn-border)] bg-white p-5">
+          <QRCode value={charge.qris_payload ?? ""} size={220} />
+          <p className="mt-3 text-center text-sm font-semibold text-[var(--yn-foreground)]">QRIS ShopeePay</p>
+          <p className="mt-1 text-center text-xs leading-5 text-[var(--yn-muted)]">Pindai QR ini dan bayar tepat {formatRupiah(payableAmount)}. Status akan tervalidasi otomatis.</p>
+        </div>
+      ) : null}
 
       {instructions.length === 0 ? (
         <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
@@ -178,8 +188,7 @@ const DonationPaymentCard = ({
           ) : (
             <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
           )}
-          Setelah transfer, sampaikan bukti pembayaran melalui kanal pengurus.
-          Status halaman ini akan diperbarui setelah pembayaran diperiksa.
+          {hasShopeeQRIS ? "Status akan diperbarui otomatis setelah mutasi ShopeePay tervalidasi." : "Setelah transfer, sampaikan bukti pembayaran melalui kanal pengurus. Status halaman ini akan diperbarui setelah pembayaran diperiksa."}
         </p>
       </div>
     </section>

@@ -98,6 +98,10 @@ export type Charge = {
   provider: string;
   external_id?: string | null;
   amount: number;
+  base_amount?: number;
+  unique_code?: number;
+  qris_payload?: string | null;
+  payment_status?: "pending" | "paid" | "expired" | "cancelled";
   instructions: ChargeInstruction[] | null;
   expires_at?: string | null;
 };

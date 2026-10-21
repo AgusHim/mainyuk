@@ -14,6 +14,7 @@ import {
 } from "@/types/shop";
 import { formatRupiah } from "@/utils/currency";
 import { formatStrToDateTime } from "@/utils/convert";
+import QRCode from "qrcode.react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -224,23 +225,30 @@ const ShopOrderDetailPage = ({ publicId }: ShopOrderDetailPageProps) => {
                       <p className="text-sm text-black">Nominal transfer</p>
                       <div className="mt-1 flex items-center justify-between gap-2">
                         <p className="text-xl font-bold text-black">
-                          {formatRupiah(order.total)}
+                          {formatRupiah(order.charge?.amount ?? order.total)}
                         </p>
                         <button
                           type="button"
-                          onClick={() => handleCopy(`${order.total}`)}
+                          onClick={() => handleCopy(`${order.charge?.amount ?? order.total}`)}
                           className="rounded border border-primary px-2 py-1 text-sm font-semibold text-primary hover:bg-primary hover:text-white"
                         >
                           Salin
                         </button>
                       </div>
                       <p className="mt-2 text-xs text-black">
-                        Transfer harus{" "}
+                        {order.charge?.unique_code ? `Kode unik ${order.charge.unique_code} sudah termasuk. ` : ""}Transfer harus{" "}
                         <span className="font-bold">tepat sejumlah itu</span>.
                         Nominal yang tidak sama tidak dapat diverifikasi
                         pengurus.
                       </p>
                     </div>
+
+                    {order.charge?.provider === "shopee_qris" && order.charge.qris_payload ? (
+                      <div className="mt-3 flex flex-col items-center rounded-lg border-2 border-black bg-white p-4">
+                        <QRCode value={order.charge.qris_payload ?? ""} size={200} />
+                        <p className="mt-3 text-center text-sm font-bold text-black">QRIS ShopeePay · tervalidasi otomatis</p>
+                      </div>
+                    ) : null}
 
                     {(order.charge?.instructions ?? []).length === 0 ? (
                       <p className="mt-3 rounded-lg border-2 border-black bg-yellow-200 p-3 text-sm text-black">
