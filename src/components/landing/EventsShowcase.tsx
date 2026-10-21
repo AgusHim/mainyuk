@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getEventsHome } from "@/redux/slices/eventSlice";
 import { Event } from "@/types/event";
-import Reveal from "./Reveal";
 
 /* Placeholder cards shown while the events request is in flight. */
 const PLACEHOLDER: Event[] = Array.from({ length: 5 }).map((_, index) => ({
@@ -138,6 +139,9 @@ export default function EventsShowcase() {
   const eventData = useAppSelector((state) => state.event.data);
   const error = useAppSelector((state) => state.event.error);
   const [active, setActive] = useState(0);
+  const showcaseRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const loading = eventData == null && !error;
@@ -221,65 +225,108 @@ export default function EventsShowcase() {
     return () => window.removeEventListener("resize", recompute);
   }, [recompute]);
 
+  useLayoutEffect(() => {
+    const root = showcaseRef.current;
+    const scene = sceneRef.current;
+    const title = titleRef.current;
+    if (!root || !scene || !title) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    const context = gsap.context(() => {
+      const titleLines = title.querySelectorAll("span");
+      const phone = scene.querySelector<HTMLElement>("[data-phone]");
+      const posters = scene.querySelectorAll<HTMLElement>("[data-poster]");
+
+      const timeline = gsap.timeline({
+        defaults: { ease: "power3.out" },
+        scrollTrigger: {
+          trigger: root,
+          start: "top 72%",
+          once: true,
+        },
+      });
+
+      timeline
+        .from(titleLines, { y: 34, autoAlpha: 0, duration: 0.7, stagger: 0.1 })
+        .from(posters, { y: 46, autoAlpha: 0, scale: 0.96, duration: 0.7, stagger: 0.035 }, "<0.08")
+        .from(phone, { y: 68, autoAlpha: 0, scale: 0.92, duration: 0.85 }, "<0.18");
+
+      if (phone) {
+        gsap.to(phone, {
+          y: -10,
+          duration: 2.4,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          delay: 1.45,
+        });
+      }
+    }, root);
+
+    return () => context.revert();
+  }, [rendered.length]);
+
   const activeEvent = count > 0 ? events[active % count] : undefined;
 
   return (
     <section
       id="gabung-event"
+      ref={showcaseRef}
       className="relative overflow-hidden bg-[#f1f1f1] pt-20 sm:pt-24"
     >
       <div className="yn-container">
-        <Reveal>
-          <h2
-            className="mx-auto text-center font-semibold"
-            style={{
-              fontSize: "clamp(2.25rem, 4vw, 3.125rem)",
-              lineHeight: 0.98,
-              letterSpacing: "-0.045em",
-            }}
-          >
-            <span className="block text-[var(--yn-foreground)]">Gabung Event</span>
-            <span className="block text-[#a3a3a3]">Terdekat YN Solo</span>
-          </h2>
-        </Reveal>
+        <h2
+          ref={titleRef}
+          className="mx-auto text-center font-semibold"
+          style={{
+            fontSize: "clamp(2.25rem, 4vw, 3.125rem)",
+            lineHeight: 0.98,
+            letterSpacing: "-0.045em",
+          }}
+        >
+          <span className="block text-[var(--yn-foreground)]">Gabung Event</span>
+          <span className="block text-[#a3a3a3]">Terdekat YN Solo</span>
+        </h2>
       </div>
 
-      <Reveal delay={140}>
-        <div className="relative mt-16 sm:mt-20">
-          {/* The centre lane masks the moving poster underneath the phone. */}
-          <div
-            ref={scrollRef}
-            onScroll={recompute}
-            aria-label="Geser untuk melihat event lainnya"
-            className="absolute inset-x-0 bottom-0 top-[17%] z-0 flex snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            <div className="flex w-max gap-7 px-[calc(50%_-_80px)] sm:gap-9 sm:px-[calc(50%_-_102px)] lg:gap-[52px] lg:px-[calc(50%_-_142px)]">
-              {rendered.map((event, index) => (
-                <PosterCard
-                  key={`${index}-${event.slug ?? event.id ?? index}`}
-                  event={event}
-                  placeholder={loading}
-                />
-              ))}
-            </div>
+      <div ref={sceneRef} className="relative mt-16 sm:mt-20">
+        {/* The centre lane masks the moving poster underneath the phone. */}
+        <div
+          ref={scrollRef}
+          onScroll={recompute}
+          aria-label="Geser untuk melihat event lainnya"
+          className="absolute inset-x-0 bottom-0 top-[17%] z-0 flex snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div className="flex w-max gap-7 px-[calc(50%_-_80px)] sm:gap-9 sm:px-[calc(50%_-_102px)] lg:gap-[52px] lg:px-[calc(50%_-_142px)]">
+            {rendered.map((event, index) => (
+              <PosterCard
+                key={`${index}-${event.slug ?? event.id ?? index}`}
+                event={event}
+                placeholder={loading}
+              />
+            ))}
           </div>
-          <div className="pointer-events-none absolute inset-y-0 left-1/2 z-10 w-[196px] -translate-x-1/2 bg-[#f1f1f1] sm:w-[244px] lg:w-[332px]" aria-hidden="true" />
-          {activeEvent?.slug ? (
-            <Link
-              href={`/events/${activeEvent.slug}`}
-              aria-label={`Lihat detail ${activeEvent.title ?? "event YukNgaji Solo"}`}
-              className="relative z-20 mx-auto block w-[180px] rounded-[2.9rem] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--yn-accent)] sm:w-[228px] lg:w-[316px]"
-            >
-              <PhoneFrame event={activeEvent} />
-            </Link>
-          ) : (
-            <div className="pointer-events-none relative z-20 mx-auto w-[180px] sm:w-[228px] lg:w-[316px]">
-              <PhoneFrame event={activeEvent} />
-            </div>
-          )}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-20 bg-gradient-to-b from-transparent to-white sm:h-28 lg:h-36" aria-hidden="true" />
         </div>
-      </Reveal>
+        <div className="pointer-events-none absolute inset-y-0 left-1/2 z-10 w-[196px] -translate-x-1/2 bg-[#f1f1f1] sm:w-[244px] lg:w-[332px]" aria-hidden="true" />
+        {activeEvent?.slug ? (
+          <Link
+            href={`/events/${activeEvent.slug}`}
+            data-phone
+            aria-label={`Lihat detail ${activeEvent.title ?? "event YukNgaji Solo"}`}
+            className="relative z-20 mx-auto block w-[180px] rounded-[2.9rem] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--yn-accent)] sm:w-[228px] lg:w-[316px]"
+          >
+            <PhoneFrame event={activeEvent} />
+          </Link>
+        ) : (
+          <div data-phone className="pointer-events-none relative z-20 mx-auto w-[180px] sm:w-[228px] lg:w-[316px]">
+            <PhoneFrame event={activeEvent} />
+          </div>
+        )}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-20 bg-gradient-to-b from-transparent to-white sm:h-28 lg:h-36" aria-hidden="true" />
+      </div>
 
       {!loading && count === 0 && (
         <div className="yn-container">
