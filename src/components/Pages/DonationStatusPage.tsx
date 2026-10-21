@@ -84,6 +84,14 @@ export default function DonationStatusPage() {
     };
   }, [dispatch, publicId]);
 
+  useEffect(() => {
+    if (!publicId || donation?.status !== "pending" || result?.charge?.provider !== "shopee_qris") return;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") dispatch(getMyDonation(publicId));
+    }, 10_000);
+    return () => window.clearInterval(timer);
+  }, [dispatch, donation?.status, publicId, result?.charge?.provider]);
+
   return (
     <RequiredAuthLayout redirectTo={`/donations/status/${publicId}`}>
       <MainLayout>

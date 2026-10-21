@@ -87,6 +87,14 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
     if (!isCurrentOrder) dispatch(getOrderByPublicID(params.public_id));
   }, [dispatch, isCurrentOrder, params.public_id]);
 
+  useEffect(() => {
+    if (!isCurrentOrder || order?.status !== "pending" || order.charge?.provider !== "shopee_qris") return;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") dispatch(getOrderByPublicID(params.public_id));
+    }, 10_000);
+    return () => window.clearInterval(timer);
+  }, [dispatch, isCurrentOrder, order?.charge?.provider, order?.status, params.public_id]);
+
   if (error && !isCurrentOrder) {
     return (
       <MainLayout>
@@ -110,7 +118,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
     );
   }
 
-  if (!isCurrentOrder || isLoading) {
+  if (!isCurrentOrder || (isLoading && !order)) {
     return (
       <MainLayout>
         <CommonHeader title="Detail Transaksi" isShowBack />
@@ -124,9 +132,11 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
   const ticketAmount = order.amount ?? 0;
   const donation = order.donation ?? 0;
   const adminFee = order.admin_fee ?? 0;
-  const total = ticketAmount + donation + adminFee;
+  const baseTotal = ticketAmount + donation + adminFee;
+  const total = order.charge?.amount ?? baseTotal;
   const ticketCount = order.user_tickets?.length ?? 0;
-  const canConfirm = !["paid", "expired", "cancelled"].includes(order.status ?? "pending");
+  const isShopeeQRIS = order.charge?.provider === "shopee_qris";
+  const canConfirm = !isShopeeQRIS && !["paid", "expired", "cancelled"].includes(order.status ?? "pending");
   const groupUrl = event?.wa_group_url || (event?.divisi?.name?.includes("Sports") ? "https://chat.whatsapp.com/HSRFShOBsjpKUHiyJV49BZ" : null);
 
   return (
@@ -201,7 +211,8 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
                   <DetailRow label="Tiket" value={amountLabel(ticketAmount)} />
                   {donation > 0 && <DetailRow label="Donasi" value={formatRupiah(donation)} />}
                   {adminFee > 0 && <DetailRow label="Biaya pembayaran" value={formatRupiah(adminFee)} />}
-                  <DetailRow label="Total" value={amountLabel(total)} accent />
+                  {order.charge?.unique_code ? <DetailRow label="Kode unik QRIS" value={`+${formatRupiah(order.charge.unique_code)}`} /> : null}
+                  <DetailRow label="Total transfer" value={amountLabel(total)} accent />
                 </dl>
               </section>
 

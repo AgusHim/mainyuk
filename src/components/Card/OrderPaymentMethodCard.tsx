@@ -11,6 +11,9 @@ export default function OrderPaymentMethodCard() {
   const total = (order?.amount ?? 0) + (order?.donation ?? 0) + (order?.admin_fee ?? 0);
   const payment = order?.payment_method;
   const isQris = payment?.type?.toLowerCase() === "qris";
+  const charge = order?.charge;
+  const isShopeeQRIS = charge?.provider === "shopee_qris" && Boolean(charge.qris_payload);
+  const payableAmount = charge?.amount ?? total;
 
   async function copy(value: string, label: string) {
     try {
@@ -53,7 +56,7 @@ export default function OrderPaymentMethodCard() {
 
         {isQris ? (
           <div className="mt-5 flex justify-center rounded-2xl bg-white p-5">
-            <QRCode value={payment.account_number ?? ""} size={190} />
+            <QRCode value={isShopeeQRIS ? charge?.qris_payload ?? "" : payment.account_number ?? ""} size={190} />
           </div>
         ) : (
           <div className="mt-5 flex items-center justify-between gap-4 rounded-xl bg-[var(--yn-surface)] p-4">
@@ -63,12 +66,12 @@ export default function OrderPaymentMethodCard() {
         )}
 
         <div className="mt-3 flex items-center justify-between gap-4 rounded-xl bg-[var(--yn-surface)] p-4">
-          <div><p className="text-xs text-[var(--yn-muted)]">Total transfer</p><p className="mt-1 text-xl font-bold text-[var(--yn-foreground)]">{total === 1 ? "Bayar seikhlasnya" : formatRupiah(total)}</p></div>
-          {total !== 1 && <button type="button" onClick={() => copy(String(total), "Nominal transfer")} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--yn-border)] px-3 py-2 text-xs font-semibold text-[var(--yn-accent)] hover:bg-[var(--yn-accent-soft)]"><Copy aria-hidden="true" className="h-3.5 w-3.5" /> Salin</button>}
+          <div><p className="text-xs text-[var(--yn-muted)]">Total transfer</p><p className="mt-1 text-xl font-bold text-[var(--yn-foreground)]">{payableAmount === 1 ? "Bayar seikhlasnya" : formatRupiah(payableAmount)}</p></div>
+          {payableAmount !== 1 && <button type="button" onClick={() => copy(String(payableAmount), "Nominal transfer")} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--yn-border)] px-3 py-2 text-xs font-semibold text-[var(--yn-accent)] hover:bg-[var(--yn-accent-soft)]"><Copy aria-hidden="true" className="h-3.5 w-3.5" /> Salin</button>}
         </div>
       </div>
 
-      {total !== 1 && <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-[var(--yn-muted)]"><Info aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />Transfer tepat sampai digit terakhir, lalu gunakan tombol konfirmasi pembayaran.</p>}
+      {payableAmount !== 1 && <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-[var(--yn-muted)]"><Info aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />{isShopeeQRIS ? `Kode unik ${charge?.unique_code ?? ""} sudah termasuk. Bayar tepat sampai digit terakhir; status diperbarui otomatis setelah mutasi Shopee tervalidasi.` : "Transfer tepat sampai digit terakhir, lalu gunakan tombol konfirmasi pembayaran."}</p>}
     </section>
   );
 }

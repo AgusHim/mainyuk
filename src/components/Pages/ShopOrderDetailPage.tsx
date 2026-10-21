@@ -42,6 +42,14 @@ const ShopOrderDetailPage = ({ publicId }: ShopOrderDetailPageProps) => {
     }
   }, [dispatch, publicId]);
 
+  useEffect(() => {
+    if (!publicId || order?.payment_status !== "pending" || order.charge?.provider !== "shopee_qris") return;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") dispatch(getMyShopOrder(publicId));
+    }, 10_000);
+    return () => window.clearInterval(timer);
+  }, [dispatch, order?.charge?.provider, order?.payment_status, publicId]);
+
   const handleCopy = (value: string) => {
     navigator.clipboard
       .writeText(value)
