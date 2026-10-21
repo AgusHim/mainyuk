@@ -225,6 +225,69 @@ export default function EventsShowcase() {
     return () => window.removeEventListener("resize", recompute);
   }, [recompute]);
 
+  useEffect(() => {
+    const scroller = scrollRef.current;
+    if (!scroller || repeat < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const posters = scroller.querySelectorAll<HTMLElement>("[data-poster]");
+    const postersPerCopy = posters.length / repeat;
+    if (!Number.isInteger(postersPerCopy) || postersPerCopy === 0) return;
+
+    const copyWidth = posters[postersPerCopy].offsetLeft - posters[0].offsetLeft;
+    if (copyWidth <= 0) return;
+
+    let scrollTween: gsap.core.Tween | null = null;
+    let resumeDelay: gsap.core.Tween | null = null;
+
+    const startAutoScroll = () => {
+      scrollTween?.kill();
+      const from = scroller.scrollLeft;
+      scrollTween = gsap.to(scroller, {
+        scrollLeft: from + copyWidth,
+        duration: Math.max(18, copyWidth / 28),
+        ease: "none",
+        onComplete: () => {
+          // The three repeated sets are identical, so returning one set back
+          // keeps the motion continuous while retaining room to scroll.
+          scroller.scrollLeft -= copyWidth;
+          startAutoScroll();
+        },
+      });
+    };
+
+    const pauseAutoScroll = () => {
+      resumeDelay?.kill();
+      scrollTween?.pause();
+    };
+
+    const resumeAutoScroll = () => {
+      resumeDelay?.kill();
+      resumeDelay = gsap.delayedCall(0.9, startAutoScroll);
+    };
+
+    startAutoScroll();
+    scroller.addEventListener("pointerdown", pauseAutoScroll);
+    scroller.addEventListener("pointerup", resumeAutoScroll);
+    scroller.addEventListener("pointercancel", resumeAutoScroll);
+    scroller.addEventListener("mouseenter", pauseAutoScroll);
+    scroller.addEventListener("mouseleave", resumeAutoScroll);
+    scroller.addEventListener("wheel", pauseAutoScroll, { passive: true });
+    scroller.addEventListener("wheel", resumeAutoScroll, { passive: true });
+
+    return () => {
+      scrollTween?.kill();
+      resumeDelay?.kill();
+      scroller.removeEventListener("pointerdown", pauseAutoScroll);
+      scroller.removeEventListener("pointerup", resumeAutoScroll);
+      scroller.removeEventListener("pointercancel", resumeAutoScroll);
+      scroller.removeEventListener("mouseenter", pauseAutoScroll);
+      scroller.removeEventListener("mouseleave", resumeAutoScroll);
+      scroller.removeEventListener("wheel", pauseAutoScroll);
+      scroller.removeEventListener("wheel", resumeAutoScroll);
+    };
+  }, [rendered.length, repeat]);
+
   useLayoutEffect(() => {
     const root = showcaseRef.current;
     const scene = sceneRef.current;
