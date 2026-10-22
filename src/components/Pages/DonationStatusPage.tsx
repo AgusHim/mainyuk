@@ -76,6 +76,10 @@ export default function DonationStatusPage() {
   const error = useAppSelector((state) => state.fundraising.error);
   const donation =
     result?.donation.public_id === publicId ? result.donation : null;
+  const transactionTotal = donation
+    ? result?.charge?.amount ?? donation.charge?.amount ?? donation.paid_amount ?? donation.amount
+    : 0;
+  const uniqueCode = result?.charge?.unique_code ?? donation?.charge?.unique_code;
 
   useEffect(() => {
     if (publicId) dispatch(getMyDonation(publicId));
@@ -179,6 +183,10 @@ export default function DonationStatusPage() {
                   <p className="mt-1 text-3xl font-semibold tracking-tight text-[var(--yn-foreground)]">
                     {formatRupiah(donation.amount)}
                   </p>
+                  <div className="mt-4 border-t border-[var(--yn-border)] pt-4">
+                    {uniqueCode ? <p className="text-sm text-[var(--yn-muted)]">Kode unik QRIS: +{formatRupiah(uniqueCode)}</p> : null}
+                    <p className="mt-1 text-sm font-semibold text-[var(--yn-foreground)]">Total transaksi: {formatRupiah(transactionTotal)}</p>
+                  </div>
                 </div>
 
                 <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2">

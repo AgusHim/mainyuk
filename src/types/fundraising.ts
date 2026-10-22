@@ -87,6 +87,7 @@ export type Donation = {
 export type DonationView = Donation & {
   campaign_slug: string;
   campaign_title: string;
+  charge?: Charge | null;
 };
 
 export type AdminDonationView = Donation & {

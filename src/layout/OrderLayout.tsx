@@ -212,7 +212,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
                   {donation > 0 && <DetailRow label="Donasi" value={formatRupiah(donation)} />}
                   {adminFee > 0 && <DetailRow label="Biaya pembayaran" value={formatRupiah(adminFee)} />}
                   {order.charge?.unique_code ? <DetailRow label="Kode unik QRIS" value={`+${formatRupiah(order.charge.unique_code)}`} /> : null}
-                  <DetailRow label="Total transfer" value={amountLabel(total)} accent />
+                  <DetailRow label="Total transaksi" value={amountLabel(total)} accent />
                 </dl>
               </section>
 

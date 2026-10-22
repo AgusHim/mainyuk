@@ -48,6 +48,11 @@ const DonationPaymentCard = ({
   const instructions = charge?.instructions ?? [];
   const payableAmount = charge?.amount ?? donation.amount;
   const hasShopeeQRIS = charge?.provider === "shopee_qris" && charge.qris_payload;
+  // QRIS ShopeePay adalah QR dinamis dengan nominal unik. Jangan tampilkan
+  // QRIS statis dari metode pembayaran pada transaksi yang sama.
+  const visibleInstructions = hasShopeeQRIS
+    ? instructions.filter((instruction) => instruction.type?.toLowerCase() !== "qris")
+    : instructions;
 
   return (
     <section
@@ -95,14 +100,14 @@ const DonationPaymentCard = ({
         </div>
       ) : null}
 
-      {instructions.length === 0 ? (
+      {visibleInstructions.length === 0 && !hasShopeeQRIS ? (
         <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
           Metode pembayaran belum dipilih. Hubungi pengurus untuk mendapatkan
           rekening tujuan dan sertakan ID donasi saat konfirmasi.
         </div>
-      ) : (
+      ) : visibleInstructions.length > 0 ? (
         <div className="mt-4 grid gap-3">
-          {instructions.map((instruction) => {
+          {visibleInstructions.map((instruction) => {
             const isQris = instruction.type?.toLowerCase() === "qris";
             return (
               <article
@@ -159,7 +164,7 @@ const DonationPaymentCard = ({
             );
           })}
         </div>
-      )}
+      ) : null}
 
       <div className="mt-6 border-t border-[var(--yn-border)] pt-5">
         <ol className="grid gap-3 text-sm text-[var(--yn-muted)] sm:grid-cols-3">

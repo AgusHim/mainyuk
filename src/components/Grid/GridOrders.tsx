@@ -47,7 +47,8 @@ function Status({ children, positive = false }: { children: React.ReactNode; pos
 }
 
 function TicketCard({ order }: { order: Order }) {
-  const total = (order.amount ?? 0) + (order.donation ?? 0) + (order.admin_fee ?? 0);
+  const baseTotal = (order.amount ?? 0) + (order.donation ?? 0) + (order.admin_fee ?? 0);
+  const total = order.charge?.amount ?? baseTotal;
   return (
     <Link href={`/orders/${order.public_id}`} className={cardClass}>
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -65,7 +66,11 @@ function TicketCard({ order }: { order: Order }) {
         </div>
       </div>
       <div className="mt-5 flex items-end justify-between gap-3">
-        <div><p className="text-xs text-[var(--yn-muted)]">Total transaksi</p><p className="mt-1 font-semibold text-[var(--yn-foreground)]">{total === 0 ? "Gratis" : formatRupiah(total)}</p></div>
+        <div>
+          <p className="text-xs text-[var(--yn-muted)]">Total transaksi</p>
+          <p className="mt-1 font-semibold text-[var(--yn-foreground)]">{total === 0 ? "Gratis" : formatRupiah(total)}</p>
+          {order.charge?.unique_code ? <p className="mt-1 text-xs text-[var(--yn-muted)]">Termasuk kode unik +{formatRupiah(order.charge.unique_code)}</p> : null}
+        </div>
         <span className="text-sm font-semibold text-[var(--yn-accent)]">Lihat detail →</span>
       </div>
     </Link>
@@ -73,6 +78,7 @@ function TicketCard({ order }: { order: Order }) {
 }
 
 function DonationCard({ donation }: { donation: DonationView }) {
+  const total = donation.charge?.amount ?? donation.paid_amount ?? donation.amount;
   return (
     <Link href={`/donations/status/${donation.public_id}`} className={cardClass}>
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -82,7 +88,11 @@ function DonationCard({ donation }: { donation: DonationView }) {
       <h3 className="mt-5 border-t border-[var(--yn-border)] pt-5 text-base font-semibold text-[var(--yn-foreground)]">{donation.campaign_title}</h3>
       <p className="mt-1 text-sm text-[var(--yn-muted)]">Donasi untuk program komunitas</p>
       <div className="mt-5 flex items-end justify-between gap-3">
-        <div><p className="text-xs text-[var(--yn-muted)]">Nominal donasi</p><p className="mt-1 font-semibold text-[var(--yn-foreground)]">{formatRupiah(donation.amount)}</p></div>
+        <div>
+          <p className="text-xs text-[var(--yn-muted)]">Total transaksi</p>
+          <p className="mt-1 font-semibold text-[var(--yn-foreground)]">{formatRupiah(total)}</p>
+          {donation.charge?.unique_code ? <p className="mt-1 text-xs text-[var(--yn-muted)]">Termasuk kode unik +{formatRupiah(donation.charge.unique_code)}</p> : null}
+        </div>
         <span className="text-sm font-semibold text-[var(--yn-accent)]">Lihat detail →</span>
       </div>
     </Link>
@@ -91,6 +101,7 @@ function DonationCard({ donation }: { donation: DonationView }) {
 
 function ShopCard({ order }: { order: ShopOrder }) {
   const itemCount = order.items?.reduce((sum, item) => sum + item.qty, 0);
+  const total = order.charge?.amount ?? order.paid_amount ?? order.total;
   return (
     <Link href={`/shop/orders/${order.public_id}`} className={cardClass}>
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -100,7 +111,11 @@ function ShopCard({ order }: { order: ShopOrder }) {
       <h3 className="mt-5 border-t border-[var(--yn-border)] pt-5 text-base font-semibold text-[var(--yn-foreground)]">{order.items?.[0]?.product_name || "Pesanan shop"}</h3>
       <p className="mt-1 text-sm text-[var(--yn-muted)]">{itemCount ? `${itemCount} barang · ` : ""}{fulfillmentStatusLabel(order.fulfillment_status)}</p>
       <div className="mt-5 flex items-end justify-between gap-3">
-        <div><p className="text-xs text-[var(--yn-muted)]">Total pesanan</p><p className="mt-1 font-semibold text-[var(--yn-foreground)]">{formatRupiah(order.total)}</p></div>
+        <div>
+          <p className="text-xs text-[var(--yn-muted)]">Total transaksi</p>
+          <p className="mt-1 font-semibold text-[var(--yn-foreground)]">{formatRupiah(total)}</p>
+          {order.charge?.unique_code ? <p className="mt-1 text-xs text-[var(--yn-muted)]">Termasuk kode unik +{formatRupiah(order.charge.unique_code)}</p> : null}
+        </div>
         <span className="text-sm font-semibold text-[var(--yn-accent)]">Lihat detail →</span>
       </div>
     </Link>

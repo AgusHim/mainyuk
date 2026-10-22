@@ -93,6 +93,7 @@ const ShopOrderDetailPage = ({ publicId }: ShopOrderDetailPageProps) => {
   };
 
   const isPending = order?.payment_status === "pending";
+  const transactionTotal = order?.charge?.amount ?? order?.paid_amount ?? order?.total ?? 0;
 
   return (
     <RequiredAuthLayout redirectTo={`/shop/orders/${publicId}`}>
@@ -202,9 +203,15 @@ const ShopOrderDetailPage = ({ publicId }: ShopOrderDetailPageProps) => {
                     </dd>
                   </div>
                   <div className="flex justify-between border-t border-black pt-1 font-bold">
-                    <dt>Total</dt>
-                    <dd>{formatRupiah(order.total)}</dd>
+                    <dt>Total transaksi</dt>
+                    <dd>{formatRupiah(transactionTotal)}</dd>
                   </div>
+                  {order.charge?.unique_code ? (
+                    <div className="flex justify-between text-xs">
+                      <dt>Kode unik QRIS</dt>
+                      <dd>+{formatRupiah(order.charge.unique_code)}</dd>
+                    </div>
+                  ) : null}
                 </dl>
 
                 {order.fulfillment_method === "shipping" ? (
