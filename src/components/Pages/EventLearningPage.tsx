@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type Content = { id: string; type: "material" | "recording"; title: string; description: string; url: string };
-type Episode = { id: string; position: number; title: string; description: string; unlocked: boolean; contents: Content[] };
+type Episode = { id: string; position: number; title: string; description: string; unlocked: boolean; contents?: Content[] };
 
 export default function EventLearningPage({ slug }: { slug: string }) {
   const [episodes, setEpisodes] = useState<Episode[] | null>(null);
@@ -35,7 +35,7 @@ export default function EventLearningPage({ slug }: { slug: string }) {
             {episode.unlocked ? <BookOpen className="size-5 shrink-0 text-[var(--yn-accent)]" aria-label="Terbuka" /> : <LockKeyhole className="size-5 shrink-0 text-[var(--yn-muted)]" aria-label="Terkunci" />}
           </div>
           {episode.unlocked ? <div className="border-t border-[var(--yn-border)] p-3">
-            {episode.contents.length ? episode.contents.map((content) => <a key={content.id} href={content.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl p-3 transition hover:bg-[var(--yn-accent-soft)]"><PlayCircle className="size-5 text-[var(--yn-accent)]" /><span className="min-w-0 flex-1"><span className="block text-sm font-medium text-[var(--yn-foreground)]">{content.title}</span><span className="block text-xs text-[var(--yn-muted)]">{content.type === "recording" ? "Rekaman" : "Materi"}{content.description ? ` · ${content.description}` : ""}</span></span></a>) : <p className="p-3 text-sm text-[var(--yn-muted)]">Materi untuk episode ini belum diterbitkan.</p>}
+            {(episode.contents?.length ?? 0) > 0 ? episode.contents?.map((content) => <a key={content.id} href={content.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl p-3 transition hover:bg-[var(--yn-accent-soft)]"><PlayCircle className="size-5 text-[var(--yn-accent)]" /><span className="min-w-0 flex-1"><span className="block text-sm font-medium text-[var(--yn-foreground)]">{content.title}</span><span className="block text-xs text-[var(--yn-muted)]">{content.type === "recording" ? "Rekaman" : "Materi"}{content.description ? ` · ${content.description}` : ""}</span></span></a>) : <p className="p-3 text-sm text-[var(--yn-muted)]">Materi untuk episode ini belum diterbitkan.</p>}
           </div> : <p className="border-t border-[var(--yn-border)] px-5 py-3 text-sm text-[var(--yn-muted)]">Butuh tiket yang mencakup episode ini.</p>}
         </section>)}
       </div>
