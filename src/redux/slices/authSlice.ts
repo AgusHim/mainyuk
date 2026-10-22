@@ -150,6 +150,12 @@ export const authSlice = createSlice({
       state.user = action.payload;
     });
 
+    builder.addCase(postRequestOTP.fulfilled, (state) => {
+      // Permintaan OTP selesai sebelum pengguna mengisi kodenya. Tanpa ini
+      // state loading tetap true dan tombol verifikasi terkunci.
+      state.loading = false;
+    });
+
     builder.addMatcher(
       isAnyOf(loginUser.fulfilled, postVerifyOTP.fulfilled),
       (state, action) => {
@@ -174,7 +180,13 @@ export const authSlice = createSlice({
     );
 
     builder.addMatcher(
-      isAnyOf(loginUser.rejected, getAuthGoogleCallback.rejected, getMe.rejected),
+      isAnyOf(
+        loginUser.rejected,
+        getAuthGoogleCallback.rejected,
+        getMe.rejected,
+        postRequestOTP.rejected,
+        postVerifyOTP.rejected
+      ),
       (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";

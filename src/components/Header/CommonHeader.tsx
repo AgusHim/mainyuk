@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -8,6 +9,7 @@ interface HeaderProps {
   children?: ReactNode;
   isShowBack?: boolean;
   isShowTrailing?: boolean;
+  brandLogo?: boolean;
 }
 
 export const CommonHeader: React.FC<HeaderProps> = ({
@@ -15,6 +17,7 @@ export const CommonHeader: React.FC<HeaderProps> = ({
   children,
   isShowBack,
   isShowTrailing = true,
+  brandLogo = false,
 }) => {
   const router = useRouter();
 
@@ -49,9 +52,21 @@ export const CommonHeader: React.FC<HeaderProps> = ({
             <></>
           )}
 
-          <h1 className="truncate text-lg font-semibold tracking-tight md:text-xl">
-            {title}
-          </h1>
+          {brandLogo ? (
+            <Link href="/" aria-label="YukNgaji Solo" className="flex items-center">
+              <Image
+                src="/images/logo/yn_logo.png"
+                alt=""
+                width={40}
+                height={40}
+                className="size-10 object-contain"
+              />
+            </Link>
+          ) : (
+            <h1 className="truncate text-lg font-semibold tracking-tight md:text-xl">
+              {title}
+            </h1>
+          )}
         </div>
 
         {isShowTrailing ? (

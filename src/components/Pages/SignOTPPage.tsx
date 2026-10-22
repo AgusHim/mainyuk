@@ -93,7 +93,7 @@ export default function SignOTPPage() {
 
   return (
     <MainLayout nav={false}>
-      <CommonHeader title="YukNgaji Solo" isShowBack={false} isShowTrailing={false} />
+      <CommonHeader title="" brandLogo isShowBack={false} isShowTrailing={false} />
       <main className="min-h-[calc(100svh-4rem)] bg-[var(--yn-background)] py-8 sm:py-14">
         <div className="yn-container grid max-w-5xl overflow-hidden rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] md:grid-cols-[0.9fr_1.1fr]">
           <aside className="hidden flex-col justify-between bg-[var(--yn-accent)] p-10 text-white md:flex">
