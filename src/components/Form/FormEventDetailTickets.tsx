@@ -22,6 +22,16 @@ const ticketStatus = (ticket: Ticket) => {
   return null;
 };
 
+const ticketAccessLabel = (ticket: Ticket) => {
+  if (ticket.access_mode === "selected") {
+    const count = ticket.episode_ids?.length ?? 0;
+    return count > 0
+      ? `Akses ${count} episode tertentu`
+      : "Akses episode tertentu";
+  }
+  return "Akses semua episode";
+};
+
 export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
   slug,
 }) => {
@@ -184,6 +194,9 @@ export const FormEventDetailTickets: React.FC<{ slug: string }> = ({
                         </h3>
                         <p className="text-sm text-[var(--yn-muted)]">
                           {e.description}
+                        </p>
+                        <p className="mt-2 inline-flex rounded-full bg-[var(--yn-accent-soft)] px-2.5 py-1 text-xs font-medium text-[var(--yn-accent-dark)]">
+                          {ticketAccessLabel(e)}
                         </p>
                       </div>
                       <div className="mt-auto flex items-center justify-between gap-4 border-t border-dashed border-[var(--yn-border)] px-4 py-3">
