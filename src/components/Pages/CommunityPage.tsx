@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { MainLayout } from "@/layout/MainLayout";
 import { getLeaderboard } from "@/redux/slices/gamificationSlice";
 import { getSessionUser } from "@/redux/slices/authSlice";
-import { getMissions } from "@/redux/slices/missionSlice";
+import { claimMission, getMissions } from "@/redux/slices/missionSlice";
 import { getThreads } from "@/redux/slices/threadSlice";
 import { LeaderboardPeriod } from "@/types/gamification";
 import { ThreadSort } from "@/types/thread";
@@ -36,6 +36,8 @@ const CommunityPage = () => {
   const [isComposing, setIsComposing] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [claimingMission, setClaimingMission] = useState<string | null>(null);
+  const [missionNotice, setMissionNotice] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -60,6 +62,18 @@ const CommunityPage = () => {
     const next = page + 1;
     setPage(next);
     dispatch(getThreads({ sort, page: next }));
+  };
+
+  const claimDailyMission = async (id: string) => {
+    if (!user) return;
+    setClaimingMission(id); setMissionNotice(null);
+    try {
+      await dispatch(claimMission({ id, data: {} })).unwrap();
+      setMissionNotice("Alhamdulillah, 2 XP sudah ditambahkan.");
+      dispatch(getMissions());
+    } catch (claimError: any) {
+      setMissionNotice(claimError?.message || "Misi belum dapat diklaim.");
+    } finally { setClaimingMission(null); }
   };
 
   return (
@@ -126,7 +140,9 @@ const CommunityPage = () => {
 
           <section aria-labelledby="mission-title" className="bg-[var(--yn-surface-muted)] p-5">
             <div className="flex items-center justify-between"><h2 id="mission-title" className="text-lg font-semibold tracking-[-0.025em]">Misi untukmu</h2><Sparkles className="size-5 text-[var(--yn-accent)]" /></div>
-            <div className="mt-4 space-y-3">{missions?.slice(0, 3).map((mission) => <Link key={mission.id} href={`/missions/${mission.id}`} className="block text-sm hover:text-[var(--yn-accent-dark)]"><span className="block font-semibold">{mission.title}</span><span className="mt-1 block text-[var(--yn-muted)]">+{mission.reward_xp} XP</span></Link>)}</div>
+            <p className="mt-2 text-xs leading-5 text-[var(--yn-muted)]">Amalan Subuh dapat diklaim pukul 04.00–06.00 WIB dan diulang setiap hari.</p>
+            {missionNotice ? <p className="mt-3 text-xs font-medium text-[var(--yn-accent-dark)]">{missionNotice}</p> : null}
+            <div className="mt-4 space-y-3">{missions?.slice(0, 3).map((mission) => <div key={mission.id} className="border-b border-[var(--yn-border)] pb-3 last:border-0 last:pb-0"><Link href={`/missions/${mission.id}`} className="block text-sm hover:text-[var(--yn-accent-dark)]"><span className="block font-semibold">{mission.title}</span><span className="mt-1 block text-[var(--yn-muted)]">+{mission.reward_xp} XP</span></Link>{mission.type === "daily" && user ? <button type="button" disabled={!mission.can_claim_now || claimingMission === mission.id} onClick={() => void claimDailyMission(mission.id)} className="mt-2 text-xs font-semibold text-[var(--yn-accent-dark)] underline underline-offset-4 disabled:cursor-not-allowed disabled:text-[var(--yn-muted)]">{claimingMission === mission.id ? "Mengklaim…" : mission.can_claim_now ? "Klaim XP" : "Klaim tersedia saat Subuh"}</button> : null}</div>)}</div>
             <Link href="/missions" className="mt-5 inline-block text-sm font-semibold text-[var(--yn-accent-dark)] underline underline-offset-4">Lihat semua misi</Link>
           </section>
         </aside>
