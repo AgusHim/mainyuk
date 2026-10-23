@@ -19,7 +19,11 @@ const BODY_MAX = 5000;
  * Identitas penulis tidak pernah dikirim dari sini: server mengambilnya dari
  * token. Karena itu form ini hanya punya judul dan isi.
  */
-const FormThread = () => {
+type Props = {
+  onCancel?: () => void;
+};
+
+const FormThread = ({ onCancel }: Props) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const user = useAppSelector((state) => state.auth.user);
@@ -57,15 +61,20 @@ const FormThread = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom"
+      className="bg-[var(--yn-surface-muted)] p-5 sm:p-6"
     >
-      <h2 className="text-lg font-semibold text-black">Tulis thread</h2>
-      <p className="mt-1 text-xs text-black">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-semibold tracking-[-0.025em] text-[var(--yn-foreground)]">Tulis thread</h2>
+          <p className="mt-1 text-sm leading-6 text-[var(--yn-muted)]">
         Namamu tampil sebagai alias komunitas, bukan nama akun. Bila belum
         punya alias, kirimanmu tampil sebagai &ldquo;Anonim&rdquo;.
-      </p>
+          </p>
+        </div>
+        {onCancel ? <button type="button" onClick={onCancel} className="text-sm font-semibold text-[var(--yn-muted)] underline underline-offset-4 hover:text-[var(--yn-foreground)]">Batal</button> : null}
+      </div>
 
-      <Label htmlFor="thread-title" className="mt-3 block text-black">
+      <Label htmlFor="thread-title" className="mt-5 block text-[var(--yn-foreground)]">
         Judul
       </Label>
       <Input
@@ -74,13 +83,13 @@ const FormThread = () => {
         onChange={(e) => setTitle(e.target.value)}
         maxLength={TITLE_MAX}
         placeholder="Judul thread"
-        className="mt-1 h-11 rounded-lg border-2 border-black bg-white px-4 font-medium text-black dark:border-strokedark dark:bg-boxdark dark:text-white"
+        className="mt-1 h-11 rounded-none border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 font-medium text-[var(--yn-foreground)]"
       />
-      <p className="mt-1 text-right text-xs text-black/70">
+      <p className="mt-1 text-right text-xs text-[var(--yn-muted)]">
         {title.length}/{TITLE_MAX}
       </p>
 
-      <Label htmlFor="thread-body" className="mt-2 block text-black">
+      <Label htmlFor="thread-body" className="mt-4 block text-[var(--yn-foreground)]">
         Isi thread
       </Label>
       <textarea
@@ -90,17 +99,16 @@ const FormThread = () => {
         maxLength={BODY_MAX}
         rows={5}
         placeholder="Tulis isi thread…"
-        className="mt-1 w-full rounded-lg border-2 border-black bg-white px-4 py-3 font-medium text-black outline-none transition focus:border-4 focus:border-primary dark:border-strokedark dark:bg-boxdark dark:text-white"
+        className="mt-1 w-full rounded-none border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 py-3 font-medium text-[var(--yn-foreground)] outline-none transition focus:border-[var(--yn-accent)] focus:ring-1 focus:ring-[var(--yn-accent)]"
       />
-      <p className="mt-1 text-right text-xs text-black/70">
+      <p className="mt-1 text-right text-xs text-[var(--yn-muted)]">
         {body.length}/{BODY_MAX}
       </p>
 
       <Button
         type="submit"
         disabled={isLoading}
-        className="mt-3 h-11 w-full rounded-md border-2 border-black p-2 disabled:opacity-50"
-        style={{ boxShadow: "5px 5px 0px 0px #000000" }}
+        className="mt-5 h-11 w-full rounded-none bg-[var(--yn-accent)] p-2 text-white hover:bg-[var(--yn-accent-dark)] disabled:opacity-50"
       >
         {isLoading ? "Mengirim…" : "Terbitkan"}
       </Button>

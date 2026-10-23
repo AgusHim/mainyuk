@@ -22,47 +22,47 @@ const ThreadCard = ({ thread }: Props) => {
   return (
     <Link
       href={`/community/${thread.public_id}`}
-      className="block rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom"
+      className="group block bg-[var(--yn-surface)] p-5 transition-colors hover:bg-[var(--yn-accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--yn-accent)]"
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         {thread.author?.avatar_url ? (
           <Image
             src={thread.author.avatar_url}
             alt={thread.author.alias}
             width={32}
             height={32}
-            className="h-8 w-8 rounded-full border-2 border-black object-cover"
+            className="h-9 w-9 rounded-full object-cover"
           />
         ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black bg-white text-xs font-bold text-black">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--yn-surface-muted)] text-xs font-semibold text-[var(--yn-foreground)]">
             {thread.author?.alias?.charAt(0)?.toUpperCase() ?? "A"}
           </div>
         )}
         <div className="min-w-0">
-          <p className="truncate text-sm font-bold text-black">
+          <p className="truncate text-sm font-semibold text-[var(--yn-foreground)]">
             {thread.author?.alias ?? "Anonim"}
           </p>
-          <p className="text-xs text-black/70">
+          <p className="text-xs text-[var(--yn-muted)]">
             {formatStrToDateTime(thread.created_at, "dd MMM yyyy HH:mm")}
           </p>
         </div>
         {sourceLabel ? (
-          <span className="ml-auto whitespace-nowrap rounded-full border-2 border-black bg-white px-2 py-0.5 text-xs font-bold text-black">
+          <span className="ml-auto whitespace-nowrap text-xs font-medium text-[var(--yn-accent-dark)]">
             {sourceLabel}
           </span>
         ) : null}
       </div>
 
-      <h2 className="mt-3 text-lg font-semibold text-black">{thread.title}</h2>
+      <h2 className="mt-4 text-xl font-semibold tracking-[-0.025em] text-[var(--yn-foreground)]">{thread.title}</h2>
       {thread.excerpt ? (
-        <p className="mt-1 line-clamp-3 text-sm text-black">{thread.excerpt}</p>
+        <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--yn-muted)]">{thread.excerpt}</p>
       ) : null}
 
-      <div className="mt-3 flex items-center gap-4 text-xs font-bold text-black">
+      <div className="mt-4 flex items-center gap-4 text-xs font-medium text-[var(--yn-muted)]">
         <span>{thread.reaction_count} reaksi</span>
         <span>{thread.comment_count} komentar</span>
         {thread.is_mine ? (
-          <span className="rounded-full border-2 border-black bg-primary px-2 py-0.5 text-white">
+          <span className="text-[var(--yn-accent-dark)]">
             Kiriman saya
           </span>
         ) : null}
