@@ -47,7 +47,7 @@ function Status({ children, positive = false }: { children: React.ReactNode; pos
 }
 
 function TicketCard({ order }: { order: Order }) {
-  const baseTotal = (order.amount ?? 0) + (order.donation ?? 0) + (order.admin_fee ?? 0);
+  const baseTotal = Math.max(0, (order.amount ?? 0) + (order.donation ?? 0) + (order.admin_fee ?? 0) - (order.discount_amount ?? 0));
   const total = order.charge?.amount ?? baseTotal;
   return (
     <Link href={`/orders/${order.public_id}`} className={cardClass}>

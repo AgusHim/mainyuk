@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 export default function OrderPaymentMethodCard() {
   const order = useAppSelector((state) => state.order.order);
-  const total = (order?.amount ?? 0) + (order?.donation ?? 0) + (order?.admin_fee ?? 0);
+  const total = Math.max(0, (order?.amount ?? 0) + (order?.donation ?? 0) + (order?.admin_fee ?? 0) - (order?.discount_amount ?? 0));
   const payment = order?.payment_method;
   const isQris = payment?.type?.toLowerCase() === "qris";
   const charge = order?.charge;

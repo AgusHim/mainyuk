@@ -132,6 +132,12 @@ const TableOrders = () => {
             Rp {order?.admin_fee?.toLocaleString("id-ID")}
           </p>
         </div>
+        {(order.discount_amount ?? 0) > 0 && (
+          <div className="my-2 w-full flex justify-between">
+            <p className="text-black dark:text-white text-lg">Voucher {order.voucher_code ? `(${order.voucher_code})` : ""}</p>
+            <p className="font-bold text-success text-lg">- Rp {order.discount_amount?.toLocaleString("id-ID")}</p>
+          </div>
+        )}
         <div className="my-2 w-full flex justify-between">
           <p className="font-bold text-black dark:text-white text-xl">
             TOTAL BAYAR
@@ -351,7 +357,7 @@ const TableOrders = () => {
 };
 
 function total(o: Order): number {
-  return (o.amount ?? 0) + (o.admin_fee ?? 0) + (o.donation ?? 0);
+  return Math.max(0, (o.amount ?? 0) + (o.admin_fee ?? 0) + (o.donation ?? 0) - (o.discount_amount ?? 0));
 }
 
 function bgStatus(status: string): string {
