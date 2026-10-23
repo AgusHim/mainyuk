@@ -156,7 +156,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
   const ticketCount = order.user_tickets?.length ?? 0;
   const isShopeeQRIS = order.charge?.provider === "shopee_qris";
   const canConfirm = !isShopeeQRIS && !["paid", "expired", "cancelled"].includes(order.status ?? "pending");
-  const groupUrl = event?.wa_group_url || (event?.divisi?.name?.includes("Sports") ? "https://chat.whatsapp.com/HSRFShOBsjpKUHiyJV49BZ" : null);
+  const groupUrl = event?.wa_group_url || (event?.divisi?.name?.includes("Sports") ? "https://chat.whatsapp.com/HSRFShOBsjpKUHiyJV49BZ" : (event?.title?.includes("Speaking") ? "https://chat.whatsapp.com/JUy14CJKEhyEpQcdjhFoCi" : null));
 
   return (
     <MainLayout>
