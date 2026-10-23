@@ -1,7 +1,6 @@
 "use client";
 import Dialog from "@/components/common/Dialog/Dialog";
 import ReportDialog from "@/components/common/Dialog/ReportDialog";
-import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import {
   createReport,
@@ -18,6 +17,7 @@ import { toast } from "sonner";
 
 type Props = {
   threadPublicId: string;
+  compact?: boolean;
 };
 
 const BODY_MAX = 1000;
@@ -29,7 +29,7 @@ const BODY_MAX = 1000;
  * kelas masalah penomoran. Penulis dirender dari `comment.author` yang sudah
  * dianonimkan server.
  */
-const ThreadCommentList = ({ threadPublicId }: Props) => {
+const ThreadCommentList = ({ threadPublicId, compact = false }: Props) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const comments = useAppSelector((state) => state.thread.comments);
@@ -117,8 +117,8 @@ const ThreadCommentList = ({ threadPublicId }: Props) => {
   };
 
   return (
-    <div className="rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">
-      <h2 className="text-lg font-semibold text-black">
+    <section className={`${compact ? "border-t border-[var(--yn-border)] bg-[var(--yn-surface-muted)] px-5 py-5" : "border-t border-[var(--yn-border)] bg-[var(--yn-background)] px-5 py-7 sm:px-8"}`}>
+      <h2 className="text-lg font-semibold tracking-[-0.025em] text-[var(--yn-foreground)]">
         Komentar ({comments.length})
       </h2>
 
@@ -129,68 +129,58 @@ const ThreadCommentList = ({ threadPublicId }: Props) => {
           maxLength={BODY_MAX}
           rows={3}
           placeholder="Tulis komentar…"
-          className="w-full rounded-lg border-2 border-black bg-white px-4 py-3 font-medium text-black outline-none transition focus:border-4 focus:border-primary dark:border-strokedark dark:bg-boxdark dark:text-white"
+          className="w-full border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 py-3 text-sm text-[var(--yn-foreground)] outline-none transition focus:border-[var(--yn-accent)] focus:ring-1 focus:ring-[var(--yn-accent)]"
         />
         <div className="mt-1 flex items-center justify-between">
-          <span className="text-xs text-black/70">
+          <span className="text-xs text-[var(--yn-muted)]">
             {body.length}/{BODY_MAX}
           </span>
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="h-10 rounded-md border-2 border-black px-4 disabled:opacity-50"
-            style={{ boxShadow: "5px 5px 0px 0px #000000" }}
-          >
+          <button type="submit" disabled={isLoading} className="h-10 bg-[var(--yn-accent)] px-4 text-sm font-semibold text-white hover:bg-[var(--yn-accent-dark)] disabled:opacity-50">
             Kirim
-          </Button>
+          </button>
         </div>
       </form>
 
       {comments.length === 0 ? (
-        <p className="mt-4 text-sm text-black">
+        <p className="mt-5 text-sm text-[var(--yn-muted)]">
           {isLoading
             ? "Memuat komentar…"
             : "Belum ada komentar. Jadi yang pertama."}
         </p>
       ) : (
-        <ul className="mt-4 grid gap-3">
+        <ul className="mt-5 divide-y divide-[var(--yn-border)]">
           {comments.map((comment) => (
             <li
               key={comment.public_id}
-              className="rounded-lg border-2 border-black bg-white p-3"
+              className="py-4"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 {comment.author?.avatar_url ? (
                   <Image
                     src={comment.author.avatar_url}
                     alt={comment.author.alias}
                     width={28}
                     height={28}
-                    className="h-7 w-7 rounded-full border-2 border-black object-cover"
+                    className="h-8 w-8 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-black bg-yellow-300 text-xs font-bold text-black">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--yn-surface-muted)] text-xs font-semibold text-[var(--yn-foreground)]">
                     {comment.author?.alias?.charAt(0)?.toUpperCase() ?? "A"}
                   </div>
                 )}
-                <p className="text-sm font-bold text-black">
-                  {comment.author?.alias ?? "Anonim"}
-                </p>
-                <p className="text-xs text-black/70">
-                  {formatStrToDateTime(comment.created_at, "dd MMM yyyy HH:mm")}
-                </p>
+                <div><p className="text-sm font-semibold text-[var(--yn-foreground)]">{comment.author?.alias ?? "Anonim"}</p><p className="text-xs text-[var(--yn-muted)]">{formatStrToDateTime(comment.created_at, "dd MMM yyyy · HH:mm")}</p></div>
               </div>
 
-              <p className="mt-2 whitespace-pre-wrap text-sm text-black">
+              <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-[var(--yn-foreground)]">
                 {comment.body}
               </p>
 
-              <div className="mt-2 flex gap-3">
+              <div className="mt-3 flex gap-3">
                 {comment.is_mine ? (
                   <button
                     type="button"
                     onClick={() => removeComment(comment)}
-                    className="text-xs font-bold text-danger underline"
+                    className="text-xs font-semibold text-red-700 underline underline-offset-4"
                   >
                     Hapus
                   </button>
@@ -198,7 +188,7 @@ const ThreadCommentList = ({ threadPublicId }: Props) => {
                   <button
                     type="button"
                     onClick={() => openReport(comment)}
-                    className="text-xs font-bold text-black underline"
+                    className="text-xs font-semibold text-[var(--yn-muted)] underline underline-offset-4 hover:text-[var(--yn-foreground)]"
                   >
                     Laporkan
                   </button>
@@ -213,7 +203,7 @@ const ThreadCommentList = ({ threadPublicId }: Props) => {
         <button
           type="button"
           onClick={loadMore}
-          className="mt-3 w-full rounded-lg border-2 border-black bg-white py-2 text-sm font-bold text-black"
+          className="mt-5 bg-[var(--yn-surface-muted)] px-4 py-3 text-sm font-semibold text-[var(--yn-foreground)]"
         >
           Muat komentar lain
         </button>
@@ -234,7 +224,7 @@ const ThreadCommentList = ({ threadPublicId }: Props) => {
           }}
         />
       </Dialog>
-    </div>
+    </section>
   );
 };
 

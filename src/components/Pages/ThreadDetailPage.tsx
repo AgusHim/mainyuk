@@ -1,32 +1,21 @@
 "use client";
+
 import Dialog from "@/components/common/Dialog/Dialog";
 import ReportDialog from "@/components/common/Dialog/ReportDialog";
-import { CommonHeader } from "@/components/Header/CommonHeader";
 import ThreadCommentList from "@/components/Thread/ThreadCommentList";
-import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { MainLayout } from "@/layout/MainLayout";
-import {
-  applyReaction,
-  applyUnreact,
-  createReport,
-  deleteThread,
-  getThreadDetail,
-  reactToThread,
-  removeThreadFromList,
-  unreactToThread,
-} from "@/redux/slices/threadSlice";
+import { applyReaction, applyUnreact, createReport, deleteThread, getThreadDetail, reactToThread, removeThreadFromList, unreactToThread } from "@/redux/slices/threadSlice";
 import { ReportReason, threadSourceLabel } from "@/types/thread";
 import { formatStrToDateTime } from "@/utils/convert";
+import { ArrowLeft, Heart, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
-type Props = {
-  publicId: string;
-};
+type Props = { publicId: string };
 
 const ThreadDetailPage = ({ publicId }: Props) => {
   const dispatch = useAppDispatch();
@@ -37,211 +26,80 @@ const ThreadDetailPage = ({ publicId }: Props) => {
   const error = useAppSelector((state) => state.thread.error);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  useEffect(() => {
-    dispatch(getThreadDetail(publicId));
-  }, [dispatch, publicId]);
+  useEffect(() => { dispatch(getThreadDetail(publicId)); }, [dispatch, publicId]);
 
   const toggleReaction = async () => {
-    if (!thread) {
-      return;
-    }
-    if (!user) {
-      toast.info("Masuk dulu untuk memberi reaksi");
-      return;
-    }
-    if (thread.reacted) {
-      dispatch(applyUnreact(thread.public_id));
-      try {
-        await dispatch(unreactToThread(thread.public_id)).unwrap();
-      } catch {
-        // Interceptor axios sudah menampilkan galatnya; muat ulang halaman
-        // mengembalikan angka sebenarnya.
-      }
-      return;
-    }
-    dispatch(applyReaction(thread.public_id));
-    try {
-      await dispatch(reactToThread(thread.public_id)).unwrap();
-    } catch {
-      // Sama seperti di atas.
-    }
+    if (!thread) return;
+    if (!user) { toast.info("Masuk dulu untuk memberi reaksi"); return; }
+    const action = thread.reacted ? unreactToThread : reactToThread;
+    dispatch(thread.reacted ? applyUnreact(thread.public_id) : applyReaction(thread.public_id));
+    try { await dispatch(action(thread.public_id)).unwrap(); } catch { /* Interceptor menampilkan galat. */ }
   };
 
   const submitReport = async (reason: ReportReason, note: string) => {
-    if (!thread) {
-      return;
-    }
-    if (!user) {
-      toast.info("Masuk dulu untuk melaporkan");
-      return;
-    }
+    if (!thread || !user) { toast.info("Masuk dulu untuk melaporkan"); return; }
     try {
-      await dispatch(
-        createReport({
-          target_type: "thread",
-          target_id: thread.public_id,
-          reason,
-          note: note.trim() === "" ? null : note,
-        })
-      ).unwrap();
+      await dispatch(createReport({ target_type: "thread", target_id: thread.public_id, reason, note: note.trim() || null })).unwrap();
       toast.success("Laporan diterima");
       dialogRef.current?.close();
-    } catch {
-      // Interceptor axios sudah menampilkan galatnya.
-    }
+    } catch { /* Interceptor menampilkan galat. */ }
   };
 
   const removeThread = async () => {
-    if (!thread) {
-      return;
-    }
+    if (!thread) return;
     try {
       await dispatch(deleteThread(thread.public_id)).unwrap();
       dispatch(removeThreadFromList(thread.public_id));
-      toast.success("Thread dihapus");
+      toast.success("Kiriman dihapus");
       router.push("/community");
-    } catch {
-      // Interceptor axios sudah menampilkan galatnya.
-    }
+    } catch { /* Interceptor menampilkan galat. */ }
   };
 
   const sourceLabel = threadSourceLabel(thread?.source_type);
 
   return (
     <MainLayout>
-      <CommonHeader
-        title="Thread"
-        isShowBack={true}
-        isShowTrailing={false}
-      />
-      <div className="yn-container bg-yellow-400 p-4">
-        {error != null && thread == null ? (
-          <div
-            role="alert"
-            className="rounded-lg border-2 border-black bg-danger/10 px-4 py-3 text-danger"
-          >
-            {error}
-          </div>
-        ) : null}
+      <main className="mx-auto min-h-screen max-w-2xl border-x border-[var(--yn-border)] bg-[var(--yn-surface)] pb-10">
+        <header className="sticky top-0 z-10 flex h-16 items-center gap-3 bg-[var(--yn-background)]/95 px-5 backdrop-blur-sm">
+          <Link href="/community" aria-label="Kembali ke komunitas" className="flex size-9 items-center justify-center text-[var(--yn-foreground)] hover:bg-[var(--yn-surface-muted)]"><ArrowLeft className="size-5" /></Link>
+          <h1 className="text-lg font-semibold tracking-[-0.025em]">Percakapan</h1>
+        </header>
 
-        {thread == null ? (
-          isLoading ? (
-            <p className="text-black">Memuat thread…</p>
-          ) : error == null ? (
-            <div className="rounded-xl border-2 border-black bg-yellow-300 p-6 shadow-custom">
-              <p className="text-sm text-black">
-                Thread tidak ditemukan atau sudah dihapus.
-              </p>
-            </div>
-          ) : null
+        {error && thread === null ? <p role="alert" className="mx-5 mt-5 bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p> : null}
+        {thread === null ? (
+          <div className="px-5 py-12 text-sm text-[var(--yn-muted)]">
+            {isLoading ? "Memuat percakapan…" : error == null ? "Percakapan tidak ditemukan atau sudah dihapus." : null}
+          </div>
         ) : (
           <>
-            <article className="rounded-xl border-2 border-black bg-yellow-300 p-4 shadow-custom">
-              <div className="flex items-center gap-2">
-                {thread.author?.avatar_url ? (
-                  <Image
-                    src={thread.author.avatar_url}
-                    alt={thread.author.alias}
-                    width={40}
-                    height={40}
-                    className="h-10 w-10 rounded-full border-2 border-black object-cover"
-                  />
-                ) : (
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-white text-sm font-bold text-black">
-                    {thread.author?.alias?.charAt(0)?.toUpperCase() ?? "A"}
-                  </div>
-                )}
-                <div>
-                  <p className="text-sm font-bold text-black">
-                    {thread.author?.alias ?? "Anonim"}
-                  </p>
-                  <p className="text-xs text-black/70">
-                    {formatStrToDateTime(thread.created_at, "dd MMM yyyy HH:mm")}
-                  </p>
+            <article className="px-5 py-7 sm:px-8">
+              <div className="flex items-center gap-3">
+                {thread.author?.avatar_url ? <Image src={thread.author.avatar_url} alt={thread.author.alias} width={44} height={44} className="size-11 rounded-full object-cover" /> : <div className="flex size-11 items-center justify-center rounded-full bg-[var(--yn-surface-muted)] text-sm font-semibold text-[var(--yn-foreground)]">{thread.author?.alias?.charAt(0)?.toUpperCase() ?? "A"}</div>}
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-[var(--yn-foreground)]">{thread.author?.alias ?? "Anonim"}</p>
+                  <p className="mt-0.5 text-xs text-[var(--yn-muted)]">{formatStrToDateTime(thread.created_at, "dd MMM yyyy · HH:mm")}</p>
                 </div>
-                {sourceLabel ? (
-                  <span className="ml-auto rounded-full border-2 border-black bg-white px-2 py-0.5 text-xs font-bold text-black">
-                    {sourceLabel}
-                  </span>
-                ) : null}
+                {sourceLabel ? <span className="text-xs font-medium text-[var(--yn-accent-dark)]">{sourceLabel}</span> : null}
               </div>
 
-              {thread.source_type ? (
-                <h1 className="mt-3 text-xl font-semibold text-black">
-                  {thread.title}
-                </h1>
-              ) : null}
-              <p className="mt-2 whitespace-pre-wrap text-sm text-black">
-                {thread.body}
-              </p>
+              {thread.source_type ? <h2 className="mt-6 text-2xl font-semibold tracking-[-0.035em] text-[var(--yn-foreground)]">{thread.title}</h2> : null}
+              <p className="mt-5 whitespace-pre-wrap text-[17px] leading-8 text-[var(--yn-foreground)]">{thread.body}</p>
 
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <Button
-                  type="button"
-                  onClick={toggleReaction}
-                  className={`h-10 rounded-md border-2 border-black px-4 ${
-                    thread.reacted ? "bg-primary text-white" : "bg-white text-black"
-                  }`}
-                  style={{ boxShadow: "5px 5px 0px 0px #000000" }}
-                >
-                  {thread.reacted ? "Batal suka" : "Suka"} ·{" "}
-                  {thread.reaction_count}
-                </Button>
-
-                {thread.is_mine ? (
-                  <button
-                    type="button"
-                    onClick={removeThread}
-                    className="text-sm font-bold text-danger underline"
-                  >
-                    Hapus thread
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!user) {
-                        toast.info("Masuk dulu untuk melaporkan");
-                        return;
-                      }
-                      dialogRef.current?.showModal();
-                    }}
-                    className="text-sm font-bold text-black underline"
-                  >
-                    Laporkan
-                  </button>
-                )}
-
-                <Link
-                  href="/community"
-                  className="ml-auto text-sm font-bold text-black underline"
-                >
-                  Kembali ke feed
-                </Link>
+              <div className="mt-7 flex items-center gap-4 text-sm">
+                <button type="button" onClick={toggleReaction} className={`flex items-center gap-2 font-medium transition-colors ${thread.reacted ? "text-[var(--yn-accent-dark)]" : "text-[var(--yn-muted)] hover:text-[var(--yn-foreground)]"}`}><Heart className={`size-5 ${thread.reacted ? "fill-current" : ""}`} /> {thread.reaction_count}</button>
+                <span className="text-[var(--yn-muted)]">{thread.comment_count} komentar</span>
+                <div className="ml-auto">
+                  {thread.is_mine ? <button type="button" onClick={removeThread} className="text-sm font-semibold text-red-700 underline underline-offset-4">Hapus</button> : <button type="button" onClick={() => user ? dialogRef.current?.showModal() : toast.info("Masuk dulu untuk melaporkan")} className="flex size-9 items-center justify-center text-[var(--yn-muted)] hover:bg-[var(--yn-surface-muted)]" aria-label="Laporkan kiriman"><MoreHorizontal className="size-5" /></button>}
+                </div>
               </div>
             </article>
 
-            <div className="mt-4">
-              <ThreadCommentList threadPublicId={thread.public_id} />
-            </div>
+            <ThreadCommentList threadPublicId={thread.public_id} />
           </>
         )}
 
-        <Dialog
-          toggleDialog={() => {}}
-          ref={dialogRef}
-          title="Laporkan thread"
-        >
-          <ReportDialog
-            targetLabel="thread ini"
-            isLoading={isLoading}
-            onConfirm={submitReport}
-            onCancel={() => {
-              dialogRef.current?.close();
-            }}
-          />
-        </Dialog>
-      </div>
+        <Dialog toggleDialog={() => {}} ref={dialogRef} title="Laporkan kiriman"><ReportDialog targetLabel="kiriman ini" isLoading={isLoading} onConfirm={submitReport} onCancel={() => dialogRef.current?.close()} /></Dialog>
+      </main>
     </MainLayout>
   );
 };
