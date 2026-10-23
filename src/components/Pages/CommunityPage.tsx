@@ -10,6 +10,7 @@ import { getThreads } from "@/redux/slices/threadSlice";
 import { LeaderboardPeriod } from "@/types/gamification";
 import { ThreadSort } from "@/types/thread";
 import { Heart, Home, MessageCircle, PenLine, Search, ShoppingBag, Sparkles, Trophy } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -51,12 +52,27 @@ const CommunityPage = () => {
   };
 
   return (
-    <MainLayout nav={false}>
+    <MainLayout>
       <main className="mx-auto grid min-h-screen max-w-[1440px] grid-cols-1 lg:grid-cols-[220px_minmax(0,640px)_300px] lg:justify-center lg:gap-10 lg:px-8">
         <aside className="border-b border-[var(--yn-border)] px-5 py-5 lg:sticky lg:top-0 lg:h-screen lg:border-b-0 lg:px-0 lg:py-8" aria-label="Menu komunitas">
-          <Link href="/" className="text-2xl font-semibold tracking-[-0.05em] text-[var(--yn-foreground)]">YukNgaji</Link>
+          <Link className="mb-5.5 inline-block" href="/">
+            <Image
+              className="hidden dark:block"
+              src={"/images/logo/yn_logo.png"}
+              alt="Logo"
+              width={176}
+              height={32}
+            />
+            <Image
+              className="dark:hidden"
+              src={"/images/logo/yn_logo.png"}
+              alt="Logo"
+              width={176}
+              height={32}
+            />
+          </Link>
           <nav className="mt-6 flex flex-wrap gap-2 lg:flex-col" aria-label="Navigasi komunitas">
-            <Link href="/community" className="flex shrink-0 items-center gap-3 bg-[var(--yn-foreground)] px-4 py-3 text-sm font-semibold text-white"><Home className="size-4" /> Untukmu</Link>
+            <Link href="/community" className="flex shrink-0 items-center gap-3 bg-[var(--yn-foreground)] px-4 py-3 text-sm font-semibold text-white"><Home className="size-4" /> Don't Hurt Anyone</Link>
             {user ? <button type="button" onClick={() => setIsComposing(true)} className="flex shrink-0 items-center gap-3 px-4 py-3 text-sm font-medium text-[var(--yn-foreground)] hover:bg-[var(--yn-surface-muted)]"><PenLine className="size-4" /> Tulis kiriman</button> : <Link href="/signin?redirectTo=/community" className="flex shrink-0 items-center gap-3 px-4 py-3 text-sm font-medium text-[var(--yn-foreground)] hover:bg-[var(--yn-surface-muted)]"><PenLine className="size-4" /> Tulis kiriman</Link>}
             <Link href="/donations" className="flex shrink-0 items-center gap-3 px-4 py-3 text-sm font-medium text-[var(--yn-foreground)] hover:bg-[var(--yn-surface-muted)]"><Heart className="size-4" /> Campaign donasi</Link>
             <Link href="/shop" className="flex shrink-0 items-center gap-3 px-4 py-3 text-sm font-medium text-[var(--yn-foreground)] hover:bg-[var(--yn-surface-muted)]"><ShoppingBag className="size-4" /> Shop</Link>
