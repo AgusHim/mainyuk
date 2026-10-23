@@ -4,6 +4,7 @@ import CheckoutPaymentMethodCard from "@/components/Card/CheckoutPaymentMethodCa
 import CheckoutTicketsCard from "@/components/Card/CheckoutTicketsCard";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { postOrder, setAuthToUserTicket, setUserTicket } from "@/redux/slices/orderSlice";
+import { user_api } from "@/redux/api";
 import { CreateOrder, Order } from "@/types/order";
 import { ValidateField } from "@/utils/Validation/Validation";
 import { ArrowRight, Check, LoaderCircle, ShieldCheck, UserRound } from "lucide-react";
@@ -41,10 +42,28 @@ export const FormCheckoutTickets: React.FC = () => {
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [voucherCode, setVoucherCode] = useState("");
+  const [voucherDiscount, setVoucherDiscount] = useState(0);
+  const [checkedVoucherCode, setCheckedVoucherCode] = useState("");
 
   const ticketSubtotal = checkout.reduce((total, entry) => total + (entry.ticket?.price ?? 0), 0);
   const totalPayment = ticketSubtotal + adminFee;
-  const needsPayment = ticketSubtotal > 0;
+  const needsPayment = ticketSubtotal + adminFee - voucherDiscount > 0;
+
+  async function checkVoucher(): Promise<number | null> {
+    const code = voucherCode.trim();
+    if (!code) { setVoucherDiscount(0); setCheckedVoucherCode(""); return 0; }
+    try {
+      const response = await user_api.post("/orders/voucher-preview", { event_id: event?.slug, ticket_ids: checkout.map((item) => item.ticket_id), voucher_code: code });
+      const discount = response.data.discount_amount ?? 0;
+      setVoucherDiscount(discount); setCheckedVoucherCode(code.toUpperCase());
+      toast.success(discount > 0 ? `Voucher berlaku: hemat ${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(discount)}` : "Voucher tidak memberikan potongan.");
+      return discount;
+    } catch (error: any) {
+      setVoucherDiscount(0); setCheckedVoucherCode("");
+      setSubmitError(error.response?.data?.error || "Voucher tidak dapat digunakan.");
+      return null;
+    }
+  }
 
   function ticketGender(index: number) {
     return checkout[index]?.ticket?.gender_allowed?.toLowerCase() ?? "both";
@@ -112,7 +131,13 @@ export const FormCheckoutTickets: React.FC = () => {
     eventSubmit.preventDefault();
     setSubmitError(null);
     if (!validateForm()) return;
-    if (needsPayment && !paymentMethod) {
+    let discount = voucherDiscount;
+    if (voucherCode.trim() && checkedVoucherCode !== voucherCode.trim().toUpperCase()) {
+      const checked = await checkVoucher();
+      if (checked === null) return;
+      discount = checked;
+    }
+    if (ticketSubtotal + adminFee - discount > 0 && !paymentMethod) {
       document.getElementById("payment-methods")?.scrollIntoView({ behavior: "smooth", block: "center" });
       toast.info("Pilih metode pembayaran untuk melanjutkan.");
       return;
@@ -210,10 +235,10 @@ export const FormCheckoutTickets: React.FC = () => {
       </div>
 
       <aside className="space-y-4 lg:sticky lg:top-28">
-        <CheckoutTicketsCard />
+        <CheckoutTicketsCard discountAmount={voucherDiscount} voucherCode={checkedVoucherCode} />
         <label className="block rounded-2xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-4 text-sm font-semibold text-[var(--yn-foreground)]">Kode voucher
-          <input value={voucherCode} onChange={(event) => setVoucherCode(event.target.value.toUpperCase())} maxLength={64} placeholder="Masukkan kode voucher" className="mt-2 h-11 w-full rounded-xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-3 text-sm font-normal uppercase outline-none focus:border-[var(--yn-accent)]" />
-          <span className="mt-2 block text-xs font-normal leading-5 text-[var(--yn-muted)]">Diskon dan syarat voucher diperiksa kembali saat pesanan dibuat.</span>
+          <div className="mt-2 flex gap-2"><input value={voucherCode} onChange={(event) => { setVoucherCode(event.target.value.toUpperCase()); setVoucherDiscount(0); setCheckedVoucherCode(""); }} maxLength={64} placeholder="Masukkan kode voucher" className="h-11 min-w-0 flex-1 rounded-xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-3 text-sm font-normal uppercase outline-none focus:border-[var(--yn-accent)]" /><button type="button" onClick={() => void checkVoucher()} className="rounded-xl border border-[var(--yn-border)] px-3 text-xs font-semibold text-[var(--yn-accent)] hover:bg-[var(--yn-accent-soft)]">Cek</button></div>
+          <span className="mt-2 block text-xs font-normal leading-5 text-[var(--yn-muted)]">Potongan akan dicek kembali saat pesanan dibuat.</span>
         </label>
         {submitError && <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{submitError}</div>}
         <button type="submit" disabled={isLoadingOrder} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-[var(--yn-accent-dark)] disabled:cursor-not-allowed disabled:opacity-60">
