@@ -10,6 +10,8 @@ export type Order ={
   amount?: number;
   donation?: number;
   admin_fee?: number;
+  discount_amount?: number;
+  voucher_code?: string | null;
   status?: string;
   invoice_url?: string | null;
   invoice_image_url?: string | null;
@@ -30,6 +32,7 @@ export type CreateOrder = {
   donation: number;
   admin_fee: number;
   payment_method_id?: string;
+  voucher_code?: string;
 };
 
 export type VerifyOrder = {

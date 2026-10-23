@@ -7,7 +7,7 @@ import { useAppSelector } from "@/hooks/hooks";
 import { isMemberRole } from "@/utils/role";
 import { canAccessDashboard } from "@/utils/dashboardAccess";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBullseye, faCartShopping, faChartSimple, faShieldHalved, faStore, faTicket, faTrophy, faUsers, faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faBullseye, faCartShopping, faChartSimple, faShieldHalved, faStore, faTag, faTicket, faTrophy, faUsers, faWallet } from "@fortawesome/free-solid-svg-icons";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -296,6 +296,21 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <></>
               )}
               {/* <!-- Menu Item Orders --> */}
+
+              {boleh("/dashboard/vouchers") ? (
+                <li>
+                  <Link
+                    href="/dashboard/vouchers"
+                    className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${
+                      pathname.includes("/dashboard/vouchers") &&
+                      "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={faTag} fill="black" width={25} height={25}/>
+                    Voucher
+                  </Link>
+                </li>
+              ) : null}
 
               {/* <!-- Menu Item Agenda --> */}
               {boleh("/dashboard/agenda") ? (

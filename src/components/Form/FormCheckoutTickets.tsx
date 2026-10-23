@@ -40,6 +40,7 @@ export const FormCheckoutTickets: React.FC = () => {
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [voucherCode, setVoucherCode] = useState("");
 
   const ticketSubtotal = checkout.reduce((total, entry) => total + (entry.ticket?.price ?? 0), 0);
   const totalPayment = ticketSubtotal + adminFee;
@@ -127,6 +128,7 @@ export const FormCheckoutTickets: React.FC = () => {
       admin_fee: adminFee,
       user_tickets: checkout,
       payment_method_id: paymentMethod?.id ?? "",
+      voucher_code: voucherCode,
     };
 
     try {
@@ -209,6 +211,10 @@ export const FormCheckoutTickets: React.FC = () => {
 
       <aside className="space-y-4 lg:sticky lg:top-28">
         <CheckoutTicketsCard />
+        <label className="block rounded-2xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-4 text-sm font-semibold text-[var(--yn-foreground)]">Kode voucher
+          <input value={voucherCode} onChange={(event) => setVoucherCode(event.target.value.toUpperCase())} maxLength={64} placeholder="Masukkan kode voucher" className="mt-2 h-11 w-full rounded-xl border border-[var(--yn-border)] bg-[var(--yn-surface)] px-3 text-sm font-normal uppercase outline-none focus:border-[var(--yn-accent)]" />
+          <span className="mt-2 block text-xs font-normal leading-5 text-[var(--yn-muted)]">Diskon dan syarat voucher diperiksa kembali saat pesanan dibuat.</span>
+        </label>
         {submitError && <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{submitError}</div>}
         <button type="submit" disabled={isLoadingOrder} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-[var(--yn-accent-dark)] disabled:cursor-not-allowed disabled:opacity-60">
           {isLoadingOrder ? <><LoaderCircle aria-hidden="true" className="h-4 w-4 animate-spin" /> Membuat pesanan…</> : <>Konfirmasi pembelian <ArrowRight aria-hidden="true" className="h-4 w-4" /></>}
