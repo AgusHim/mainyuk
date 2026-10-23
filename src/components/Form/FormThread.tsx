@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { createThread } from "@/redux/slices/threadSlice";
@@ -10,7 +9,6 @@ import { toast } from "sonner";
 
 // Batas yang sama dengan yang ditegakkan server; di sini hanya supaya anggota
 // tahu batasnya sebelum menekan kirim, bukan sebagai pengganti validasi server.
-const TITLE_MAX = 140;
 const BODY_MAX = 5000;
 
 /**
@@ -28,7 +26,6 @@ const FormThread = ({ onCancel }: Props) => {
   const router = useRouter();
   const user = useAppSelector((state) => state.auth.user);
   const isLoading = useAppSelector((state) => state.thread.loading);
-  const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,18 +34,13 @@ const FormThread = ({ onCancel }: Props) => {
       toast.info("Masuk dulu untuk menulis thread");
       return;
     }
-    if (title.trim().length < 3) {
-      toast.info("Judul minimal 3 karakter");
-      return;
-    }
     if (body.trim().length === 0) {
-      toast.info("Isi thread belum diisi");
+      toast.info("Kiriman belum diisi");
       return;
     }
 
     try {
-      const created = await dispatch(createThread({ title, body })).unwrap();
-      setTitle("");
+      const created = await dispatch(createThread({ title: "", body })).unwrap();
       setBody("");
       toast.success("Thread terbit");
       router.push(`/community/${created.public_id}`);
@@ -74,23 +66,8 @@ const FormThread = ({ onCancel }: Props) => {
         {onCancel ? <button type="button" onClick={onCancel} className="text-sm font-semibold text-[var(--yn-muted)] underline underline-offset-4 hover:text-[var(--yn-foreground)]">Batal</button> : null}
       </div>
 
-      <Label htmlFor="thread-title" className="mt-5 block text-[var(--yn-foreground)]">
-        Judul
-      </Label>
-      <Input
-        id="thread-title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        maxLength={TITLE_MAX}
-        placeholder="Judul thread"
-        className="mt-1 h-11 rounded-none border border-[var(--yn-border)] bg-[var(--yn-surface)] px-4 font-medium text-[var(--yn-foreground)]"
-      />
-      <p className="mt-1 text-right text-xs text-[var(--yn-muted)]">
-        {title.length}/{TITLE_MAX}
-      </p>
-
-      <Label htmlFor="thread-body" className="mt-4 block text-[var(--yn-foreground)]">
-        Isi thread
+      <Label htmlFor="thread-body" className="mt-5 block text-[var(--yn-foreground)]">
+        Kiriman
       </Label>
       <textarea
         id="thread-body"

@@ -1,9 +1,8 @@
 import {
   CalendarDays,
   CircleUserRound,
-  HandHeart,
   Home,
-  Shirt,
+  MessageCircle,
   RotateCcwClock,
   type LucideIcon,
 } from "lucide-react";
@@ -17,8 +16,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { name: "Home", path: "/", icon: Home },
   { name: "Events", path: "/events", icon: CalendarDays },
+  { name: "Community", path: "/community", icon: MessageCircle },
   { name: "Orders", path: "/orders", icon: RotateCcwClock },
-  { name: "Donasi", path: "/donations", icon: HandHeart },
-  { name: "Shop", path: "/shop", icon: Shirt },
   { name: "Profile", path: "/profile", icon: CircleUserRound },
 ];

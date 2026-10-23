@@ -53,7 +53,7 @@ const ThreadCard = ({ thread }: Props) => {
         ) : null}
       </div>
 
-      <h2 className="mt-4 text-xl font-semibold tracking-[-0.025em] text-[var(--yn-foreground)]">{thread.title}</h2>
+      {thread.source_type ? <h2 className="mt-4 text-xl font-semibold tracking-[-0.025em] text-[var(--yn-foreground)]">{thread.title}</h2> : null}
       {thread.excerpt ? (
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--yn-muted)]">{thread.excerpt}</p>
       ) : null}

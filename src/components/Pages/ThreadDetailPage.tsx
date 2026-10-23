@@ -166,9 +166,11 @@ const ThreadDetailPage = ({ publicId }: Props) => {
                 ) : null}
               </div>
 
-              <h1 className="mt-3 text-xl font-semibold text-black">
-                {thread.title}
-              </h1>
+              {thread.source_type ? (
+                <h1 className="mt-3 text-xl font-semibold text-black">
+                  {thread.title}
+                </h1>
+              ) : null}
               <p className="mt-2 whitespace-pre-wrap text-sm text-black">
                 {thread.body}
               </p>
