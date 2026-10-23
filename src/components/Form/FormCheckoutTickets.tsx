@@ -9,7 +9,7 @@ import { CreateOrder, Order } from "@/types/order";
 import { ValidateField } from "@/utils/Validation/Validation";
 import { ArrowRight, Check, LoaderCircle, ShieldCheck, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 type FieldValue = string | boolean;
@@ -32,10 +32,12 @@ export const FormCheckoutTickets: React.FC = () => {
   const [formData, setFormData] = useState<FormValues>(() => {
     const initial: FormValues = {};
     checkout.forEach((entry, index) => {
-      initial[`${index}_name`] = entry.user_name ?? "";
-      initial[`${index}_email`] = entry.user_email ?? "";
-      initial[`${index}_gender`] = entry.user_gender ?? "male";
-      initial[`${index}_isUseAuth`] = false;
+      const allowedGender = entry.ticket?.gender_allowed?.toLowerCase() ?? "both";
+      const useAccountByDefault = checkout.length === 1 && index === 0 && Boolean(user) && (allowedGender === "both" || user?.gender?.toLowerCase() === allowedGender);
+      initial[`${index}_name`] = useAccountByDefault ? user?.name ?? "" : entry.user_name ?? "";
+      initial[`${index}_email`] = useAccountByDefault ? user?.email ?? "" : entry.user_email ?? "";
+      initial[`${index}_gender`] = useAccountByDefault ? user?.gender?.toLowerCase() ?? "male" : entry.user_gender ?? "male";
+      initial[`${index}_isUseAuth`] = useAccountByDefault;
     });
     return initial;
   });
@@ -44,6 +46,7 @@ export const FormCheckoutTickets: React.FC = () => {
   const [voucherCode, setVoucherCode] = useState("");
   const [voucherDiscount, setVoucherDiscount] = useState(0);
   const [checkedVoucherCode, setCheckedVoucherCode] = useState("");
+  const autoFilledTicket = useRef<string | null>(null);
 
   const ticketSubtotal = checkout.reduce((total, entry) => total + (entry.ticket?.price ?? 0), 0);
   const totalPayment = ticketSubtotal + adminFee;
@@ -100,6 +103,15 @@ export const FormCheckoutTickets: React.FC = () => {
       dispatch(setUserTicket({ index, type: "gender", value: "male" }));
     }
   }
+
+  useEffect(() => {
+    const entry = checkout[0];
+    if (checkout.length !== 1 || !entry || !user) return;
+    const key = `${entry.ticket_id}-${entry.event_id}`;
+    if (autoFilledTicket.current === key) return;
+    autoFilledTicket.current = key;
+    useAccountData(0, true);
+  }, [checkout.length, checkout[0]?.ticket_id, checkout[0]?.event_id, user?.email, user?.gender, user?.name]);
 
   function updateField(index: number, field: "name" | "email" | "gender", value: string) {
     const key = `${index}_${field}`;

@@ -6,10 +6,12 @@ import { CommonHeader } from "@/components/Header/CommonHeader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { MainLayout } from "@/layout/MainLayout";
 import { getOrderByPublicID } from "@/redux/slices/orderSlice";
+import { user_api } from "@/redux/api";
 import { Order } from "@/types/order";
 import { formatRupiah } from "@/utils/currency";
 import {
   ArrowRight,
+  BookOpen,
   CalendarDays,
   CircleAlert,
   Clock3,
@@ -20,7 +22,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type OrderLayoutProps = {
   params: { public_id: string };
@@ -81,6 +83,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
   const order = useAppSelector((state) => state.order.order);
   const isLoading = useAppSelector((state) => state.order.loading);
   const error = useAppSelector((state) => state.order.error);
+  const [hasLearningMaterial, setHasLearningMaterial] = useState(false);
   const isCurrentOrder = order?.public_id === params.public_id;
 
   useEffect(() => {
@@ -94,6 +97,21 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
     }, 10_000);
     return () => window.clearInterval(timer);
   }, [dispatch, isCurrentOrder, order?.charge?.provider, order?.status, params.public_id]);
+
+  useEffect(() => {
+    if (!isCurrentOrder || order?.status !== "paid" || !order.event?.slug) {
+      setHasLearningMaterial(false);
+      return;
+    }
+    let active = true;
+    user_api.get(`/events/${order.event.slug}/learning`)
+      .then((response) => {
+        const hasContent = Array.isArray(response.data) && response.data.some((episode) => Array.isArray(episode.contents) && episode.contents.length > 0);
+        if (active) setHasLearningMaterial(hasContent);
+      })
+      .catch(() => { if (active) setHasLearningMaterial(false); });
+    return () => { active = false; };
+  }, [isCurrentOrder, order?.event?.slug, order?.status]);
 
   if (error && !isCurrentOrder) {
     return (
@@ -132,7 +150,8 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
   const ticketAmount = order.amount ?? 0;
   const donation = order.donation ?? 0;
   const adminFee = order.admin_fee ?? 0;
-  const baseTotal = ticketAmount + donation + adminFee;
+  const discountAmount = order.discount_amount ?? 0;
+  const baseTotal = Math.max(0, ticketAmount + donation + adminFee - discountAmount);
   const total = order.charge?.amount ?? baseTotal;
   const ticketCount = order.user_tickets?.length ?? 0;
   const isShopeeQRIS = order.charge?.provider === "shopee_qris";
@@ -211,6 +230,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
                   <DetailRow label="Tiket" value={amountLabel(ticketAmount)} />
                   {donation > 0 && <DetailRow label="Donasi" value={formatRupiah(donation)} />}
                   {adminFee > 0 && <DetailRow label="Biaya pembayaran" value={formatRupiah(adminFee)} />}
+                  {discountAmount > 0 && <DetailRow label={order.voucher_code ? `Voucher (${order.voucher_code})` : "Voucher"} value={`−${formatRupiah(discountAmount)}`} />}
                   {order.charge?.unique_code ? <DetailRow label="Kode unik QRIS" value={`+${formatRupiah(order.charge.unique_code)}`} /> : null}
                   <DetailRow label="Total transaksi" value={amountLabel(total)} accent />
                 </dl>
@@ -220,6 +240,11 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
                 {order.status === "paid" && (
                   <Link href={`/orders/${params.public_id}/tickets`} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-[var(--yn-accent-dark)]">
                     <Ticket aria-hidden="true" className="h-4 w-4" /> Lihat tiket <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                  </Link>
+                )}
+                {order.status === "paid" && hasLearningMaterial && event?.slug && (
+                  <Link href={`/events/${event.slug}/learning`} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)] px-6 py-3 text-sm font-semibold text-[var(--yn-foreground)] transition hover:bg-[var(--yn-accent-soft)]">
+                    <BookOpen aria-hidden="true" className="h-4 w-4 text-[var(--yn-accent)]" /> Lihat materi event
                   </Link>
                 )}
                 {canConfirm && (
