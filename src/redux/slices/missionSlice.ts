@@ -62,8 +62,10 @@ export const claimMission = createAsyncThunk(
 
 export const getMyClaims = createAsyncThunk(
   "mission.myClaims",
-  async (page: number = 1) => {
-    const res = await user_api.get("/missions/claims", { params: { page } });
+  async (input: number | { page?: number; perPage?: number } = 1) => {
+    const page = typeof input === "number" ? input : input.page ?? 1;
+    const perPage = typeof input === "number" ? undefined : input.perPage;
+    const res = await user_api.get("/missions/claims", { params: { page, per_page: perPage } });
     return res.data as {
       claims: ClaimView[];
       page: number;
