@@ -38,6 +38,9 @@ const CommunityPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [claimingMission, setClaimingMission] = useState<string | null>(null);
   const [missionNotice, setMissionNotice] = useState<string | null>(null);
+  const visibleMissions = [...(missions ?? [])]
+    .sort((a, b) => Number(b.type === "daily") - Number(a.type === "daily"))
+    .slice(0, 3);
 
   useEffect(() => {
     if (user) {
@@ -142,7 +145,7 @@ const CommunityPage = () => {
             <div className="flex items-center justify-between"><h2 id="mission-title" className="text-lg font-semibold tracking-[-0.025em]">Misi untukmu</h2><Sparkles className="size-5 text-[var(--yn-accent)]" /></div>
             <p className="mt-2 text-xs leading-5 text-[var(--yn-muted)]">Amalan Subuh dapat diklaim pukul 04.00–06.00 WIB dan diulang setiap hari.</p>
             {missionNotice ? <p className="mt-3 text-xs font-medium text-[var(--yn-accent-dark)]">{missionNotice}</p> : null}
-            <div className="mt-4 space-y-3">{missions?.slice(0, 3).map((mission) => <div key={mission.id} className="border-b border-[var(--yn-border)] pb-3 last:border-0 last:pb-0"><Link href={`/missions/${mission.id}`} className="block text-sm hover:text-[var(--yn-accent-dark)]"><span className="block font-semibold">{mission.title}</span><span className="mt-1 block text-[var(--yn-muted)]">+{mission.reward_xp} XP</span></Link>{mission.type === "daily" && user ? <button type="button" disabled={!mission.can_claim_now || claimingMission === mission.id} onClick={() => void claimDailyMission(mission.id)} className="mt-2 text-xs font-semibold text-[var(--yn-accent-dark)] underline underline-offset-4 disabled:cursor-not-allowed disabled:text-[var(--yn-muted)]">{claimingMission === mission.id ? "Mengklaim…" : mission.can_claim_now ? "Klaim XP" : "Klaim tersedia saat Subuh"}</button> : null}</div>)}</div>
+            <div className="mt-4 space-y-3">{visibleMissions.map((mission) => <div key={mission.id} className={`border-b border-[var(--yn-border)] pb-3 last:border-0 last:pb-0 ${mission.type === "daily" && !mission.can_claim_now ? "opacity-70" : ""}`}><Link href={`/missions/${mission.id}`} className="block text-sm hover:text-[var(--yn-accent-dark)]"><span className="block font-semibold">{mission.title}</span><span className="mt-1 block text-[var(--yn-muted)]">+{mission.reward_xp} XP</span></Link>{mission.type === "daily" && user ? <button type="button" disabled={!mission.can_claim_now || claimingMission === mission.id} onClick={() => void claimDailyMission(mission.id)} className="mt-2 text-xs font-semibold text-[var(--yn-accent-dark)] underline underline-offset-4 disabled:cursor-not-allowed disabled:text-[var(--yn-muted)]">{claimingMission === mission.id ? "Mengklaim…" : mission.can_claim_now ? "Klaim XP" : "Pengingat: klaim saat Subuh"}</button> : null}</div>)}</div>
             <Link href="/missions" className="mt-5 inline-block text-sm font-semibold text-[var(--yn-accent-dark)] underline underline-offset-4">Lihat semua misi</Link>
           </section>
         </aside>
