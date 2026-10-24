@@ -276,6 +276,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               ) : (
                 <></>
               )}
+              {boleh("/dashboard/shopee") ? (
+                <li><Link href="/dashboard/shopee" className={`group relative flex items-center gap-2.5 rounded-sm my-2 py-2 px-4 font-medium duration-300 ease-in-out hover:rounded-lg hover:bg-white dark:hover:bg-meta-4 ${pathname.includes("/dashboard/shopee") && "border-2 border-black shadow-bottom rounded-xl bg-white dark:bg-meta-4"}`}><FontAwesomeIcon icon={faWallet} fill="black" width={25} height={25}/> Shopee QRIS</Link></li>
+              ) : null}
               {/* <!-- Menu Item Orders --> */}
 
               {/* <!-- Menu Item Orders --> */}

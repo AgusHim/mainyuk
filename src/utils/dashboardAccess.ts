@@ -65,6 +65,7 @@ const ROUTES: Route[] = [
   { prefix: "/dashboard/moderation", roles: ADMIN_PJ_RANGER },
   { prefix: "/dashboard/orders", roles: ADMIN },
   { prefix: "/dashboard/payment_methods", roles: ADMIN },
+  { prefix: "/dashboard/shopee", roles: ADMIN },
   { prefix: "/dashboard/vouchers", roles: ADMIN },
   // Riwayat kehadiran pribadi. Hanya anggota; pengurus memakai halaman lain.
   // Perilaku ini dipertahankan apa adanya dari menu lama — kalau ternyata
