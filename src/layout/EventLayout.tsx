@@ -90,7 +90,7 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
                   ></path>
                 </svg>
                 <span className="text-sm text-[var(--yn-muted)]">
-                  {formatStrToDateTime(
+                  {eventData?.title?.includes("Speaking")?"Ahad 1, 8, 15 dan 22 November 2026":formatStrToDateTime(
                     eventData!.start_at!,
                     "EEEE, dd MMMM yyyy"
                   )}
