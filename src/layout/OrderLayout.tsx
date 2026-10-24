@@ -274,7 +274,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
                 )}
                 {order.status === "paid" && groupUrl && (
                   <button type="button" onClick={() => setIsGroupDialogOpen(true)} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)] px-6 py-3 text-sm font-semibold text-[var(--yn-foreground)] transition hover:bg-[var(--yn-surface-muted)]">
-                    <Users aria-hidden="true" className="h-4 w-4" /> Gabung grup WhatsApp
+                    <Users aria-hidden="true" className="h-4 w-4" /> Gabung Peserta
                   </button>
                 )}
                 <Link href="/orders" className="inline-flex min-h-11 items-center justify-center gap-2 px-5 py-2 text-sm font-semibold text-[var(--yn-muted)] hover:text-[var(--yn-foreground)]">
@@ -299,7 +299,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
               <Users aria-hidden="true" className="size-5" />
             </span>
             <DialogTitle className="text-xl font-semibold tracking-tight text-[var(--yn-foreground)]">
-              Grup WhatsApp event tersedia
+              Masuk ke Grup Peserta
             </DialogTitle>
             <DialogDescription className="text-sm leading-relaxed text-[var(--yn-muted)]">
               Kamu sudah bisa bergabung ke grup {event?.title ? `“${event.title}”` : "event"}. Grup ini digunakan untuk informasi teknis, pengumuman, dan koordinasi peserta.
