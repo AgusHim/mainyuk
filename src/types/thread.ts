@@ -28,6 +28,8 @@ export type ThreadAuthor = {
   alias: string;
   avatar_url?: string | null;
   show_badges: boolean;
+  level?: number;
+  level_name?: string;
 };
 
 // Bentuk thread di jalur publik. `excerpt` dipakai daftar feed dan `body`

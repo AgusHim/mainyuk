@@ -293,24 +293,24 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
       </main>
 
       <Dialog open={isGroupDialogOpen} onOpenChange={setIsGroupDialogOpen}>
-        <DialogContent className="max-w-md border border-[var(--yn-border)] bg-[var(--yn-surface)] p-6 shadow-xl sm:p-7">
-          <DialogHeader className="gap-3 pr-8">
-            <span className="flex size-11 items-center justify-center rounded-full bg-[var(--yn-accent-soft)] text-[var(--yn-accent-dark)]">
-              <Users aria-hidden="true" className="size-5" />
+        <DialogContent className="max-w-md rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-5 shadow-xl sm:p-6">
+          <DialogHeader className="gap-4 pr-9">
+            <span className="flex size-10 items-center justify-center rounded-full bg-[var(--yn-accent-soft)] text-[var(--yn-accent-dark)]">
+              <Users aria-hidden="true" className="size-[18px]" />
             </span>
-            <DialogTitle className="text-xl font-semibold tracking-tight text-[var(--yn-foreground)]">
+            <DialogTitle className="text-[22px] font-semibold leading-tight tracking-[-0.025em] text-[var(--yn-foreground)]">
               Masuk ke Grup Peserta
             </DialogTitle>
-            <DialogDescription className="text-sm leading-relaxed text-[var(--yn-muted)]">
+            <DialogDescription className="text-[15px] leading-6 text-[var(--yn-muted)]">
               Kamu sudah bisa bergabung ke grup {event?.title ? `“${event.title}”` : "event"}. Grup ini digunakan untuk informasi teknis, pengumuman, dan koordinasi peserta.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="-mx-6 -mb-6 mt-2 border-0 bg-transparent p-0 sm:-mx-7 sm:-mb-7 sm:p-0">
-            <button type="button" onClick={() => setIsGroupDialogOpen(false)} className="min-h-11 px-4 text-sm font-semibold text-[var(--yn-muted)] transition hover:text-[var(--yn-foreground)]">
+          <DialogFooter className="mt-6 gap-2.5 border-0 bg-transparent p-0 sm:justify-stretch">
+            <button type="button" onClick={() => setIsGroupDialogOpen(false)} className="min-h-11 rounded-full px-4 text-sm font-semibold text-[var(--yn-muted)] transition hover:bg-[var(--yn-surface-muted)] hover:text-[var(--yn-foreground)] sm:flex-1">
               Nanti saja
             </button>
             {groupUrl && (
-              <a href={groupUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsGroupDialogOpen(false)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--yn-accent-dark)]">
+              <a href={groupUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsGroupDialogOpen(false)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--yn-accent-dark)] sm:flex-[1.35]">
                 Lanjut ke WhatsApp <ExternalLink aria-hidden="true" className="size-4" />
               </a>
             )}

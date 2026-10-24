@@ -168,7 +168,7 @@ const ThreadCommentList = ({ threadPublicId, compact = false }: Props) => {
                     {comment.author?.alias?.charAt(0)?.toUpperCase() ?? "A"}
                   </div>
                 )}
-                <div><p className="text-sm font-semibold text-[var(--yn-foreground)]">{comment.author?.alias ?? "Anonim"}</p><p className="text-xs text-[var(--yn-muted)]">{formatStrToDateTime(comment.created_at, "dd MMM yyyy · HH:mm")}</p></div>
+                <div className="min-w-0"><div className="flex min-w-0 items-center gap-2"><p className="truncate text-sm font-semibold text-[var(--yn-foreground)]">{comment.author?.alias ?? "Anonim"}</p>{comment.author?.level ? <span className="shrink-0 text-xs font-medium text-[var(--yn-accent-dark)]">Lv. {comment.author.level}</span> : null}</div><p className="text-xs text-[var(--yn-muted)]">{comment.author?.level_name ? `${comment.author.level_name} · ` : ""}{formatStrToDateTime(comment.created_at, "dd MMM yyyy · HH:mm")}</p></div>
               </div>
 
               <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-[var(--yn-foreground)]">

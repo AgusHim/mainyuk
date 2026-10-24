@@ -76,8 +76,8 @@ const ThreadDetailPage = ({ publicId }: Props) => {
               <div className="flex items-center gap-3">
                 {thread.author?.avatar_url ? <Image src={thread.author.avatar_url} alt={thread.author.alias} width={44} height={44} className="size-11 rounded-full object-cover" /> : <div className="flex size-11 items-center justify-center rounded-full bg-[var(--yn-surface-muted)] text-sm font-semibold text-[var(--yn-foreground)]">{thread.author?.alias?.charAt(0)?.toUpperCase() ?? "A"}</div>}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-[var(--yn-foreground)]">{thread.author?.alias ?? "Anonim"}</p>
-                  <p className="mt-0.5 text-xs text-[var(--yn-muted)]">{formatStrToDateTime(thread.created_at, "dd MMM yyyy · HH:mm")}</p>
+                  <div className="flex min-w-0 items-center gap-2"><p className="truncate text-sm font-semibold text-[var(--yn-foreground)]">{thread.author?.alias ?? "Anonim"}</p>{thread.author?.level ? <span className="shrink-0 text-xs font-medium text-[var(--yn-accent-dark)]">Lv. {thread.author.level}</span> : null}</div>
+                  <p className="mt-0.5 text-xs text-[var(--yn-muted)]">{thread.author?.level_name ? `${thread.author.level_name} · ` : ""}{formatStrToDateTime(thread.created_at, "dd MMM yyyy · HH:mm")}</p>
                 </div>
                 {sourceLabel ? <span className="text-xs font-medium text-[var(--yn-accent-dark)]">{sourceLabel}</span> : null}
               </div>
