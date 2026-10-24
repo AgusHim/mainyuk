@@ -60,9 +60,13 @@ export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
 
   if (!isCurrentEvent || isLoading || !checkoutRestored || checkout.length === 0) return <Loader />;
 
-  const eventStart = event.start_at ? new Date(event.start_at) : null;
+  // Waktu event dari dashboard disimpan sebagai waktu lokal WIB, tetapi API
+  // lama dapat mengirim suffix `Z`. Jangan biarkan browser menganggapnya UTC
+  // lalu menambahkan tujuh jam lagi ketika dirender di Asia/Jakarta.
+  const eventStartValue = event.start_at?.replace(/(?:Z|[+-]\d{2}:\d{2})$/, "");
+  const eventStart = eventStartValue ? new Date(`${eventStartValue}Z`) : null;
   const eventDate = eventStart && !Number.isNaN(eventStart.getTime())
-    ? new Intl.DateTimeFormat("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).format(eventStart)
+    ? new Intl.DateTimeFormat("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }).format(eventStart)
     : "Jadwal akan diumumkan";
 
   return (
@@ -82,7 +86,7 @@ export const CheckoutLayout: React.FC<{ slug: string }> = ({ slug }) => {
             <div className="p-5 sm:p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--yn-accent)]">Event pilihanmu</p>
               <h2 className="mt-2 text-xl font-semibold text-[var(--yn-foreground)]">{event.title}</h2>
-              <p className="mt-3 flex items-start gap-2 text-sm text-[var(--yn-muted)]"><CalendarDays aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />{eventDate} WIB</p>
+              <p className="mt-3 flex items-start gap-2 text-sm text-[var(--yn-muted)]"><CalendarDays aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />{event.title?.includes("Speaking") ?"Ahad 1, 8, 15 dan 22 November 2026 Jam 09:00 WIB - Selesai":`${eventDate} WIB`}</p>
             </div>
             <div className="border-t border-[var(--yn-border)] p-5 sm:border-l sm:border-t-0 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-[var(--yn-muted)]"><UserRound aria-hidden="true" className="h-4 w-4" />Pemesan</p>
