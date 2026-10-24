@@ -138,16 +138,22 @@ const TableOrders = () => {
             <p className="font-bold text-success text-lg">- Rp {order.discount_amount?.toLocaleString("id-ID")}</p>
           </div>
         )}
+        {order.charge?.unique_code ? (
+          <div className="my-2 w-full flex justify-between">
+            <p className="text-black dark:text-white text-lg">Kode unik QRIS</p>
+            <p className="font-bold text-black dark:text-white text-lg">+ Rp {order.charge.unique_code.toLocaleString("id-ID")}</p>
+          </div>
+        ) : null}
         <div className="my-2 w-full flex justify-between">
           <p className="font-bold text-black dark:text-white text-xl">
             TOTAL BAYAR
           </p>
           <p className="font-bold text-primary text-xl">
-            {total(order) == 0
+            {payableTotal(order) == 0
               ? "GRATIS"
-              : total(order) == 1
+              : payableTotal(order) == 1
                 ? "Pay As You Wish"
-                : `Rp ${total(order).toLocaleString("id-ID")}`}
+                : `Rp ${payableTotal(order).toLocaleString("id-ID")}`}
           </p>
         </div>
         <div>
@@ -203,6 +209,12 @@ const TableOrders = () => {
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                   Total Bayar
                 </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                  Voucher
+                </th>
+                <th className="min-w-[130px] py-4 px-4 font-medium text-black dark:text-white">
+                  Kode Unik
+                </th>
                 <th className="min-w-[140px] py-4 px-4 font-medium text-black dark:text-white">
                   Metode Bayar
                 </th>
@@ -230,7 +242,7 @@ const TableOrders = () => {
               {error != null ? (
                 <tr>
                   <td
-                    colSpan={10}
+                    colSpan={12}
                     role="alert"
                     className="border-b border-black py-6 px-2 text-center text-danger"
                   >
@@ -241,7 +253,7 @@ const TableOrders = () => {
               {error == null && (orders == null || isLoading) ? (
                 <tr>
                   <td
-                    colSpan={10}
+                    colSpan={12}
                     className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
                   >
                     Memuat…
@@ -251,7 +263,7 @@ const TableOrders = () => {
               {orders != null && !isLoading && orders.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={10}
+                    colSpan={12}
                     className="border-b border-black py-6 px-2 text-center text-black dark:text-white"
                   >
                     {status != null || event_id != null
@@ -278,12 +290,19 @@ const TableOrders = () => {
                   </td>
                   <td className="border-b border-black py-3 px-2">
                     <p className="text-black dark:text-white">
-                      {total(data) == 0
+                      {payableTotal(data) == 0
                         ? "GRATIS"
-                        : total(data) == 1
+                        : payableTotal(data) == 1
                           ? "Pay As You Wish"
-                          : `Rp ${total(data).toLocaleString("id-ID")}`}
+                          : `Rp ${payableTotal(data).toLocaleString("id-ID")}`}
                     </p>
+                    {data.charge?.unique_code ? <p className="mt-1 text-xs text-black/60 dark:text-white/60">termasuk kode unik</p> : null}
+                  </td>
+                  <td className="border-b border-black py-3 px-2">
+                    {(data.discount_amount ?? 0) > 0 ? <><p className="font-semibold text-success">- Rp {data.discount_amount?.toLocaleString("id-ID")}</p><p className="mt-1 text-xs text-black/60 dark:text-white/60">{data.voucher_code ?? "Voucher"}</p></> : <span className="text-sm text-black/60 dark:text-white/60">-</span>}
+                  </td>
+                  <td className="border-b border-black py-3 px-2">
+                    {data.charge?.unique_code ? <p className="font-semibold text-black dark:text-white">+ Rp {data.charge.unique_code.toLocaleString("id-ID")}</p> : <span className="text-sm text-black/60 dark:text-white/60">-</span>}
                   </td>
                   <td className="border-b border-black py-3 px-2">
                     {data.payment_method != null ? (
@@ -358,6 +377,10 @@ const TableOrders = () => {
 
 function total(o: Order): number {
   return Math.max(0, (o.amount ?? 0) + (o.admin_fee ?? 0) + (o.donation ?? 0) - (o.discount_amount ?? 0));
+}
+
+function payableTotal(o: Order): number {
+  return o.charge?.amount ?? total(o);
 }
 
 function bgStatus(status: string): string {
