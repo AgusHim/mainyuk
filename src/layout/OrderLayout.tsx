@@ -3,6 +3,14 @@
 import OrderPaymentMethodCard from "@/components/Card/OrderPaymentMethodCard";
 import Loader from "@/components/common/Loader/Loader";
 import { CommonHeader } from "@/components/Header/CommonHeader";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { MainLayout } from "@/layout/MainLayout";
 import { getOrderByPublicID } from "@/redux/slices/orderSlice";
@@ -15,6 +23,7 @@ import {
   CalendarDays,
   CircleAlert,
   Clock3,
+  ExternalLink,
   MapPin,
   MessageCircle,
   ReceiptText,
@@ -84,6 +93,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
   const isLoading = useAppSelector((state) => state.order.loading);
   const error = useAppSelector((state) => state.order.error);
   const [hasLearningMaterial, setHasLearningMaterial] = useState(false);
+  const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
   const isCurrentOrder = order?.public_id === params.public_id;
 
   useEffect(() => {
@@ -253,9 +263,9 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
                   </a>
                 )}
                 {order.status === "paid" && groupUrl && (
-                  <a href={groupUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)] px-6 py-3 text-sm font-semibold text-[var(--yn-foreground)] transition hover:bg-[var(--yn-surface-muted)]">
+                  <button type="button" onClick={() => setIsGroupDialogOpen(true)} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)] px-6 py-3 text-sm font-semibold text-[var(--yn-foreground)] transition hover:bg-[var(--yn-surface-muted)]">
                     <Users aria-hidden="true" className="h-4 w-4" /> Gabung grup WhatsApp
-                  </a>
+                  </button>
                 )}
                 <Link href="/orders" className="inline-flex min-h-11 items-center justify-center gap-2 px-5 py-2 text-sm font-semibold text-[var(--yn-muted)] hover:text-[var(--yn-foreground)]">
                   Kembali ke riwayat transaksi
@@ -271,6 +281,32 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
           </div>
         </div>
       </main>
+
+      <Dialog open={isGroupDialogOpen} onOpenChange={setIsGroupDialogOpen}>
+        <DialogContent className="max-w-md border border-[var(--yn-border)] bg-[var(--yn-surface)] p-6 shadow-xl sm:p-7">
+          <DialogHeader className="gap-3 pr-8">
+            <span className="flex size-11 items-center justify-center rounded-full bg-[var(--yn-accent-soft)] text-[var(--yn-accent-dark)]">
+              <Users aria-hidden="true" className="size-5" />
+            </span>
+            <DialogTitle className="text-xl font-semibold tracking-tight text-[var(--yn-foreground)]">
+              Masuk grup WhatsApp event?
+            </DialogTitle>
+            <DialogDescription className="text-sm leading-relaxed text-[var(--yn-muted)]">
+              Grup ini digunakan untuk informasi teknis, pengumuman, dan koordinasi peserta {event?.title ? `“${event.title}”` : "event"}.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="-mx-6 -mb-6 mt-2 border-0 bg-transparent p-0 sm:-mx-7 sm:-mb-7 sm:p-0">
+            <button type="button" onClick={() => setIsGroupDialogOpen(false)} className="min-h-11 px-4 text-sm font-semibold text-[var(--yn-muted)] transition hover:text-[var(--yn-foreground)]">
+              Nanti saja
+            </button>
+            {groupUrl && (
+              <a href={groupUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsGroupDialogOpen(false)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--yn-accent)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--yn-accent-dark)]">
+                Lanjut ke WhatsApp <ExternalLink aria-hidden="true" className="size-4" />
+              </a>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </MainLayout>
   );
 }
