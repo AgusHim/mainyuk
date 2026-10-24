@@ -97,6 +97,16 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
   const isCurrentOrder = order?.public_id === params.public_id;
 
   useEffect(() => {
+    if (
+      isCurrentOrder &&
+      order?.status === "paid" &&
+      getGroupUrl(order.event)
+    ) {
+      setIsGroupDialogOpen(true);
+    }
+  }, [isCurrentOrder, order?.event, order?.status]);
+
+  useEffect(() => {
     if (!isCurrentOrder) dispatch(getOrderByPublicID(params.public_id));
   }, [dispatch, isCurrentOrder, params.public_id]);
 
@@ -166,7 +176,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
   const ticketCount = order.user_tickets?.length ?? 0;
   const isShopeeQRIS = order.charge?.provider === "shopee_qris";
   const canConfirm = !isShopeeQRIS && !["paid", "expired", "cancelled"].includes(order.status ?? "pending");
-  const groupUrl = event?.wa_group_url || (event?.divisi?.name?.includes("Sports") ? "https://chat.whatsapp.com/HSRFShOBsjpKUHiyJV49BZ" : (event?.title?.includes("Speaking") ? "https://chat.whatsapp.com/JUy14CJKEhyEpQcdjhFoCi" : null));
+  const groupUrl = getGroupUrl(event);
 
   return (
     <MainLayout>
@@ -289,10 +299,10 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
               <Users aria-hidden="true" className="size-5" />
             </span>
             <DialogTitle className="text-xl font-semibold tracking-tight text-[var(--yn-foreground)]">
-              Masuk grup WhatsApp event?
+              Grup WhatsApp event tersedia
             </DialogTitle>
             <DialogDescription className="text-sm leading-relaxed text-[var(--yn-muted)]">
-              Grup ini digunakan untuk informasi teknis, pengumuman, dan koordinasi peserta {event?.title ? `“${event.title}”` : "event"}.
+              Kamu sudah bisa bergabung ke grup {event?.title ? `“${event.title}”` : "event"}. Grup ini digunakan untuk informasi teknis, pengumuman, dan koordinasi peserta.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="-mx-6 -mb-6 mt-2 border-0 bg-transparent p-0 sm:-mx-7 sm:-mb-7 sm:p-0">
@@ -308,6 +318,16 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
         </DialogContent>
       </Dialog>
     </MainLayout>
+  );
+}
+
+function getGroupUrl(event: Order["event"]) {
+  return event?.wa_group_url || (
+    event?.divisi?.name?.includes("Sports")
+      ? "https://chat.whatsapp.com/HSRFShOBsjpKUHiyJV49BZ"
+      : event?.title?.includes("Speaking")
+        ? "https://chat.whatsapp.com/JUy14CJKEhyEpQcdjhFoCi"
+        : null
   );
 }
 
