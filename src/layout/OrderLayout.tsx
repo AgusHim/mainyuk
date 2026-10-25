@@ -227,7 +227,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
                     <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--yn-accent)]">Event</p>
                     <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[var(--yn-foreground)]">{event?.title || "Event YukNgaji Solo"}</h2>
                     <div className="mt-5 space-y-3 text-sm text-[var(--yn-muted)]">
-                      <p className="flex items-start gap-3"><CalendarDays aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--yn-accent)]" /><span>{formatEventDate(event?.start_at)}</span></p>
+                      <p className="flex items-start gap-3"><CalendarDays aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--yn-accent)]" /><span>{event?.title?.includes("Speaker")?"Setiap Ahad 1, 8, 15 dan 22 November 2026 Jam 09.00 WIB - Selesai": formatEventDate(event?.start_at)}</span></p>
                       {event?.location_desc?.[0] && <p className="flex items-start gap-3"><MapPin aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--yn-accent)]" /><span>{event.location_desc[0]}</span></p>}
                       <p className="flex items-start gap-3"><Users aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--yn-accent)]" /><span>{ticketCount > 0 ? `${ticketCount} tiket dalam pesanan` : "Tiket event"}</span></p>
                     </div>
