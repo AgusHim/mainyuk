@@ -23,6 +23,7 @@ import TableParticipants from "../Tables/TableParticipants";
 import ExportParticipantsButton from "../Export/ExportParticipants";
 import PollManager from "../Polls/PollManager";
 import EventEpisodeManager from "./EventEpisodeManager";
+import EventAssignmentSubmissions from "./EventAssignmentSubmissions";
 
 export default function DashboardEventDetailPage({
   params,
@@ -326,6 +327,12 @@ export default function DashboardEventDetailPage({
         >
           Episode & Materi
         </button>
+        <button
+          className={`border-b-2 py-4 px-6 text-sm font-medium hover:text-primary ${activeTab === "assignments" ? "border-primary text-primary" : "border-transparent text-black dark:text-white"}`}
+          onClick={() => setActiveTab("assignments")}
+        >
+          Tugas
+        </button>
       </div>
 
       {activeTab === "tickets" && (
@@ -420,6 +427,7 @@ export default function DashboardEventDetailPage({
         </div>
       )}
       {activeTab === "episodes" && event?.id && <EventEpisodeManager eventId={event.id} />}
+      {activeTab === "assignments" && event?.id && <EventAssignmentSubmissions eventId={event.id} />}
       <Dialog toggleDialog={toggleOnDialog} ref={dialogRef}>
         {dialogContent}
       </Dialog>
