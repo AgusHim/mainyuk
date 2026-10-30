@@ -53,11 +53,14 @@ export default function EventDetailPage({
         if (user == null) {
           router.replace(`/signin?redirectTo=/events/${params.slug}/qna`);
         }
-        if (user != null && presence.event_id != params.slug) {
+        if (user != null) {
           const presence: CreatePresence = {
             event_id: params.slug,
             user_id: user.id,
           };
+          // Endpoint presence idempoten per hari WIB. Kirim setiap kali link
+          // QnA dibuka agar scan pada hari berikutnya mencatat attendance baru,
+          // termasuk bila pengguna masih berada dalam sesi SPA yang sama.
           dispatch(postPrecence(presence));
         }
       });
