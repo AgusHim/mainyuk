@@ -184,7 +184,10 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
 const AllowedGender: React.FC<{ event: Event }> = ({ event }) => {
   if (event.allowed_gender == "FEMALE") {
     return (
-      <span className="rounded-full bg-pink-100 px-4 py-2 text-sm font-semibold text-pink-700">
+      <span
+        className="rounded-full px-4 py-2 text-sm font-semibold text-white"
+        style={{ backgroundColor: "#ec4899" }}
+      >
         Female Only
       </span>
     );
