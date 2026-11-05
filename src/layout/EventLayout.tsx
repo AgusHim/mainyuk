@@ -28,6 +28,7 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
     return <Loader></Loader>;
   }
   const eventStarted = eventData.start_at && Date.now() >= new Date(eventData.start_at).getTime();
+  const hasLearningMaterial = eventData.divisi?.name.trim().toLowerCase() === "class";
   return (
     <>
       <CommonHeader title={eventData?.title ?? ""} isShowBack />
@@ -69,9 +70,11 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
                   Lihat & pilih tiket ↓
                 </Link>
               )}
-              <Link href={`/events/${slug}/learning`} className="rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)] px-5 py-2.5 text-sm font-semibold text-[var(--yn-foreground)] hover:border-[var(--yn-accent)]">
-                Materi peserta
-              </Link>
+              {hasLearningMaterial && (
+                <Link href={`/events/${slug}/learning`} className="rounded-full border border-[var(--yn-border)] bg-[var(--yn-surface)] px-5 py-2.5 text-sm font-semibold text-[var(--yn-foreground)] hover:border-[var(--yn-accent)]">
+                  Materi peserta
+                </Link>
+              )}
             </div>
             <div className="mb-6 flex flex-col gap-2">
               <div className="flex items-center gap-2">
@@ -181,7 +184,7 @@ export const EventLayout: React.FC<{ slug: string }> = ({ slug }) => {
 const AllowedGender: React.FC<{ event: Event }> = ({ event }) => {
   if (event.allowed_gender == "FEMALE") {
     return (
-      <span className="rounded-full bg-[var(--yn-accent-soft)] px-3 py-1 text-xs font-medium text-[var(--yn-accent-dark)]">
+      <span className="rounded-full bg-pink-100 px-4 py-2 text-sm font-semibold text-pink-700">
         Female Only
       </span>
     );

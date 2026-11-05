@@ -16,7 +16,11 @@ export default function EventLearningPage({ slug, assignmentDriveFolderURL }: { 
   useEffect(() => {
     user_api.get(`/events/${slug}/learning`)
       .then((response) => setEpisodes(response.data as Episode[]))
-      .catch(() => setError("Materi belum dapat dimuat. Pastikan kamu sudah login dan tiketmu telah dibayar."));
+      .catch((requestError) => setError(
+        requestError.response?.status === 403
+          ? "Materi hanya tersedia untuk event divisi Class."
+          : "Materi belum dapat dimuat. Pastikan kamu sudah login dan tiketmu telah dibayar."
+      ));
   }, [slug]);
 
   return <>
