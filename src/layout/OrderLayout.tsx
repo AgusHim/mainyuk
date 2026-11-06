@@ -310,7 +310,7 @@ export default function OrderLayout({ params }: OrderLayoutProps) {
               {order.status === "expired" && isShopeeQRIS && total > 0 && (
                 <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
                   <p className="font-semibold">Sudah membayar QRIS sebelum batas waktu?</p>
-                  <p className="mt-1 leading-5">Mutasi Shopee dicocokkan dari nominal tepat <strong>{formatRupiah(total)}</strong>{order.charge?.unique_code ? ` (termasuk kode unik ${order.charge.unique_code})` : ""}. Jika status belum berubah setelah beberapa menit, hubungi admin dengan Order ID ini.</p>
+                  <p className="mt-1 leading-5">Mutasi QRIS dicocokkan dari nominal tepat <strong>{formatRupiah(total)}</strong>{order.charge?.unique_code ? ` (termasuk kode unik ${order.charge.unique_code})` : ""}. Jika status belum berubah setelah beberapa menit, hubungi admin dengan Order ID ini.</p>
                 </div>
               )}
             </aside>
