@@ -141,7 +141,7 @@ export const orderSlice = createSlice({
     });
 
     builder.addMatcher(
-      isAnyOf(getOrders.pending, getOrderByPublicID.pending),
+      isAnyOf(getOrders.pending, getAdminOrders.pending, getOrderByPublicID.pending),
       (state, _) => {
         state.loading = true;
         state.error = null;
@@ -149,7 +149,7 @@ export const orderSlice = createSlice({
     );
 
     builder.addMatcher(
-      isAnyOf(getOrders.rejected, getOrderByPublicID.rejected, postOrder.rejected),
+      isAnyOf(getOrders.rejected, getAdminOrders.rejected, getOrderByPublicID.rejected, postOrder.rejected),
       (state, action) => {
         state.loading = false;
         state.isLoadingOrder = false;

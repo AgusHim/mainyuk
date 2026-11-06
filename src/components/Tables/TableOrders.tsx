@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { getAdminOrders, putOrderVerify } from "@/redux/slices/orderSlice";
 import { Order, VerifyOrder } from "@/types/order";
 import { formatStrToDateTime } from "@/utils/convert";
-import { useEffect, useRef, useState } from "react";
+import { formatRupiah } from "@/utils/currency";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Dialog from "../common/Dialog/Dialog";
 import { Button } from "@/components/ui/button";
 import DropdownEvents from "../Dropdowns/DropdownEvents";
@@ -18,11 +19,51 @@ const TableOrders = () => {
   const [status, setStatus] = useState<string | null>(null);
   const [event_id, setEventID] = useState<string | null>(null);
 
+  const loadOrders = (nextStatus = status, nextEventID = event_id) =>
+    dispatch(getAdminOrders({
+      status: nextStatus ?? "",
+      event_id: nextEventID ?? "",
+    }));
+
   useEffect(() => {
     if (orders == null) {
-      dispatch(getAdminOrders({ status: status ?? "", event_id: event_id }));
+      loadOrders();
     }
-  }, []);
+  }, [dispatch, orders]);
+
+  const summary = useMemo(() => {
+    const values = orders ?? [];
+    return values.reduce(
+      (total, order) => {
+        const payable = payableTotal(order);
+        const tickets = order.user_tickets?.length ?? 0;
+        total.orders += 1;
+        total.transactionValue += payable;
+
+        if (order.status === "paid") {
+          total.paidOrders += 1;
+          total.revenue += payable;
+          total.ticketsSold += tickets;
+          total.donations += order.donation ?? 0;
+        }
+        if (order.status === "pending") {
+          total.pendingOrders += 1;
+          total.pendingValue += payable;
+        }
+        return total;
+      },
+      {
+        orders: 0,
+        transactionValue: 0,
+        paidOrders: 0,
+        revenue: 0,
+        pendingOrders: 0,
+        pendingValue: 0,
+        ticketsSold: 0,
+        donations: 0,
+      }
+    );
+  }, [orders]);
 
   const [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -48,7 +89,7 @@ const TableOrders = () => {
       .unwrap()
       .then((res: any) => {
         if (res != null) {
-          dispatch(getAdminOrders({ status: "", event_id: event_id }));
+          loadOrders();
         }
         toggleDialog();
       })
@@ -59,21 +100,15 @@ const TableOrders = () => {
   }
 
   const handleFilterStatus = (newValue: string) => {
-    if (newValue == "all") {
-      setStatus(null);
-    } else {
-      setStatus(newValue);
-    }
-    dispatch(getAdminOrders({ status: newValue, event_id: event_id })); // This is where you can call additional logic
+    const nextStatus = newValue === "all" ? null : newValue;
+    setStatus(nextStatus);
+    loadOrders(nextStatus, event_id);
   };
 
   const handleFilterEvent = (newValue: string) => {
-    if (newValue == "all") {
-      setEventID(null);
-    } else {
-      setEventID(newValue);
-    }
-    dispatch(getAdminOrders({ status: status, event_id: newValue })); // This is where you can call additional logic
+    const nextEventID = newValue === "all" ? null : newValue;
+    setEventID(nextEventID);
+    loadOrders(status, nextEventID);
   };
 
   function handleClickTableRow(order: Order) {
@@ -194,6 +229,14 @@ const TableOrders = () => {
       <div className="flex flex-row items-center justify-start gap-3 mb-5">
         <DropdownEvents onChange={handleFilterEvent} />
         <DropdownStatus onChange={handleFilterStatus} />
+      </div>
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <SummaryCard label="Pendapatan diterima" value={formatRupiah(summary.revenue)} description="Dari pesanan lunas" accent="text-success" />
+        <SummaryCard label="Nilai transaksi" value={formatRupiah(summary.transactionValue)} description="Seluruh pesanan pada filter" />
+        <SummaryCard label="Total pesanan" value={summary.orders.toLocaleString("id-ID")} description="Data sesuai filter aktif" />
+        <SummaryCard label="Menunggu pembayaran" value={summary.pendingOrders.toLocaleString("id-ID")} description={summary.pendingOrders > 0 ? formatRupiah(summary.pendingValue) : "Tidak ada pembayaran tertunda"} accent="text-yellow-600" />
+        <SummaryCard label="Tiket terjual" value={summary.ticketsSold.toLocaleString("id-ID")} description={`${summary.paidOrders.toLocaleString("id-ID")} pesanan lunas`} />
+        <SummaryCard label="Donasi diterima" value={formatRupiah(summary.donations)} description="Dari pesanan lunas" accent="text-primary" />
       </div>
       <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 shadow-bottom border-2 border-black dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="max-w-full overflow-x-auto">
@@ -382,6 +425,24 @@ function total(o: Order): number {
 function payableTotal(o: Order): number {
   return o.charge?.amount ?? total(o);
 }
+
+const SummaryCard = ({
+  label,
+  value,
+  description,
+  accent = "text-black dark:text-white",
+}: {
+  label: string;
+  value: string;
+  description: string;
+  accent?: string;
+}) => (
+  <section className="rounded-sm border-2 border-black bg-white p-5 shadow-bottom dark:bg-boxdark">
+    <p className="text-sm font-medium text-black dark:text-white">{label}</p>
+    <p className={`mt-2 text-2xl font-bold ${accent}`}>{value}</p>
+    <p className="mt-1 text-xs text-black/60 dark:text-white/60">{description}</p>
+  </section>
+);
 
 function bgStatus(status: string): string {
   if (status == "paid") {
