@@ -5,7 +5,7 @@ import DashboardLoader from "@/components/common/Loader/DashboardLoader";
 import Image from "next/image";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   getEventDetail,
   getEventParticipants,
@@ -18,7 +18,7 @@ import { formatStrToDateTime } from "@/utils/convert";
 import TableTickets from "../Tables/TableTickets";
 import Dialog from "../common/Dialog/Dialog";
 import FormTicket from "../Form/FormTicket";
-import { setTicket } from "@/redux/slices/ticketSlice";
+import { getTicketsByEventID, setTicket } from "@/redux/slices/ticketSlice";
 import TableParticipants from "../Tables/TableParticipants";
 import ExportParticipantsButton from "../Export/ExportParticipants";
 import PollManager from "../Polls/PollManager";
@@ -33,6 +33,7 @@ export default function DashboardEventDetailPage({
   const dispatch = useAppDispatch();
   const event = useAppSelector((state) => state.event.event);
   const participants = useAppSelector((state) => state.event.participants);
+  const tickets = useAppSelector((state) => state.ticket.tickets);
   const isLoading = useAppSelector((state) => state.event.loading);
   const error = useAppSelector((state) => state.event.error);
 
@@ -44,10 +45,18 @@ export default function DashboardEventDetailPage({
   ).length;
 
   useEffect(() => {
-    if (!isLoading) {
+    if (event?.slug !== params.slug) {
       dispatch(getEventDetail(params.slug));
     }
-  }, []);
+  }, [dispatch, event?.slug, params.slug]);
+
+  useEffect(() => {
+    if (event?.id == null || event.slug !== params.slug) {
+      return;
+    }
+    dispatch(getEventParticipants(event.id));
+    dispatch(getTicketsByEventID(event.id));
+  }, [dispatch, event?.id, event?.slug, params.slug]);
 
   const [dialogContent, setDialogContent] = useState<React.ReactNode>(null);
   const [activeTab, setActiveTab] = useState("tickets");
@@ -57,6 +66,58 @@ export default function DashboardEventDetailPage({
   const ticketNames = Array.from(
     new Set(participants?.map((p) => p.ticket?.name).filter(Boolean))
   ) as string[];
+
+  const ticketCapacity = useMemo(() => {
+    const eventTickets = (tickets ?? []).filter((ticket) => ticket.event_id === event?.id);
+    const paidTickets = (participants ?? []).filter((participant) => participant.event_id === event?.id);
+    const paidByTicket = new Map<string, number>();
+
+    paidTickets.forEach((participant) => {
+      if (participant.ticket_id == null) return;
+      paidByTicket.set(
+        participant.ticket_id,
+        (paidByTicket.get(participant.ticket_id) ?? 0) + 1
+      );
+    });
+
+    const distribution = eventTickets.map((ticket) => {
+      const paid = paidByTicket.get(ticket.id ?? "") ?? 0;
+      // sold_pax dari API mencakup paid + pending agar kuota tidak terjual
+      // berlebih. Peserta yang sudah lunas dihitung tersendiri di atas.
+      const reserved = Math.max(ticket.sold_pax ?? 0, paid);
+      const pending = Math.max(0, reserved - paid);
+      const max = ticket.max_pax ?? 0;
+      return {
+        id: ticket.id ?? ticket.name,
+        name: ticket.name,
+        max,
+        paid,
+        pending,
+        reserved,
+        remaining: max > 0 ? Math.max(0, max - reserved) : null,
+      };
+    });
+
+    const limited = distribution.filter((ticket) => ticket.max > 0);
+    const capacity = limited.reduce((sum, ticket) => sum + ticket.max, 0);
+    const paid = distribution.reduce((sum, ticket) => sum + ticket.paid, 0);
+    const pending = distribution.reduce((sum, ticket) => sum + ticket.pending, 0);
+    const reserved = distribution.reduce((sum, ticket) => sum + ticket.reserved, 0);
+
+    return {
+      distribution,
+      capacity,
+      hasUnlimitedTicket: limited.length !== distribution.length,
+      paid,
+      pending,
+      reserved,
+      remaining: distribution.length === 0
+        ? 0
+        : limited.length > 0
+          ? Math.max(0, capacity - limited.reduce((sum, ticket) => sum + ticket.reserved, 0))
+          : null,
+    };
+  }, [event?.id, participants, tickets]);
 
   function toggleOnDialog() {
     if (!dialogRef.current) {
@@ -284,6 +345,57 @@ export default function DashboardEventDetailPage({
           </svg>
         </CardDataStats>
       </div>
+      <section className="mb-6 rounded-sm border-2 border-black bg-white p-5 shadow-bottom dark:bg-boxdark sm:p-7.5">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-black dark:text-white">Kapasitas & persebaran tiket</h2>
+            <p className="mt-1 text-sm text-black/60 dark:text-white/60">Tiket lunas dihitung sebagai terjual; reservasi pending tetap menahan kuota.</p>
+          </div>
+          {ticketCapacity.hasUnlimitedTicket && <p className="text-xs font-medium text-black/60 dark:text-white/60">Ada jenis tiket tanpa batas kuota.</p>}
+        </div>
+
+        <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <TicketMetric
+            label="Kapasitas maksimum"
+            value={tickets == null ? "Memuat…" : ticketCapacity.hasUnlimitedTicket && ticketCapacity.capacity === 0 ? "Tidak dibatasi" : ticketCapacity.hasUnlimitedTicket ? `${ticketCapacity.capacity.toLocaleString("id-ID")}+` : ticketCapacity.capacity.toLocaleString("id-ID")}
+            detail={ticketCapacity.hasUnlimitedTicket ? "Kuota terbatas + tiket tanpa batas" : "Akumulasi seluruh jenis tiket"}
+          />
+          <TicketMetric label="Tiket lunas" value={ticketCapacity.paid.toLocaleString("id-ID")} detail="Peserta dengan pembayaran berhasil" accent="text-success" />
+          <TicketMetric label="Reservasi pending" value={ticketCapacity.pending.toLocaleString("id-ID")} detail="Masih menahan kuota sementara" accent="text-yellow-600" />
+          <TicketMetric label="Sisa kuota" value={ticketCapacity.remaining == null ? "Tidak dibatasi" : ticketCapacity.remaining.toLocaleString("id-ID")} detail="Setelah tiket lunas dan pending" accent="text-primary" />
+        </div>
+
+        <div className="mt-6 space-y-4">
+          {tickets == null ? (
+            <p className="text-sm text-black/60 dark:text-white/60">Memuat persebaran tiket…</p>
+          ) : ticketCapacity.distribution.length === 0 ? (
+            <p className="text-sm text-black/60 dark:text-white/60">Belum ada jenis tiket untuk event ini.</p>
+          ) : ticketCapacity.distribution.map((ticket) => {
+            const percent = ticket.max > 0 ? Math.min(100, Math.round((ticket.reserved / ticket.max) * 100)) : 0;
+            return (
+              <div key={ticket.id} className="rounded-md border border-stroke p-4 dark:border-strokedark">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="font-semibold text-black dark:text-white">{ticket.name}</p>
+                    <p className="text-xs text-black/60 dark:text-white/60">{ticket.paid} lunas · {ticket.pending} pending</p>
+                  </div>
+                  <p className="text-sm font-semibold text-black dark:text-white">
+                    {ticket.max > 0 ? `${ticket.reserved} / ${ticket.max} terpakai` : `${ticket.reserved} terpakai · tanpa batas`}
+                  </p>
+                </div>
+                {ticket.max > 0 && (
+                  <>
+                    <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-gray-2 dark:bg-meta-4">
+                      <div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${percent}%` }} />
+                    </div>
+                    <p className="mt-2 text-xs text-black/60 dark:text-white/60">{ticket.remaining} tiket tersisa ({percent}% terisi)</p>
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
       <div className="mb-6 flex gap-4 border-b border-stroke dark:border-strokedark overflow-x-auto">
         <button
           className={`border-b-2 py-4 px-6 text-sm font-medium hover:text-primary ${activeTab === "tickets"
@@ -434,3 +546,21 @@ export default function DashboardEventDetailPage({
     </>
   );
 }
+
+const TicketMetric = ({
+  label,
+  value,
+  detail,
+  accent = "text-black dark:text-white",
+}: {
+  label: string;
+  value: string;
+  detail: string;
+  accent?: string;
+}) => (
+  <div className="rounded-md border border-stroke p-4 dark:border-strokedark">
+    <p className="text-xs font-medium text-black/60 dark:text-white/60">{label}</p>
+    <p className={`mt-1 text-xl font-bold ${accent}`}>{value}</p>
+    <p className="mt-1 text-xs text-black/60 dark:text-white/60">{detail}</p>
+  </div>
+);
