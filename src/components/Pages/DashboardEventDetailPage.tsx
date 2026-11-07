@@ -69,14 +69,18 @@ export default function DashboardEventDetailPage({
 
   const ticketCapacity = useMemo(() => {
     const eventTickets = (tickets ?? []).filter((ticket) => ticket.event_id === event?.id);
-    const paidTickets = (participants ?? []).filter((participant) => participant.event_id === event?.id);
+    // Endpoint peserta menyembunyikan ticket_id pada objek utama, tetapi
+    // relasi ticket memuat ID yang sama. Gunakan relasi ini agar tiket paid
+    // tidak keliru dihitung sebagai reservasi pending.
+    const paidTickets = participants ?? [];
     const paidByTicket = new Map<string, number>();
 
     paidTickets.forEach((participant) => {
-      if (participant.ticket_id == null) return;
+      const ticketID = participant.ticket?.id;
+      if (ticketID == null) return;
       paidByTicket.set(
-        participant.ticket_id,
-        (paidByTicket.get(participant.ticket_id) ?? 0) + 1
+        ticketID,
+        (paidByTicket.get(ticketID) ?? 0) + 1
       );
     });
 
