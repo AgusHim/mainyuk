@@ -24,6 +24,7 @@ import ExportParticipantsButton from "../Export/ExportParticipants";
 import PollManager from "../Polls/PollManager";
 import EventEpisodeManager from "./EventEpisodeManager";
 import EventAssignmentSubmissions from "./EventAssignmentSubmissions";
+import EventVerifierManager from "./EventVerifierManager";
 
 export default function DashboardEventDetailPage({
   params,
@@ -449,6 +450,12 @@ export default function DashboardEventDetailPage({
         >
           Tugas
         </button>
+        <button
+          className={`border-b-2 py-4 px-6 text-sm font-medium hover:text-primary ${activeTab === "verifier" ? "border-primary text-primary" : "border-transparent text-black dark:text-white"}`}
+          onClick={() => setActiveTab("verifier")}
+        >
+          Verifikator
+        </button>
       </div>
 
       {activeTab === "tickets" && (
@@ -544,6 +551,7 @@ export default function DashboardEventDetailPage({
       )}
       {activeTab === "episodes" && event?.id && <EventEpisodeManager eventId={event.id} />}
       {activeTab === "assignments" && event?.id && <EventAssignmentSubmissions eventId={event.id} />}
+      {activeTab === "verifier" && event?.id && event.slug && <EventVerifierManager eventId={event.id} slug={event.slug} />}
       <Dialog toggleDialog={toggleOnDialog} ref={dialogRef}>
         {dialogContent}
       </Dialog>

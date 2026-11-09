@@ -23,6 +23,9 @@ const rolePath = (role: string) => {
   if (role == "user") {
     rolePath = "user_api";
   }
+  if (role == "verifier") {
+    rolePath = "verifier_api";
+  }
   return rolePath;
 };
 
@@ -98,9 +101,16 @@ const ranger_api = axios.create({
   withCredentials: true,
 });
 
+// Sesi verifikator berdiri sendiri dan sengaja tidak memakai interceptor
+// akun user. Token event-scoped dikirim eksplisit oleh halaman verifikator.
+const verifier_api = axios.create({
+  baseURL: `${baseURL("verifier")}`,
+  withCredentials: true,
+});
+
 attachInterceptors(api);
 attachInterceptors(user_api);
 attachInterceptors(admin_api);
 attachInterceptors(ranger_api);
 
-export { api, user_api, admin_api, ranger_api };
+export { api, user_api, admin_api, ranger_api, verifier_api };
