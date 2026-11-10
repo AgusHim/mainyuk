@@ -55,8 +55,13 @@ export default function OrderPaymentMethodCard() {
         </div>
 
         {isQris ? (
-          <div className="mt-5 flex justify-center rounded-2xl bg-white p-5">
-            <QRCode value={isShopeeQRIS ? charge?.qris_payload ?? "" : payment.account_number ?? ""} size={190} />
+          <div className="mt-5 flex justify-center rounded-2xl bg-white p-6 shadow-sm sm:p-7">
+            <QRCode
+              value={isShopeeQRIS ? charge?.qris_payload ?? "" : payment.account_number ?? ""}
+              size={190}
+              bgColor="#ffffff"
+              fgColor="#000000"
+            />
           </div>
         ) : (
           <div className="mt-5 flex items-center justify-between gap-4 rounded-xl bg-[var(--yn-surface)] p-4">
