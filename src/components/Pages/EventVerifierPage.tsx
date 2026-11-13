@@ -161,8 +161,14 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
           <section className="mt-5 overflow-hidden rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-4 sm:p-6">
             <h2 className="font-semibold text-[var(--yn-foreground)]">Arahkan kamera ke QR tiket</h2>
             <p className="mt-1 text-sm text-[var(--yn-muted)]">Hanya tiket paid untuk event ini yang dapat diproses.</p>
-            <div className="mt-4 max-h-[520px] overflow-hidden rounded-2xl bg-black">
-              <Scanner scanDelay={1200} allowMultiple onScan={(values) => { if (values[0]?.rawValue) checkIn(values[0].rawValue); }} constraints={{ facingMode: "environment" }} />
+            <div className="-mx-4 mt-4 h-[min(60svh,480px)] overflow-hidden bg-black sm:mx-0 sm:h-[520px] sm:rounded-2xl">
+              <Scanner
+                scanDelay={1200}
+                allowMultiple
+                onScan={(values) => { if (values[0]?.rawValue) checkIn(values[0].rawValue); }}
+                constraints={{ facingMode: "environment" }}
+                styles={{ container: { width: "100%", height: "100%" }, video: { objectFit: "cover" } }}
+              />
             </div>
           </section>
         ) : (
