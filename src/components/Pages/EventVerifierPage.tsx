@@ -5,13 +5,15 @@ import { Input } from "@/components/ui/input";
 import { verifier_api } from "@/redux/api";
 import { ResScanTicket } from "@/types/presence";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import { CheckCircle2, LogOut, QrCode, Search, ShieldCheck, Users } from "lucide-react";
+import { BarChart3, CheckCircle2, LogOut, QrCode, Search, ShieldCheck, Users } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 type SessionInfo = { event_id: string; event_slug: string; event_name: string; expires_at: string };
 type TicketRow = { public_id: string; name: string; email: string; phone: string; gender: string; ticket_name: string; checked_in: boolean; last_check_in_at?: string | null };
 type TicketOption = { id: string; name: string };
+type TicketDistribution = { id: string; name: string; total_tickets: number; checked_in: number; not_checked_in: number; male: number; female: number; unspecified: number };
+type Distribution = { total_tickets: number; checked_in: number; not_checked_in: number; male: number; female: number; unspecified: number; by_ticket: TicketDistribution[] };
 
 const tokenKey = (slug: string) => `event-verifier:${slug}`;
 
@@ -22,11 +24,13 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
   const [session, setSession] = useState<SessionInfo | null>(null);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
-  const [mode, setMode] = useState<"scan" | "manual">("scan");
+  const [mode, setMode] = useState<"scan" | "manual" | "distribution">("scan");
   const [search, setSearch] = useState("");
   const [ticketID, setTicketID] = useState("");
   const [ticketOptions, setTicketOptions] = useState<TicketOption[]>([]);
   const [tickets, setTickets] = useState<TicketRow[]>([]);
+  const [distribution, setDistribution] = useState<Distribution | null>(null);
+  const [distributionLoading, setDistributionLoading] = useState(false);
   const [result, setResult] = useState<ResScanTicket | null>(null);
   const scanning = useRef(false);
 
@@ -97,12 +101,27 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
     }
   }, [headers, slug, token]);
 
+  const loadDistribution = useCallback(async () => {
+    if (!token) return;
+    setDistributionLoading(true);
+    try {
+      const response = await verifier_api.get(`/events/${slug}/distribution`, { headers: headers() });
+      setDistribution(response.data as Distribution);
+    } catch (error: any) {
+      if (error?.response?.status === 401) logout();
+      toast.error(errorMessage(error));
+    } finally {
+      setDistributionLoading(false);
+    }
+  }, [headers, slug, token]);
+
   useEffect(() => {
     if (mode === "manual" && token) {
       loadTicketOptions();
       loadTickets("");
     }
-  }, [mode, token]);
+    if (mode === "distribution" && token) loadDistribution();
+  }, [loadDistribution, loadTicketOptions, loadTickets, mode, token]);
 
   const checkIn = async (publicID: string) => {
     if (!token || scanning.current) return;
@@ -113,6 +132,7 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
       const data = response.data as ResScanTicket;
       setResult(data);
       setTickets((current) => current.map((ticket) => ticket.public_id === publicID ? { ...ticket, checked_in: true } : ticket));
+      if (mode === "distribution") void loadDistribution();
       toast.success(data.already_checked_in ? "Tiket sudah check-in hari ini" : "Check-in berhasil");
     } catch (error: any) {
       if (error?.response?.status === 401) logout();
@@ -152,9 +172,10 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
       </header>
 
       <div className="yn-container max-w-4xl py-7">
-        <div className="grid grid-cols-2 gap-2 rounded-2xl bg-[var(--yn-surface-muted)] p-1.5">
+        <div className="grid grid-cols-3 gap-2 rounded-2xl bg-[var(--yn-surface-muted)] p-1.5">
           <button type="button" onClick={() => setMode("scan")} className={`flex min-h-11 items-center justify-center gap-2 rounded-xl text-sm font-semibold ${mode === "scan" ? "bg-[var(--yn-surface)] text-[var(--yn-foreground)] shadow-sm" : "text-[var(--yn-muted)]"}`}><QrCode className="size-4" /> Scan QR</button>
           <button type="button" onClick={() => setMode("manual")} className={`flex min-h-11 items-center justify-center gap-2 rounded-xl text-sm font-semibold ${mode === "manual" ? "bg-[var(--yn-surface)] text-[var(--yn-foreground)] shadow-sm" : "text-[var(--yn-muted)]"}`}><Users className="size-4" /> Verifikasi manual</button>
+          <button type="button" onClick={() => setMode("distribution")} className={`flex min-h-11 items-center justify-center gap-2 rounded-xl text-sm font-semibold ${mode === "distribution" ? "bg-[var(--yn-surface)] text-[var(--yn-foreground)] shadow-sm" : "text-[var(--yn-muted)]"}`}><BarChart3 className="size-4" /> Sebaran data</button>
         </div>
 
         {mode === "scan" ? (
@@ -171,7 +192,7 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
               />
             </div>
           </section>
-        ) : (
+        ) : mode === "manual" ? (
           <section className="mt-5 rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-4 sm:p-6">
             <form onSubmit={(event) => { event.preventDefault(); loadTickets(search); }} className="flex flex-col gap-2 sm:flex-row">
               <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nama, email, no. HP, atau kode tiket" className="h-11 flex-1" />
@@ -201,6 +222,27 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
               {!loading && tickets.length === 0 && <p className="py-8 text-center text-sm text-[var(--yn-muted)]">Tidak ada tiket paid yang cocok.</p>}
             </div>
           </section>
+        ) : (
+          <section className="mt-5 rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-4 sm:p-6">
+            <div className="flex items-start justify-between gap-4">
+              <div><h2 className="font-semibold text-[var(--yn-foreground)]">Sebaran data peserta</h2><p className="mt-1 text-sm text-[var(--yn-muted)]">Ringkasan tiket paid dan check-in hari ini.</p></div>
+              <Button type="button" variant="outline" size="sm" onClick={() => void loadDistribution()} disabled={distributionLoading}>Muat ulang</Button>
+            </div>
+            {distributionLoading && distribution == null ? <p className="py-10 text-center text-sm text-[var(--yn-muted)]">Memuat sebaran data…</p> : distribution == null ? <p className="py-10 text-center text-sm text-[var(--yn-muted)]">Data belum tersedia.</p> : <>
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <DistributionMetric label="Tiket paid" value={distribution.total_tickets} />
+                <DistributionMetric label="Sudah check-in" value={distribution.checked_in} accent="text-green-700" />
+                <DistributionMetric label="Belum check-in" value={distribution.not_checked_in} accent="text-amber-700" />
+                <DistributionMetric label="Akhwat / Ikhwan" value={`${distribution.female} / ${distribution.male}`} />
+              </div>
+              <div className="mt-6 space-y-3">
+                {distribution.by_ticket.length === 0 ? <p className="py-6 text-center text-sm text-[var(--yn-muted)]">Belum ada tiket paid.</p> : distribution.by_ticket.map((ticket) => {
+                  const checkedPercent = ticket.total_tickets === 0 ? 0 : Math.round((ticket.checked_in / ticket.total_tickets) * 100);
+                  return <article key={ticket.id} className="rounded-2xl border border-[var(--yn-border)] p-4"><div className="flex items-start justify-between gap-3"><div><h3 className="font-semibold text-[var(--yn-foreground)]">{ticket.name}</h3><p className="mt-1 text-sm text-[var(--yn-muted)]">{ticket.total_tickets} tiket paid · {ticket.checked_in} sudah check-in</p></div><span className="text-sm font-semibold text-[var(--yn-accent-dark)]">{checkedPercent}%</span></div><div className="mt-3 h-2 overflow-hidden rounded-full bg-[var(--yn-surface-muted)]"><div className="h-full rounded-full bg-[var(--yn-accent)]" style={{ width: `${checkedPercent}%` }} /></div><p className="mt-3 text-xs text-[var(--yn-muted)]">Akhwat {ticket.female} · Ikhwan {ticket.male}{ticket.unspecified > 0 ? ` · Belum diisi ${ticket.unspecified}` : ""} · Belum check-in {ticket.not_checked_in}</p></article>;
+                })}
+              </div>
+            </>}
+          </section>
         )}
 
         {result && (
@@ -211,4 +253,8 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
       </div>
     </main>
   );
+}
+
+function DistributionMetric({ label, value, accent }: { label: string; value: number | string; accent?: string }) {
+  return <div className="rounded-2xl bg-[var(--yn-surface-muted)] p-4"><p className="text-xs font-medium text-[var(--yn-muted)]">{label}</p><p className={`mt-1 text-2xl font-semibold ${accent ?? "text-[var(--yn-foreground)]"}`}>{value}</p></div>;
 }
