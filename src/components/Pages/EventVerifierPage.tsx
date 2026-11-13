@@ -11,6 +11,7 @@ import { toast } from "sonner";
 
 type SessionInfo = { event_id: string; event_slug: string; event_name: string; expires_at: string };
 type TicketRow = { public_id: string; name: string; email: string; phone: string; gender: string; ticket_name: string; checked_in: boolean; last_check_in_at?: string | null };
+type TicketOption = { id: string; name: string };
 
 const tokenKey = (slug: string) => `event-verifier:${slug}`;
 
@@ -23,6 +24,8 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<"scan" | "manual">("scan");
   const [search, setSearch] = useState("");
+  const [ticketID, setTicketID] = useState("");
+  const [ticketOptions, setTicketOptions] = useState<TicketOption[]>([]);
   const [tickets, setTickets] = useState<TicketRow[]>([]);
   const [result, setResult] = useState<ResScanTicket | null>(null);
   const scanning = useRef(false);
@@ -69,11 +72,11 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
     setResult(null);
   };
 
-  const loadTickets = useCallback(async (query = search) => {
+  const loadTickets = useCallback(async (query = search, selectedTicketID = ticketID) => {
     if (!token) return;
     setLoading(true);
     try {
-      const response = await verifier_api.get(`/events/${slug}/tickets`, { params: { search: query }, headers: headers() });
+      const response = await verifier_api.get(`/events/${slug}/tickets`, { params: { search: query, ticket_id: selectedTicketID || undefined }, headers: headers() });
       setTickets(response.data as TicketRow[]);
     } catch (error: any) {
       if (error?.response?.status === 401) logout();
@@ -81,10 +84,24 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
     } finally {
       setLoading(false);
     }
-  }, [headers, search, slug, token]);
+  }, [headers, search, slug, ticketID, token]);
+
+  const loadTicketOptions = useCallback(async () => {
+    if (!token) return;
+    try {
+      const response = await verifier_api.get(`/events/${slug}/ticket-options`, { headers: headers() });
+      setTicketOptions(response.data as TicketOption[]);
+    } catch (error: any) {
+      if (error?.response?.status === 401) logout();
+      toast.error(errorMessage(error));
+    }
+  }, [headers, slug, token]);
 
   useEffect(() => {
-    if (mode === "manual" && token) loadTickets("");
+    if (mode === "manual" && token) {
+      loadTicketOptions();
+      loadTickets("");
+    }
   }, [mode, token]);
 
   const checkIn = async (publicID: string) => {
@@ -152,6 +169,19 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
           <section className="mt-5 rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-4 sm:p-6">
             <form onSubmit={(event) => { event.preventDefault(); loadTickets(search); }} className="flex flex-col gap-2 sm:flex-row">
               <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nama, email, no. HP, atau kode tiket" className="h-11 flex-1" />
+              <select
+                aria-label="Filter jenis tiket"
+                value={ticketID}
+                onChange={(event) => {
+                  const nextTicketID = event.target.value;
+                  setTicketID(nextTicketID);
+                  loadTickets(search, nextTicketID);
+                }}
+                className="h-11 rounded-md border border-[var(--yn-border)] bg-[var(--yn-surface)] px-3 text-sm text-[var(--yn-foreground)] sm:w-52"
+              >
+                <option value="">Semua tiket</option>
+                {ticketOptions.map((ticket) => <option key={ticket.id} value={ticket.id}>{ticket.name}</option>)}
+              </select>
               <Button type="submit" disabled={loading} className="h-11 bg-[var(--yn-accent)] text-white"><Search className="mr-2 size-4" /> Cari peserta</Button>
             </form>
             <p className="mt-2 text-xs text-[var(--yn-muted)]">Maksimal 100 tiket paid ditampilkan.</p>
