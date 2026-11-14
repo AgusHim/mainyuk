@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { verifier_api } from "@/redux/api";
 import { ResScanTicket } from "@/types/presence";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import { BarChart3, CheckCircle2, LogOut, QrCode, Search, ShieldCheck, Users } from "lucide-react";
+import { BarChart3, Camera, CheckCircle2, LogOut, QrCode, Search, ShieldCheck, Users } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -32,6 +32,10 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
   const [distribution, setDistribution] = useState<Distribution | null>(null);
   const [distributionLoading, setDistributionLoading] = useState(false);
   const [result, setResult] = useState<ResScanTicket | null>(null);
+  const [cameraDenied, setCameraDenied] = useState(false);
+  const [cameraRequesting, setCameraRequesting] = useState(false);
+  const [scannerKey, setScannerKey] = useState(0);
+  const [scannerPaused, setScannerPaused] = useState(false);
   const scanning = useRef(false);
 
   const headers = useCallback((value = token) => ({ Authorization: `Bearer ${value ?? ""}` }), [token]);
@@ -126,6 +130,7 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
   const checkIn = async (publicID: string) => {
     if (!token || scanning.current) return;
     scanning.current = true;
+    if (mode === "scan") setScannerPaused(true);
     setLoading(true);
     try {
       const response = await verifier_api.post(`/events/${slug}/check-in`, { public_id: publicID }, { headers: headers() });
@@ -137,9 +142,41 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
     } catch (error: any) {
       if (error?.response?.status === 401) logout();
       toast.error(errorMessage(error));
+      scanning.current = false;
+      if (mode === "scan") setScannerPaused(false);
     } finally {
       setLoading(false);
-      window.setTimeout(() => { scanning.current = false; }, 1200);
+      if (mode !== "scan") scanning.current = false;
+    }
+  };
+
+  const continueScanning = () => {
+    setResult(null);
+    scanning.current = false;
+    if (mode === "scan") setScannerPaused(false);
+  };
+
+  const requestCameraPermission = async () => {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      toast.error("Browser ini tidak mendukung akses kamera.");
+      return;
+    }
+    setCameraRequesting(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+      stream.getTracks().forEach((track) => track.stop());
+      setCameraDenied(false);
+      setScannerKey((current) => current + 1);
+    } catch (error) {
+      const name = error instanceof DOMException ? error.name : "";
+      if (name === "NotAllowedError" || name === "PermissionDeniedError") {
+        setCameraDenied(true);
+        toast.error("Izin kamera masih ditolak. Aktifkan kamera untuk situs ini dari pengaturan browser.");
+      } else {
+        toast.error("Kamera tidak dapat diakses. Pastikan tidak sedang dipakai aplikasi lain.");
+      }
+    } finally {
+      setCameraRequesting(false);
     }
   };
 
@@ -183,13 +220,17 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
             <h2 className="font-semibold text-[var(--yn-foreground)]">Arahkan kamera ke QR tiket</h2>
             <p className="mt-1 text-sm text-[var(--yn-muted)]">Hanya tiket paid untuk event ini yang dapat diproses.</p>
             <div className="-mx-4 mt-4 h-[min(60svh,480px)] overflow-hidden bg-black sm:mx-0 sm:h-[520px] sm:rounded-2xl">
-              <Scanner
+              {cameraDenied ? <div className="flex h-full flex-col items-center justify-center px-6 text-center text-white"><Camera className="size-9" /><h3 className="mt-4 font-semibold">Izin kamera diperlukan</h3><p className="mt-2 max-w-sm text-sm text-white/75">Izinkan kamera untuk situs ini agar QR tiket dapat dipindai.</p><Button type="button" onClick={() => void requestCameraPermission()} disabled={cameraRequesting} className="mt-5 bg-white text-black hover:bg-white/90">{cameraRequesting ? "Meminta akses…" : "Aktifkan izin kamera"}</Button><p className="mt-4 text-xs text-white/60">Jika tetap ditolak, aktifkan izin Camera pada pengaturan browser untuk situs ini.</p></div> : <Scanner
+                key={scannerKey}
                 scanDelay={1200}
-                allowMultiple
+                allowMultiple={false}
+                paused={scannerPaused}
+                components={{ audio: false }}
                 onScan={(values) => { if (values[0]?.rawValue) checkIn(values[0].rawValue); }}
+                onError={(error) => { const name = error instanceof Error ? error.name : ""; if (name === "NotAllowedError" || name === "PermissionDeniedError") setCameraDenied(true); }}
                 constraints={{ facingMode: "environment" }}
                 styles={{ container: { width: "100%", height: "100%" }, video: { objectFit: "cover" } }}
-              />
+              />}
             </div>
           </section>
         ) : mode === "manual" ? (
@@ -245,11 +286,7 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
           </section>
         )}
 
-        {result && (
-          <section className="mt-5 rounded-3xl border border-green-200 bg-green-50 p-5 text-green-950">
-            <div className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 size-6 shrink-0 text-green-600" /><div><h2 className="font-semibold">{result.already_checked_in ? "Sudah check-in hari ini" : "Check-in berhasil"}</h2><p className="mt-1 text-sm">{result.user_ticket.user_name} · {result.user_ticket.ticket?.name}</p><p className="mt-1 text-xs">Kode tiket: {result.user_ticket.public_id}</p></div></div>
-          </section>
-        )}
+        {result && <div role="dialog" aria-modal="true" aria-labelledby="scan-result-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-5"><section className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl"><span className="mx-auto flex size-14 items-center justify-center rounded-full bg-green-100 text-green-600"><CheckCircle2 className="size-8" /></span><h2 id="scan-result-title" className="mt-4 text-xl font-semibold text-[var(--yn-foreground)]">{result.already_checked_in ? "Sudah check-in hari ini" : "Check-in berhasil"}</h2><p className="mt-3 font-medium text-[var(--yn-foreground)]">{result.user_ticket.user_name}</p><p className="mt-1 text-sm text-[var(--yn-muted)]">{result.user_ticket.ticket?.name}</p><p className="mt-3 text-xs text-[var(--yn-muted)]">Kode tiket: {result.user_ticket.public_id}</p><Button type="button" onClick={continueScanning} className="mt-6 h-11 w-full rounded-full bg-[var(--yn-accent)] text-white">{mode === "scan" ? "Scan tiket berikutnya" : "Selesai"}</Button></section></div>}
       </div>
     </main>
   );
