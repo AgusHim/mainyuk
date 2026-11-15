@@ -27,6 +27,7 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
   const [mode, setMode] = useState<"scan" | "manual" | "distribution">("scan");
   const [search, setSearch] = useState("");
   const [ticketID, setTicketID] = useState("");
+  const [checkInFilter, setCheckInFilter] = useState<"all" | "checked" | "unchecked">("all");
   const [ticketOptions, setTicketOptions] = useState<TicketOption[]>([]);
   const [tickets, setTickets] = useState<TicketRow[]>([]);
   const [distribution, setDistribution] = useState<Distribution | null>(null);
@@ -126,6 +127,8 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
     }
     if (mode === "distribution" && token) loadDistribution();
   }, [loadDistribution, loadTicketOptions, loadTickets, mode, token]);
+
+  const filteredTickets = tickets.filter((ticket) => checkInFilter === "all" || (checkInFilter === "checked" ? ticket.checked_in : !ticket.checked_in));
 
   const checkIn = async (publicID: string) => {
     if (!token || scanning.current) return;
@@ -237,6 +240,11 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
           <section className="mt-5 rounded-3xl border border-[var(--yn-border)] bg-[var(--yn-surface)] p-4 sm:p-6">
             <form onSubmit={(event) => { event.preventDefault(); loadTickets(search); }} className="flex flex-col gap-2 sm:flex-row">
               <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nama, email, no. HP, atau kode tiket" className="h-11 flex-1" />
+              <select aria-label="Filter status scan" value={checkInFilter} onChange={(event) => setCheckInFilter(event.target.value as "all" | "checked" | "unchecked")} className="h-11 rounded-md border border-[var(--yn-border)] bg-[var(--yn-surface)] px-3 text-sm text-[var(--yn-foreground)] sm:w-44">
+                <option value="all">Semua status</option>
+                <option value="checked">Sudah di-scan</option>
+                <option value="unchecked">Belum di-scan</option>
+              </select>
               <select
                 aria-label="Filter jenis tiket"
                 value={ticketID}
@@ -254,13 +262,13 @@ export default function EventVerifierPage({ slug }: { slug: string }) {
             </form>
             <p className="mt-2 text-xs text-[var(--yn-muted)]">Maksimal 100 tiket paid ditampilkan.</p>
             <div className="mt-5 space-y-3">
-              {tickets.map((ticket) => (
+              {filteredTickets.map((ticket) => (
                 <article key={ticket.public_id} className="flex flex-col gap-4 rounded-2xl border border-[var(--yn-border)] p-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><p className="font-semibold text-[var(--yn-foreground)]">{ticket.name}</p>{ticket.checked_in && <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">Sudah check-in</span>}</div><p className="mt-1 truncate text-sm text-[var(--yn-muted)]">{ticket.ticket_name} · {ticket.public_id}</p><p className="mt-1 text-xs text-[var(--yn-muted)]">{ticket.email}{ticket.phone ? ` · ${ticket.phone}` : ""}</p></div>
                   <Button type="button" disabled={loading} onClick={() => checkIn(ticket.public_id)} className={ticket.checked_in ? "shrink-0 bg-[var(--yn-surface-muted)] text-[var(--yn-foreground)]" : "shrink-0 bg-[var(--yn-accent)] text-white"}>{ticket.checked_in ? "Lihat status" : "Check-in manual"}</Button>
                 </article>
               ))}
-              {!loading && tickets.length === 0 && <p className="py-8 text-center text-sm text-[var(--yn-muted)]">Tidak ada tiket paid yang cocok.</p>}
+              {!loading && filteredTickets.length === 0 && <p className="py-8 text-center text-sm text-[var(--yn-muted)]">Tidak ada tiket yang cocok dengan filter.</p>}
             </div>
           </section>
         ) : (
